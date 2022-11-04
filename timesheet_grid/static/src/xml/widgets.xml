@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates>
+    <t t-name="timesheet_grid.Many2OneAvatarHoursSubfield">
+        <small t-attf-class="o_grid_section_subtext ms-1 opacity-75 {{ (not_enough_hours) ? 'o_grid_section_subtext_not_enough_hours text-danger' : 'o_grid_section_subtext_overtime text-success' }} {{ (overtime_indication) ? '' : 'd-none' }}" t-att-title="title">
+            <t t-esc="overtime_indication"/>
+        </small>
+    </t>
+
+    <t t-name="timesheet_grid.Many2OneTimesheetSubfield">
+        <span t-attf-class="o_grid_section_subtext_container">
+            <span t-attf-class="o_grid_section_subtext_name overflow-hidden text-truncate">
+                <t t-esc="value"/>
+            </span>
+            <small t-if="overtime_indication" t-attf-class="o_grid_section_subtext ms-1 mt-auto opacity-75 {{ color_class }}" t-att-title="title">
+                <t t-esc="overtime_indication"/>
+            </small>
+        </span>
+    </t>
+</templates>

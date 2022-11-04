@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_bank_rec_widget_form_inherit_batch_payment" model="ir.ui.view">
+            <field name="name">bank.rec.widget.form.inherit.batch_payment</field>
+            <field name="model">bank.rec.widget</field>
+            <field name="inherit_id" ref="account_accountant.view_bank_rec_widget_form"/>
+            <field name="arch" type="xml">
+                <page name="amls_tab" position="after">
+                    <page name="batch_payments_tab"
+                          string="Batch Payments"
+                          attrs="{'invisible': [('state', 'in', ('reconciled', 'to_check'))]}">
+                        <field name="batch_payments_widget" invisible="1"/>
+                        <field name="selected_batch_payment_ids" invisible="1"/>
+                        <div class="bank_rec_widget_form_batch_payments_list_anchor">
+                            <widget name="bank_rec_form_list" resModel="account.batch.payment" dataField="batch_payments_widget"/>
+                        </div>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <!-- Search view on batch payment to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_account_batch_payment_search_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.batch.payment.search.bank_rec_widget</field>
+            <field name="model">account.batch.payment</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"
+                           string="Batch Payment"
+                           filter_domain="[('name', 'ilike', self)]"/>
+                    <field name="date"/>
+                    <field name="journal_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <separator/>
+                    <filter name="amount_received" string="Received" domain="[('batch_type', '=', 'inbound')]"/>
+                    <filter name="amount_paid" string="Paid" domain="[('batch_type', '=', 'outbound')]"/>
+                    <separator name="inject_after"/>
+                    <filter name="date" string="Date" date="date"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree view on batch payment to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_account_batch_payment_list_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.batch.payment.list.bank_rec_widget</field>
+            <field name="model">account.batch.payment</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <tree string="Suggestions"
+                      create="false"
+                      edit="false"
+                      js_class="bank_rec_widget_form_batch_payments_list">
+                    <!-- Invisible fields -->
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="journal_id"
+                           optional="hidden"/>
+                    <field name="amount_residual_currency"
+                           string="Open Amount (in Currency)"/>
+                    <field name="amount_residual"
+                           string="Open Amount"
+                           groups="base.group_multi_currency"
+                           optional="hidden"/>
+
+                    <button name="action_open_batch_payment"
+                            type="object"
+                            string="View"
+                            class="btn btn-sm btn-secondary"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

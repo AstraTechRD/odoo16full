@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.appraisal</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority" eval="80"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(hr.plan_wizard_action)d']" position="before">
+                <button name="action_send_appraisal_request"
+                    string="Request Appraisal"
+                    type="object"
+                    data-hotkey="g"
+                    groups="!hr_appraisal.group_hr_appraisal_user"
+                    class="btn btn-primary" attrs="{'invisible': &quot;[('parent_user_id', '!=', uid)]&quot;}"/>
+                <button name="action_send_appraisal_request"
+                    string="Request Appraisal"
+                    type="object"
+                    data-hotkey="g"
+                    groups="hr_appraisal.group_hr_appraisal_user"
+                    class="btn btn-primary"/>
+            </xpath>
+            <div name="button_box" position="inside">
+                <field name="appraisal_count" invisible="1"/>
+                <field name="ongoing_appraisal_count" invisible="1"/>
+                <field name="last_appraisal_id" invisible="1"/>
+                <button name="action_open_last_appraisal"
+                    class="oe_stat_button" attrs="{'invisible': [('last_appraisal_id', '=', False)]}"
+                    icon="fa-star-half-o"
+                    type="object"
+                    >
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="last_appraisal_date" readonly="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Last Appraisal
+                        </span>
+                    </div>
+                </button>
+            </div>
+            <group name="application_group" position="attributes">
+                <attribute name="string">Application Settings</attribute>
+            </group>
+            <group name="application_group" position="inside">
+                <field name="parent_user_id" invisible="1"/>
+                <field name="next_appraisal_date" groups="base.group_no_one"/>
+            </group>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_create_multi_appraisals">
+        <field name="name">Request Appraisals</field>
+        <field name="sequence">6</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('hr_appraisal.group_hr_appraisal_user'))]"/>
+        <field name="code">
+             action = model._create_multi_appraisals()
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Recurring products -->
+        <record id="product_office_cleaning" model="product.product">
+            <field name="name">Office Cleaning Service (SUB)</field>
+            <field name="recurring_invoice">True</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="type">service</field>
+            <field name="list_price">200.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="product_pricing_1" model="product.pricing">
+            <field name="recurrence_id" ref="sale_temporal.recurrence_monthly"/>
+            <field name="price" eval="10"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="product_pricing_2" model="product.pricing">
+            <field name="recurrence_id" ref="sale_temporal.recurrence_yearly"/>
+            <field name="price" eval="100"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="product_pricing_3" model="product.pricing">
+            <field name="recurrence_id" ref="sale_temporal.recurrence_3_year"/>
+            <field name="price" eval="250"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="product_car_leasing" model="product.product">
+            <field name="name">Car Leasing (SUB)</field>
+            <field name="recurring_invoice">True</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="type">service</field>
+            <field name="list_price">200.0</field>
+            <field name="invoice_policy">delivery</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="product_pricing_4" model="product.pricing">
+            <field name="recurrence_id" ref="sale_temporal.recurrence_monthly"/>
+            <field name="price" eval="20"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="product_pricing_5" model="product.pricing">
+            <field name="recurrence_id" ref="sale_temporal.recurrence_yearly"/>
+            <field name="price" eval="200"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="product_pricing_6" model="product.pricing">
+            <field name="recurrence_id" ref="sale_temporal.recurrence_3_year"/>
+            <field name="price" eval="500"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <!-- Subscription products with pricings -->
+        <record id="product_office_cleaning" model="product.product"> <!-- Cleaning -->
+            <field name="product_pricing_ids"
+                   eval="[(6,0,[ref('product_pricing_1'), ref('product_pricing_2'), ref('product_pricing_3')])]"/>
+        </record>
+        <record id="product_car_leasing" model="product.product"> <!-- Car -->
+            <field name="product_pricing_ids"
+                   eval="[(6,0,[ref('product_pricing_4'), ref('product_pricing_5'), ref('product_pricing_6')])]"/>
+        </record>
+
+
+        <!-- Default Subscription Templates
+             Defined in data and extended here to add demo values for some fields -->
+        <record id="monthly_template" model="sale.order.template">
+            <field name="name">Monthly</field>
+            <field name="recurrence_id" ref="sale_temporal.recurrence_monthly"/>
+            <field name="good_health_domain">[('recurring_monthly', '&gt;=', 20)]</field>
+            <field name="bad_health_domain">[('recurring_monthly', '&lt;', 20)]</field>
+            <field name="recurring_rule_boundary">limited</field>
+            <field name="recurring_rule_count">6</field>
+            <field name="recurring_rule_type">year</field>
+        </record>
+
+        <record id="montly_template_line" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="monthly_template"/>
+            <field name="name">Office Cleaning Service (SUB)</field>
+            <field name="product_id" ref="product_office_cleaning"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="yearly_template" model="sale.order.template">
+            <field name="name">Yearly</field>
+            <field name="recurrence_id" ref="sale_temporal.recurrence_yearly"/>
+            <field name="recurring_rule_boundary">limited</field>
+            <field name="recurring_rule_type">year</field>
+            <field name="recurring_rule_count">6</field>
+        </record>
+
+        <record id="yearly_template_line" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="yearly_template"/>
+            <field name="name">Office Cleaning Service (SUB)</field>
+            <field name="product_id" ref="product_office_cleaning"/>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <!-- Demo Subscriptions -->
+        <record id="subscription_portal_1" model="sale.order">
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="sale_order_template_id" ref="sale_subscription.monthly_template"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="client_order_ref">subscription_portal_1</field>
+        </record>
+
+        <function model="sale.order"
+                  name="_onchange_sale_order_template_id"
+                  eval="[ref('sale_subscription.subscription_portal_1')]"/>
+
+        <record id="rec_line_1" model="sale.order.line">
+            <field name="name">Office Cleaning Service (SUB)</field>
+            <field name="order_id" ref="subscription_portal_1"/>
+            <field name="product_id" ref="sale_subscription.product_office_cleaning"/>
+            <field name="product_uom_qty">3</field>
+            <field name="price_unit">20.0</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+        </record>
+
+        <function model="sale.order" name="action_confirm" eval="[[ref('subscription_portal_1')]]" context="{'action_no_send_mail': True}"/>
+
+        <record id="subscription_portal_2" model="sale.order">
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="sale_order_template_id" ref="sale_subscription.yearly_template"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="client_order_ref">subscription_portal_2</field>
+        </record>
+
+        <function model="sale.order"
+                  name="_onchange_sale_order_template_id"
+                  eval="[ref('sale_subscription.subscription_portal_2')]"/>
+
+        <!-- Unlimited subscription -->
+
+        <record id="subscription_portal_3" model="sale.order">
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="recurrence_id" ref="sale_temporal.recurrence_monthly"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="client_order_ref">subscription_portal_3</field>
+        </record>
+
+        <record id="rec_line_3" model="sale.order.line">
+            <field name="name">Office Cleaning Service (SUB)</field>
+            <field name="order_id" ref="subscription_portal_3"/>
+            <field name="product_id" ref="sale_subscription.product_office_cleaning"/>
+            <field name="product_uom_qty">3</field>
+            <field name="price_unit">20.0</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+        </record>
+
+        <!-- Confirm some Sales Orders-->
+        <function model="sale.order" name="action_confirm" eval="[[ref('subscription_portal_2')]]" context="{'action_no_send_mail': True}"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('subscription_portal_3')]]" context="{'action_no_send_mail': True}"/>
+        <function model="sale.order" name="set_close" eval="[[ref('subscription_portal_3')]]"/>
+
+        <!-- Demo Alerts-->
+
+        <record id="subscription_alert_percent_revenue" model="sale.order.alert">
+            <field name="name">Take action on less satisfied clients</field>
+            <field name="rating_operator">&lt;</field>
+            <field name="rating_percentage">30</field>
+            <field name="trigger_condition">on_time</field>
+            <field name="trg_date_id" search="[('model', '=', 'sale.order'), ('name', '=', 'start_date')]"
+                   model="ir.model.fields"/>
+            <field name="trg_date_range">1</field>
+            <field name="trg_date_range_type">month</field>
+            <field name="action">next_activity</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="activity_date_deadline_range">5</field>
+            <field name="activity_user">contract</field>
+            <field name="activity_note">Please call the client to get some feedback about its subscription.</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="invoice_date" position="after">
+                <field name="is_avatax" invisible="1"/>
+                <field name="avatax_tax_date" attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('is_avatax', '=', False)]}"/>
+            </field>
+            <xpath expr="//button[@name='button_draft']" position="after">
+                <button name="button_update_avatax"
+                        type="object"
+                        string="Compute Taxes using Avatax"
+                        attrs="{'invisible':['|', '|', '|', ('state', '!=', 'draft'), ('is_move_sent', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund')), ('is_avatax', '=', False)]}"
+                        groups="account.group_account_invoice"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='tax_ids']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.is_avatax', '=', True)]}</attribute>
+            </xpath>
+            <group name="accounting_info_group" position="inside">
+                <field name="avatax_unique_code" attrs="{'invisible': [('is_avatax', '=', False)]}"/>
+            </group>
+        </field>
+    </record>
+</odoo>

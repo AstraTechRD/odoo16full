@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.Editor" owl="1">
+    <div
+        t-on-studio-edit-view="switchViewLegacy"
+        t-on-do-action.stop="onDoAction"
+        class="o_web_studio_editor">
+        <EditorMenu switchView.bind="switchView" switchTab.bind="switchTab" />
+        <StudioActionContainer initialAction="initialAction"/>
+    </div>
+</t>
+
+</templates>

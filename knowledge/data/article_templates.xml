@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <template id="knowledge_article_user_onboarding">
+<h1>
+    <span style="font-size: 36px;">Hello there <t t-out="object.name"/>,</span>
+</h1>
+<p>
+    <span style="font-size: 14px;">
+        This is where you and your team can centralize your
+        <font class="text-o-color-2" style="font-weight: bolder;">Knowledge</font>
+        and best practices!
+    </span>
+</p>
+<p><br /></p>
+<h3>Diving in</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">This private page is for you to play around with.</span>
+    <br />
+    <span style="font-size: 14px;">Ready to give it a spin?</span>
+</p>
+<p>
+    <span style="font-size: 14px;">Try the following</span>
+</p>
+<ul class="o_checklist">
+    <li id="checkId-140908257281">
+        <span style="font-size: 14px;">Click anywhere, and just start typing</span>
+    </li>
+    <li id="checkId-441216037148">
+        <span style="font-size: 14px;">Press Ctrl-Z to undo any change</span>
+    </li>
+    <li id="checkId-948702291173">
+        <span style="font-size: 14px;">Check this box to indicate it's done</span>
+    </li>
+    <li id="checkId-980463482772">
+        <span style="font-size: 14px;">
+            Select text to
+            <font class="bg-o-color-2">Highlight</font>,
+            <span style="text-decoration-line: line-through;">strikethrough</span>
+            or
+            <span style="font-weight: bolder;">style</span>
+            <span style="font-style: italic; text-decoration-line: underline;">it</span>
+        </span>
+    </li>
+    <li id="checkId-152369821198">
+        <span style="font-size: 14px;">
+            Below this list, try
+            <span style="font-weight: bolder;">commands</span>
+            by
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">typing</font>
+            </span>
+            "<span style="font-weight: bolder;">/</span>"
+        </span>
+    </li>
+    <li class="oe-nested" id="checkId-947916154443">
+        <ul class="o_checklist">
+            <li id="checkId-1422510558483">
+                <span style="font-size: 14px;">
+                    Add a checklist
+                    (/<span style="font-style: italic;">checklist</span>)
+                </span>
+            </li>
+            <li id="checkId-109605733655">
+                <span style="font-size: 14px;">
+                    Add a separator
+                    (/<span style="font-style: italic;">separator</span>)
+                </span>
+            </li>
+            <li id="checkId-1518315885641">
+                <span style="font-size: 14px;">
+                    Use
+                    /<span style="font-style: italic;">heading</span>
+                    to convert a text into a title
+                </span>
+            </li>
+        </ul>
+    </li>
+</ul>
+<p><br /></p>
+<p>
+    <span style="font-size: 14px;">Got it? Now let's try advanced features</span>
+</p>
+<ul>
+    <li>
+        <span style="font-size: 14px;">
+            Use
+            /<span style="font-weight: bolder;"><font class="text-o-color-2">template</font></span>
+            to insert a
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">template</font>
+            </span>
+            box. Need to re-use its content?
+        </span>
+    </li>
+    <li class="oe-nested">
+        <ul>
+            <li>
+                <span style="font-size: 14px;">From your document, find this article by clicking on the book icon in the chatter.</span>
+            </li>
+            <li>
+                <span style="font-size: 14px;">You can use the template as a description, a message or simply copy it to your clipboard!</span>
+            </li>
+        </ul>
+    </li>
+</ul>
+<div class="o_knowledge_behavior_anchor o_knowledge_behavior_type_template">
+    <div class="d-flex">
+        <div class="o_knowledge_template_label align-middle">Template</div>
+    </div>
+    <div class="o_knowledge_content" data-prop-name="content">
+        <p>
+            Hello there, I am a template
+            <br />
+            Use the buttons at the top-right of this box to re-use my content.
+            <br />
+            No more time wasted!
+        </p>
+    </div>
+</div>
+<p><br /></p>
+<ul>
+    <li>
+        <span style="font-size: 14px;">
+            Use
+            /<span style="font-weight: bolder;"><font class="text-o-color-2">file</font></span>
+            to share documents that are frequently needed
+        </span>
+    </li>
+    <li class="oe-nested">
+        <ul>
+            <li>
+                <span style="font-size: 14px;">Need this document somewhere? Come back here by clicking on the book icon in the chatter.</span>
+            </li>
+            <li>
+                <span style="font-size: 14px;">From this box, files can be previewed, forwarded and downloaded.</span>
+            </li>
+        </ul>
+    </li>
+</ul>
+<div class="o_knowledge_behavior_anchor o_knowledge_behavior_type_file">
+    <div class="o_knowledge_file_image" data-prop-name="fileImage">
+        <a href="https://www.odoo.com/web/content/31413934?download=true" title="Onboarding.pdf" data-mimetype="application/pdf" class="o_image"></a>
+    </div>
+    <div class="o_knowledge_file_description">
+        <div class="o_knowledge_file_name" data-prop-name="fileName">Odoo Survival Guide</div>
+        <div class="o_knowledge_file_extension" data-prop-name="fileExtension">pdf</div>
+    </div>
+</div>
+<p><br /></p>
+<p>
+    <span style="font-size: 14px;">
+        Want to go
+        <span style="font-style: italic;">even</span>
+        faster?
+    </span>
+    <br />
+    <span style="font-size: 14px;">
+        Access
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Articles</font>
+        </span>
+        by opening the
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Command Palette</font>
+        </span>
+        (Ctrl + k/⌘ + k) then search through articles by starting your query with
+        "<span style="font-weight: bolder;">?</span>".
+    </span>
+</p>
+<p><br /></p>
+<h3>Navigation Basics</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        See the
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Menu</font>
+        </span>
+        there, on the left?
+    </span>
+</p>
+<p>
+    <span style="font-size: 14px;">
+        Those are your
+        <span style="font-weight: bolder;"><font class="text-o-color-2">Articles</font></span>.
+    </span>
+</p>
+<p>
+    <span style="font-size: 14px;">Each of them can bu used both as:</span>
+</p>
+<ul>
+    <li>
+        <span style="font-size: 14px;">
+            Content — Just click and
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">start typing</font>
+            </span>
+            (<span style="font-style: italic;">documentation, tips, reports, ...</span>)
+        </span>
+    </li>
+    <li>
+        <span style="font-size: 14px;">
+            Folders —
+        </span>
+        <span style="font-size: 14px;">
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Nest other Articles</font>
+            </span>
+            under it to regroup them
+            (<span style="font-style: italic;">per team, topic, project, ...</span>)
+        </span>
+    </li>
+</ul>
+<p>
+    <span style="font-size: 14px;">
+        To change the way
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Articles</font>
+        </span>
+        are organized, you can simply
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Drag &amp; Drop</font>
+        </span>
+        them
+    </span>
+</p>
+<p><br /></p>
+<h3>Who has access to what?</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Articles</font>
+        </span>
+        are stored into different
+        <span style="font-weight: bolder;"><font class="text-o-color-2">Sections</font></span>:
+    </span>
+</p>
+<ul>
+    <li>
+        <span style="font-size: 14px;">
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Favorites</font>
+            </span>
+            — Those are
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">shortcuts</font>
+            </span>
+            you create for yourself.
+            Unstar this page at the top to remove it from your favorites.
+        </span>
+    </li>
+    <li>
+        <span style="font-size: 14px;">
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Workspace</font>
+            </span>
+        </span>
+        <span style="font-size: 14px;">
+            — Articles there can be accessed by
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">your team</font>
+        </span>
+    </span>
+    </li>
+    <li>
+        <span style="font-size: 14px;">
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Shared</font>
+            </span>
+        </span>
+        <span style="font-size: 14px;">
+            — Those are the ones you
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">have invited someone or been invited to</font>
+            </span>
+        </span>
+    </li>
+    <li>
+        <span style="font-size: 14px;">
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Private</font>
+            </span>
+        </span>
+        <span style="font-size: 14px;">
+            — This is
+            <span style="font-weight: bolder;"><font class="text-o-color-2">your stuff</font></span>,
+            the things you keep for yourself
+            (<span style="font-style: italic;">Drafts, Todo lists, ...</span>)
+        </span>
+    </li>
+</ul>
+<p>
+    <span style="font-size: 14px;">
+        And again, to move an
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Article</font>
+        </span>
+        from a
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Section</font>
+        </span>
+        to another, just
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Drag &amp; Drop</font>
+        </span>
+        it.
+    </span>
+</p>
+<p>
+    <span style="font-size: 14px;">
+        A good workflow is to write your drafts in
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Private</font>
+        </span>
+        and, once done, move it from
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Private</font>
+        </span>
+        to
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Workspace</font>
+        </span>
+        to share it with everyone.
+    </span>
+</p>
+<p>
+    <span style="font-size: 14px;">And voilà, it is that simple.</span>
+</p>
+<p><br /></p>
+<hr />
+<p>
+    To be sure to stay updated, follow us on
+    <a href="https://twitter.com/Odoo" target="_blank"><span style="font-weight: bolder;"><font class="text-o-color-1">Twitter</font></span></a>,
+    <a href="https://www.youtube.com/channel/UCkQPikELWZFLgQNHd73jkdg" target="_blank">
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-1">YouTube</font>
+        </span>
+    </a>
+    or
+    <a href="https://www.facebook.com/odoo" target="_blank"><span style="font-weight: bolder;"><font class="text-o-color-1">Facebook</font></span></a>.
+</p>
+    </template>
+
+</data></odoo>

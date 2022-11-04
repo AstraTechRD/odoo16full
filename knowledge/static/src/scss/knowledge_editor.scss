@@ -1,0 +1,40 @@
+.o_knowledge_editor {
+    .note-editable,
+    .o_readonly {
+        h1, h2, h3, h4, h5, h6 {
+            transition: background-color 0.5s ease;
+            &.o_knowledge_header_highlight {
+                border-radius: 0.25rem;
+                background-color: rgba($knowledge-bg--active, 0.2);
+            }
+        }
+    }
+    .o_field_property_add {
+        margin: 0;
+    }
+    .o_property_field .o_td_label,
+    .o_property_field .o_property_field_value {
+        padding: 0;
+    }
+}
+
+@include media-breakpoint-down(xl) {
+    .o_knowledge_editor .note-editable,
+    .o_knowledge_editor .o_readonly {
+        padding-bottom: 1rem !important; //overriding html field's padding (web_enterprise style)
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .o_knowledge_editor .note-editable,
+    .o_knowledge_editor .o_readonly {
+        padding-bottom: 50vh !important; //overriding html field's padding (web_enterprise style)
+    }
+}
+
+@media print {
+    .o_knowledge_editor .note-editable,
+    .o_knowledge_editor .o_readonly {
+        padding-bottom: 0 !important; // overriding html field's padding (web_enterprise style)
+    }
+}

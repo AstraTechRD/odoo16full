@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="mrp_workorder.Tablet" class="o_content o_tablet_client_action" owl="1">
+        <div class="o_workorder_blocking_screen" t-if="isBlocked"/>
+        <View t-props="views['workorder']"/>
+        <div class="o_tablet_bottom_content">
+            <div t-if="steps.length" class="o_tablet_timeline" t-on-select-step="selectStep">
+                <t t-foreach="steps" t-as="step" t-key="step.id">
+                    <StepComponent step="step"
+                        selectedStepId="state.selectedStepId"
+                        onSelectStep.bind="selectStep"/>
+                </t>
+            </div>
+            <div class="o_tablet_instructions_content">
+                <t t-if="state.selectedStepId">
+                    <View t-props="views['check']" t-key="state.selectedStepId"/>
+                    <div t-if="checkInstruction" class="o_tablet_instruction_note">
+                        <t t-out="checkInstruction"/>
+                    </div>
+                    <t t-if="worksheetData">
+                        <DocumentViewer t-props="worksheetData"/>
+                    </t>
+                </t>
+                <t t-elif="steps.length !== 0">
+                    <SummaryStep workorder="workorderId"/>
+                </t>
+            </div>
+        </div>
+        <div t-if="popup['menu'].isShown" class="o_tablet_popups" >
+            <MenuPopup popupData="popup['menu'].data" onClosePopup.bind="closePopup" onClose.bind="onCloseRerender"/>
+        </div>
+    </div>
+</templates>

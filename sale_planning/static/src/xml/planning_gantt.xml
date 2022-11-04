@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="SalePlanningGanttView.buttons" t-extend="PlanningGanttView.buttons">
+        <t t-jquery="> :last-child" t-operation="after">
+            <button t-if="activeActions.create" class="o_gantt_button_plan_so btn btn-secondary" title="Plan Orders" data-hotkey="n">
+                Plan Orders
+            </button>
+        </t>
+    </t>
+</templates>

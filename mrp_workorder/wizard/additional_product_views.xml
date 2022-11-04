@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mrp_workorder_additional_product_wizard" model="ir.ui.view">
+        <field name="name">MRP Additional Product</field>
+        <field name="model">mrp_workorder.additional.product</field>
+        <field name="arch" type="xml">
+            <form string="Add product">
+                <group>
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="product_tracking" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="product_uom_category_id" invisible="1"/>
+                        <field name="product_id"/>
+                        <label for="product_qty" string="Quantity" />
+                        <div class="o_row">
+                            <field name="product_qty" attrs="{'readonly': [('product_tracking', '=', 'serial')]}"/>
+                            <field name="product_uom_id" groups="uom.group_uom" attrs="{'readonly': [('product_tracking', '=', 'serial')]}"/>
+                        </div>
+                    </group>
+                </group>
+                <footer>
+                    <button name="add_product" type="object" string="Add Component" attrs="{'invisible': [('type', '=', 'byproduct')]}" class="btn-primary" data-hotkey="q"/>
+                    <button name="add_product" type="object" string="Add By-Product" attrs="{'invisible': [('type', '=', 'component')]}" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-default btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

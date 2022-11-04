@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="pe_ubl_2_1_debit_note_line" inherit_id="l10n_pe_edi.pe_ubl_2_1_common_line" primary="True">
+        <xpath expr="//*[name()='cbc:ID']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:DebitedQuantity
+                        t-att-unitCode="line.product_uom_id.l10n_pe_edi_measure_unit_code"
+                        t-esc='line.quantity'/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pe_ubl_2_1_debit_note_body" inherit_id="l10n_pe_edi.pe_ubl_2_1_common" primary="True">
+        <xpath expr="//*[name()='cbc:DocumentCurrencyCode']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:DiscrepancyResponse t-if="record.l10n_latam_document_type_id.code == '08'">
+                    <cbc:ResponseCode t-esc="record.l10n_pe_edi_charge_reason"/>
+                    <cbc:Description t-esc="record.ref"/>
+                </cac:DiscrepancyResponse>
+                <cac:BillingReference>
+                    <cac:InvoiceDocumentReference t-if="record.debit_origin_id">
+                        <cbc:ID t-esc="record.debit_origin_id.name.replace(' ', '')"/>
+                        <cbc:DocumentTypeCode t-esc="record.debit_origin_id.l10n_latam_document_type_id.code"/>
+                    </cac:InvoiceDocumentReference>
+                </cac:BillingReference>
+            </t>
+        </xpath>
+        <xpath expr="//*[name()='cac:TaxTotal']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:RequestedMonetaryTotal>
+                    <cbc:LineExtensionAmount
+                            t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_untaxed)"/>
+                    <cbc:TaxInclusiveAmount
+                            t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_total)"/>
+                    <cbc:PayableAmount
+                            t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_total)"/>
+                </cac:RequestedMonetaryTotal>
+                <cac:DebitNoteLine t-foreach="invoice_line_vals_list" t-as="line_vals">
+                    <t t-call="l10n_pe_edi.pe_ubl_2_1_debit_note_line"/>
+                </cac:DebitNoteLine>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pe_ubl_2_1_debit_note">
+        <DebitNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
+                   xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                   xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                   xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+                   xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                   xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                   xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+                   xmlns:sac="urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1"
+                   xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <t t-call="l10n_pe_edi.pe_ubl_2_1_debit_note_body"/>
+        </DebitNote>
+    </template>
+
+</odoo>

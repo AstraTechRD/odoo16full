@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="mail_template_send_offer" model="mail.template">
+        <field name="name">Employee: Contract And Salary Package</field>
+        <field name="model_id" ref="hr_contract.model_hr_contract"/>
+        <field name="subject">{{ object.company_id.name }} : Job Offer - {{ object.name }}</field>
+        <field name="partner_to" >{{ ctx.get('partner_to', False) }}</field>
+        <field name="email_to"> {{ ctx.get('email_to', False) }}</field>
+        <field name="description">Sent manually when you generate a simulation link on the employee contract</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <h2>Congratulations!</h2>
+    You can configure your salary package by clicking on the link below.
+    <div style="padding: 16px 0px 16px 0px;">
+        <a t-att-href="ctx.get('salary_package_url')"
+            target="_blank"
+            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Configure your package</a>
+    </div>
+</div>
+        </field>
+        <field name="lang">{{ object.employee_id.address_home_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="mail_template_send_offer_applicant" model="mail.template">
+        <field name="name">Recruitment: Your Salary Package</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">{{ object.company_id.name }} : Job Offer - {{ object.name }}</field>
+        <field name="partner_to" >{{ ctx.get('partner_to', False) }}</field>
+        <field name="description">Sent automatically when you generate an offer for an application</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <h2>Congratulations!</h2>
+    You can configure your salary package by clicking on the link below.
+    <div style="padding: 16px 0px 16px 0px;">
+        <a t-att-href="ctx.get('salary_package_url')"
+            target="_blank"
+            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Configure your package</a>
+    </div>
+</div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</data></odoo>

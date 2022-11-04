@@ -1,0 +1,2052 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_l10n_tr_bilanco" model="account.report">
+        <field name="name">Bilanço</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.tr"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_tr_bilanco_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_trbs_active" model="account.report.line">
+                <field name="name">AKTİF (VARLIKLAR)</field>
+                <field name="code">TRBS_ACTIVE</field>
+                <field name="aggregation_formula">TRBS_1.balance + TRBS_2.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_trbs_1" model="account.report.line">
+                        <field name="name">DÖNEN VARLIKLAR</field>
+                        <field name="code">TRBS_1</field>
+                        <field name="aggregation_formula">TRBS_10.balance + TRBS_11.balance + TRBS_12.balance + TRBS_13.balance + TRBS_15.balance + TRBS_17.balance + TRBS_18.balance - TRBS_19.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_trbs_10" model="account.report.line">
+                                <field name="name">Hazır Değerler</field>
+                                <field name="code">TRBS_10</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_100.balance + TRBS_101.balance + TRBS_102.balance - TRBS_103.balance + TRBS_108.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_100" model="account.report.line">
+                                        <field name="name">Kasa</field>
+                                        <field name="code">TRBS_100</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '100%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_101" model="account.report.line">
+                                        <field name="name">Alınan çekler</field>
+                                        <field name="code">TRBS_101</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '101%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_102" model="account.report.line">
+                                        <field name="name">Bankalar</field>
+                                        <field name="code">TRBS_102</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '102%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_103" model="account.report.line">
+                                        <field name="name">Verilen Çekler ve Ödeme Emirleri (-)</field>
+                                        <field name="code">TRBS_103</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_103_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '103%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_108" model="account.report.line">
+                                        <field name="name">Diğer Hazır Değerler</field>
+                                        <field name="code">TRBS_108</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '108%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_11" model="account.report.line">
+                                <field name="name">Menkul Kıymetler</field>
+                                <field name="code">TRBS_11</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_110.balance + TRBS_111.balance + TRBS_112.balance + TRBS_118.balance - TRBS_119.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_110" model="account.report.line">
+                                        <field name="name">Hisse senetleri</field>
+                                        <field name="code">TRBS_110</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '110%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_111" model="account.report.line">
+                                        <field name="name">Özel Kesim Tahvil .Senet ve Bonoları</field>
+                                        <field name="code">TRBS_111</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '111%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_112" model="account.report.line">
+                                        <field name="name">Kamu Kesimi Tahvil. Senet ve Bonoları</field>
+                                        <field name="code">TRBS_112</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '112%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_118" model="account.report.line">
+                                        <field name="name">Diğer Menkul Kıymetler</field>
+                                        <field name="code">TRBS_118</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '118%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_119" model="account.report.line">
+                                        <field name="name">Menkul Kıymetler Değer Düşüklüğü Karşılığı (-)</field>
+                                        <field name="code">TRBS_119</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_119_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '119%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_12" model="account.report.line">
+                                <field name="name">Ticari Alacaklar</field>
+                                <field name="code">TRBS_12</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_120.balance + TRBS_121.balance - TRBS_122.balance + TRBS_126.balance + TRBS_127.balance + TRBS_128.balance - TRBS_129.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_120" model="account.report.line">
+                                        <field name="name">Alıcılar</field>
+                                        <field name="code">TRBS_120</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '120%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_121" model="account.report.line">
+                                        <field name="name">Alacak Senetleri</field>
+                                        <field name="code">TRBS_121</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '121%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_122" model="account.report.line">
+                                        <field name="name">Alacak Senetleri Reeskontu(-)</field>
+                                        <field name="code">TRBS_122</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_122_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '122%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_126" model="account.report.line">
+                                        <field name="name">Verilen Depozito ve Teminatlar</field>
+                                        <field name="code">TRBS_126</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '126%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_127" model="account.report.line">
+                                        <field name="name">Diğer Ticari Alacaklar</field>
+                                        <field name="code">TRBS_127</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '127%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_128" model="account.report.line">
+                                        <field name="name">Şüpheli Ticari Alacaklar</field>
+                                        <field name="code">TRBS_128</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '128%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_129" model="account.report.line">
+                                        <field name="name">Şüpheli Ticari Alacaklar Karşılığı (-)</field>
+                                        <field name="code">TRBS_129</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_129_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '129%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_13" model="account.report.line">
+                                <field name="name">Diğer Alacaklar</field>
+                                <field name="code">TRBS_13</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_131.balance + TRBS_132.balance + TRBS_133.balance + TRBS_135.balance + TRBS_136.balance - TRBS_137.balance - TRBS_138.balance - TRBS_139.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_131" model="account.report.line">
+                                        <field name="name">Ortaklardan Alacaklar</field>
+                                        <field name="code">TRBS_131</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '131%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_132" model="account.report.line">
+                                        <field name="name">İştiraklerden Alacaklar</field>
+                                        <field name="code">TRBS_132</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '132%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_133" model="account.report.line">
+                                        <field name="name">Bağlı Ortaklıklardan Alacaklar</field>
+                                        <field name="code">TRBS_133</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '133%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_135" model="account.report.line">
+                                        <field name="name">Personelden Alacaklar</field>
+                                        <field name="code">TRBS_135</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '135%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_136" model="account.report.line">
+                                        <field name="name">Diğer Çeşitli Alacaklar</field>
+                                        <field name="code">TRBS_136</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '136%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_137" model="account.report.line">
+                                        <field name="name">Diğer Alacak Senetleri Reeskontu (-)</field>
+                                        <field name="code">TRBS_137</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_137_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '137%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_138" model="account.report.line">
+                                        <field name="name">Şüpheli Diğer Alacaklar</field>
+                                        <field name="code">TRBS_138</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '138%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_139" model="account.report.line">
+                                        <field name="name">Şüpheli Diğer Alacaklar Karşılığı (-)</field>
+                                        <field name="code">TRBS_139</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_139_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '139%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_15" model="account.report.line">
+                                <field name="name">Stoklar</field>
+                                <field name="code">TRBS_15</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_150.balance + TRBS_151.balance + TRBS_152.balance + TRBS_153.balance + TRBS_157.balance - TRBS_158.balance + TRBS_159.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_150" model="account.report.line">
+                                        <field name="name">İlk Madde ve Malzeme</field>
+                                        <field name="code">TRBS_150</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '150%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_151" model="account.report.line">
+                                        <field name="name">Yarı Mamüller-Üretim</field>
+                                        <field name="code">TRBS_151</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '151%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_152" model="account.report.line">
+                                        <field name="name">Mamüller</field>
+                                        <field name="code">TRBS_152</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '152%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_153" model="account.report.line">
+                                        <field name="name">Ticari Mallar</field>
+                                        <field name="code">TRBS_153</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '153%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_157" model="account.report.line">
+                                        <field name="name">Diğer Stoklar</field>
+                                        <field name="code">TRBS_157</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '157%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_158" model="account.report.line">
+                                        <field name="name">Stok Değer Düşüklüğü Karşılığı (-)</field>
+                                        <field name="code">TRBS_158</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_158_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '158%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_159" model="account.report.line">
+                                        <field name="name">Verilen Sipariş Avansları</field>
+                                        <field name="code">TRBS_159</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '159%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_17" model="account.report.line">
+                                <field name="name">Yıllara Yaygın İnş.ve Onarım Maaliyetleri</field>
+                                <field name="code">TRBS_17</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_170.balance + TRBS_179.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_170" model="account.report.line">
+                                        <field name="name">Yıllara Yaygın İnş.ve Onarım Maaliyetleri</field>
+                                        <field name="code">TRBS_170</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '170%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_179" model="account.report.line">
+                                        <field name="name">Taşeronlara Verilen Avanslar</field>
+                                        <field name="code">TRBS_179</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '179%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_18" model="account.report.line">
+                                <field name="name">Gelecek Aylara Ait Gid.ve Gelir Tah.</field>
+                                <field name="code">TRBS_18</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_180.balance + TRBS_181.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_180" model="account.report.line">
+                                        <field name="name">Gelecek Aylara Ait Giderler</field>
+                                        <field name="code">TRBS_180</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '180%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_181" model="account.report.line">
+                                        <field name="name">Gelir Tahakkukları</field>
+                                        <field name="code">TRBS_181</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '181%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_19" model="account.report.line">
+                                <field name="name">Diğer Dönen Varlıklar</field>
+                                <field name="code">TRBS_19</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_190.balance + TRBS_191.balance + TRBS_192.balance + TRBS_193.balance + TRBS_195.balance + TRBS_196.balance + TRBS_197.balance + TRBS_198.balance - TRBS_199.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_190" model="account.report.line">
+                                        <field name="name">Devreden KDV.</field>
+                                        <field name="code">TRBS_190</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '190%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_191" model="account.report.line">
+                                        <field name="name">İndirilecek KDV</field>
+                                        <field name="code">TRBS_191</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '191%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_192" model="account.report.line">
+                                        <field name="name">Diğer KDV</field>
+                                        <field name="code">TRBS_192</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '192%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_193" model="account.report.line">
+                                        <field name="name">Peşin Ödenen Vergiler ve Fonlar</field>
+                                        <field name="code">TRBS_193</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '193%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_195" model="account.report.line">
+                                        <field name="name">İş Avansları</field>
+                                        <field name="code">TRBS_195</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '195%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_196" model="account.report.line">
+                                        <field name="name">Personel Avansları</field>
+                                        <field name="code">TRBS_196</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '196%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_197" model="account.report.line">
+                                        <field name="name">Sayım Tesellüm Noksanları</field>
+                                        <field name="code">TRBS_197</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '197%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_198" model="account.report.line">
+                                        <field name="name">Diğer Çeşitli Dönen Varlıklar</field>
+                                        <field name="code">TRBS_198</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '198%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_199" model="account.report.line">
+                                        <field name="name">Diğer Dönen Varlıklar Karşılığı (-)</field>
+                                        <field name="code">TRBS_199</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_199_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '199%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_trbs_2" model="account.report.line">
+                        <field name="name">DURAN VARLIKLAR</field>
+                        <field name="code">TRBS_2</field>
+                        <field name="aggregation_formula">TRBS_22.balance + TRBS_23.balance + TRBS_24.balance + TRBS_25.balance + TRBS_26.balance + TRBS_27.balance + TRBS_28.balance + TRBS_29.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_trbs_22" model="account.report.line">
+                                <field name="name">Ticari Alacaklar</field>
+                                <field name="code">TRBS_22</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_220.balance + TRBS_221.balance - TRBS_222.balance + TRBS_226.balance - TRBS_229.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_220" model="account.report.line">
+                                        <field name="name">Alıcılar</field>
+                                        <field name="code">TRBS_220</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '220%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_221" model="account.report.line">
+                                        <field name="name">Alacak Senetleri</field>
+                                        <field name="code">TRBS_221</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '221%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_222" model="account.report.line">
+                                        <field name="name">Alacak Senetleri Reeskontu (-)</field>
+                                        <field name="code">TRBS_222</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_222_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '222%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_226" model="account.report.line">
+                                        <field name="name">Verilen Depozito ve Teminatlar</field>
+                                        <field name="code">TRBS_226</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '226%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_229" model="account.report.line">
+                                        <field name="name">Şüpheli Alacaklar Karşılığı (-)</field>
+                                        <field name="code">TRBS_229</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_229_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '229%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_23" model="account.report.line">
+                                <field name="name">Diğer Alacaklar</field>
+                                <field name="code">TRBS_23</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_231.balance + TRBS_232.balance + TRBS_233.balance + TRBS_235.balance + TRBS_236.balance - TRBS_237.balance - TRBS_239.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_231" model="account.report.line">
+                                        <field name="name">Ortaklardan Alacaklar</field>
+                                        <field name="code">TRBS_231</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '231%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_232" model="account.report.line">
+                                        <field name="name">İştiraklerden Alacaklar</field>
+                                        <field name="code">TRBS_232</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '232%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_233" model="account.report.line">
+                                        <field name="name">Bağlı Ortaklıklardan Alacaklar</field>
+                                        <field name="code">TRBS_233</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '233%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_235" model="account.report.line">
+                                        <field name="name">Personelden Alacaklar</field>
+                                        <field name="code">TRBS_235</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '235%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_236" model="account.report.line">
+                                        <field name="name">Diğer Çeşitli Alacaklar</field>
+                                        <field name="code">TRBS_236</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '236%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_237" model="account.report.line">
+                                        <field name="name">Diğer Alacak Senetleri Reeskontu (-)</field>
+                                        <field name="code">TRBS_237</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_237_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '237%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_239" model="account.report.line">
+                                        <field name="name">Şüpheli Diğer Alacaklar Karşılığı (-)</field>
+                                        <field name="code">TRBS_239</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_239_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '239%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_24" model="account.report.line">
+                                <field name="name">Mali Duran Varlıklar</field>
+                                <field name="code">TRBS_24</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_240.balance - TRBS_241.balance + TRBS_242.balance - TRBS_243.balance - TRBS_244.balance + TRBS_245.balance - TRBS_246.balance - TRBS_247.balance + TRBS_248.balance - TRBS_249.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_240" model="account.report.line">
+                                        <field name="name">Bağlı Menkul Kıymetler</field>
+                                        <field name="code">TRBS_240</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '240%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_241" model="account.report.line">
+                                        <field name="name">Bağlı Menkul Kıymetler Değer Düşüklüğü Krş.(-)</field>
+                                        <field name="code">TRBS_241</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_241_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '241%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_242" model="account.report.line">
+                                        <field name="name">İştirakler</field>
+                                        <field name="code">TRBS_242</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '242%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_243" model="account.report.line">
+                                        <field name="name">İştiraklere Sermaye Taahhütleri (-)</field>
+                                        <field name="code">TRBS_243</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_243_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '243%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_244" model="account.report.line">
+                                        <field name="name">İştiraklere Sermaye Payları Değer Düşüklüğü Krş.(-)</field>
+                                        <field name="code">TRBS_244</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_244_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '244%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_245" model="account.report.line">
+                                        <field name="name">Bağlı Ortaklıklar</field>
+                                        <field name="code">TRBS_245</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '245%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_246" model="account.report.line">
+                                        <field name="name">Bağlı Ortaklıklara Sermaye Taahh. (-)</field>
+                                        <field name="code">TRBS_246</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_246_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '246%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_247" model="account.report.line">
+                                        <field name="name">Bağlı Ortaklıklar Sermaye Payları Değer Düş.Karş.(-)</field>
+                                        <field name="code">TRBS_247</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_247_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '247%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_248" model="account.report.line">
+                                        <field name="name">Diğer Mali Duran Varlıklar</field>
+                                        <field name="code">TRBS_248</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '248%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_249" model="account.report.line">
+                                        <field name="name">Diğer Mali Duran Varlıklar Karşılığı (-)</field>
+                                        <field name="code">TRBS_249</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_249_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '249%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_25" model="account.report.line">
+                                <field name="name">Maddi Duran Varlıklar</field>
+                                <field name="code">TRBS_25</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_250.balance + TRBS_251.balance + TRBS_252.balance + TRBS_253.balance + TRBS_254.balance + TRBS_255.balance + TRBS_256.balance - TRBS_257.balance + TRBS_258.balance + TRBS_259.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_250" model="account.report.line">
+                                        <field name="name">Arazi ve Arsalar</field>
+                                        <field name="code">TRBS_250</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '250%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_251" model="account.report.line">
+                                        <field name="name">Yeraltı ve Yerüstü Düzenleri</field>
+                                        <field name="code">TRBS_251</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '251%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_252" model="account.report.line">
+                                        <field name="name">Binalar</field>
+                                        <field name="code">TRBS_252</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '252%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_253" model="account.report.line">
+                                        <field name="name">Tesis. Makina ve Cihazlar</field>
+                                        <field name="code">TRBS_253</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '253%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_254" model="account.report.line">
+                                        <field name="name">Taşıtlar</field>
+                                        <field name="code">TRBS_254</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '254%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_255" model="account.report.line">
+                                        <field name="name">Demirbaşlar</field>
+                                        <field name="code">TRBS_255</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '255%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_256" model="account.report.line">
+                                        <field name="name">Diğer Maddi Duran Varlıklar</field>
+                                        <field name="code">TRBS_256</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '256%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_257" model="account.report.line">
+                                        <field name="name">Birikmiş Amortismanlar (-)</field>
+                                        <field name="code">TRBS_257</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_257_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '257%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_258" model="account.report.line">
+                                        <field name="name">Yapılmakta Olan Yatırımlar</field>
+                                        <field name="code">TRBS_258</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '258%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_259" model="account.report.line">
+                                        <field name="name">Verilen Avanslar</field>
+                                        <field name="code">TRBS_259</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '259%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_26" model="account.report.line">
+                                <field name="name">Maddi Olmayan Duran Varlıklar</field>
+                                <field name="code">TRBS_26</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_260.balance + TRBS_261.balance + TRBS_262.balance + TRBS_263.balance + TRBS_264.balance + TRBS_267.balance - TRBS_268.balance + TRBS_269.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_260" model="account.report.line">
+                                        <field name="name">Haklar</field>
+                                        <field name="code">TRBS_260</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '260%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_261" model="account.report.line">
+                                        <field name="name">Şerefiye</field>
+                                        <field name="code">TRBS_261</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '261%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_262" model="account.report.line">
+                                        <field name="name">Kuruluş ve Örgütlenme Giderleri</field>
+                                        <field name="code">TRBS_262</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '262%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_263" model="account.report.line">
+                                        <field name="name">Araştırma ve Geliştirme Giderleri</field>
+                                        <field name="code">TRBS_263</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '263%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_264" model="account.report.line">
+                                        <field name="name">Özel Maliyetler</field>
+                                        <field name="code">TRBS_264</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '264%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_267" model="account.report.line">
+                                        <field name="name">Diğer Maddi Olmayan Duran Varlıklar</field>
+                                        <field name="code">TRBS_267</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '267%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_268" model="account.report.line">
+                                        <field name="name">Birikmiş Amortismanlar (-)</field>
+                                        <field name="code">TRBS_268</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_268_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '268%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_269" model="account.report.line">
+                                        <field name="name">Verilen Avanslar</field>
+                                        <field name="code">TRBS_269</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '269%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_27" model="account.report.line">
+                                <field name="name">Özel Tükenmeye Tabi Varlıklar</field>
+                                <field name="code">TRBS_27</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_271.balance + TRBS_272.balance + TRBS_277.balance - TRBS_278.balance + TRBS_279.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_271" model="account.report.line">
+                                        <field name="name">Arama Giderleri</field>
+                                        <field name="code">TRBS_271</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '271%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_272" model="account.report.line">
+                                        <field name="name">Hazırlık ve Geliştirme Giderleri</field>
+                                        <field name="code">TRBS_272</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '272%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_277" model="account.report.line">
+                                        <field name="name">Diğer Özel Tükenmeye Tabi Varlıklar</field>
+                                        <field name="code">TRBS_277</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '277%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_278" model="account.report.line">
+                                        <field name="name">Birikmiş Tükenme Payları (-)</field>
+                                        <field name="code">TRBS_278</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_278_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '278%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_279" model="account.report.line">
+                                        <field name="name">Verilen Avanslar</field>
+                                        <field name="code">TRBS_279</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '279%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_28" model="account.report.line">
+                                <field name="name">Gelecek Yıllara Ait Gid.ve Gelir Tahakukları</field>
+                                <field name="code">TRBS_28</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_280.balance + TRBS_281.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_280" model="account.report.line">
+                                        <field name="name">Gelecek Yıllara Ait Giderler</field>
+                                        <field name="code">TRBS_280</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '280%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_281" model="account.report.line">
+                                        <field name="name">Gelir Tahhakkukları</field>
+                                        <field name="code">TRBS_281</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '281%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_29" model="account.report.line">
+                                <field name="name">Diğer Duran Varlıklar</field>
+                                <field name="code">TRBS_29</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_291.balance + TRBS_292.balance + TRBS_293.balance + TRBS_294.balance + TRBS_295.balance + TRBS_297.balance - TRBS_298.balance - TRBS_299.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_291" model="account.report.line">
+                                        <field name="name">Gelecek Yıllarda İndirilecek KDV</field>
+                                        <field name="code">TRBS_291</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '291%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_292" model="account.report.line">
+                                        <field name="name">Diğer KDV</field>
+                                        <field name="code">TRBS_292</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '292%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_293" model="account.report.line">
+                                        <field name="name">Gelecek Yıllar İhtiyacı Stoklar</field>
+                                        <field name="code">TRBS_293</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '293%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_294" model="account.report.line">
+                                        <field name="name">Elden Çıkarılacak Stoklar ve Maddi Duran Varlıklar</field>
+                                        <field name="code">TRBS_294</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '294%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_295" model="account.report.line">
+                                        <field name="name">Peşin Ödenen Vergiler ve Fonlar</field>
+                                        <field name="code">TRBS_295</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '295%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_297" model="account.report.line">
+                                        <field name="name">Diğer Çeşitli Duran Varlıklar</field>
+                                        <field name="code">TRBS_297</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '297%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_298" model="account.report.line">
+                                        <field name="name">Stok Değer Düşüklüğü Karşılığı (-)</field>
+                                        <field name="code">TRBS_298</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_298_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '298%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_299" model="account.report.line">
+                                        <field name="name">Birikmiş Amortismanlar (-)</field>
+                                        <field name="code">TRBS_299</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_299_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '299%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_trbs_pasive" model="account.report.line">
+                <field name="name">PASİF (KAYNAKLAR)</field>
+                <field name="code">TRBS_PASIVE</field>
+                <field name="aggregation_formula">TRBS_3.balance + TRBS_4.balance + TRBS_5.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_trbs_3" model="account.report.line">
+                        <field name="name">KISA VADELİ YABANCI KAYNAK</field>
+                        <field name="code">TRBS_3</field>
+                        <field name="aggregation_formula">TRBS_30.balance + TRBS_32.balance + TRBS_33.balance + TRBS_34.balance + TRBS_35.balance + TRBS_36.balance + TRBS_37.balance + TRBS_38.balance + TRBS_39.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_trbs_30" model="account.report.line">
+                                <field name="name">Mali Borçlar</field>
+                                <field name="code">TRBS_30</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_300.balance + TRBS_303.balance + TRBS_304.balance + TRBS_305.balance + TRBS_306.balance - TRBS_308.balance + TRBS_309.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_300" model="account.report.line">
+                                        <field name="name">Banka Kredileri</field>
+                                        <field name="code">TRBS_300</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '300%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_303" model="account.report.line">
+                                        <field name="name">K.V Kredilerin Anapara Taksitleri ve Faizleri</field>
+                                        <field name="code">TRBS_303</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '303%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_304" model="account.report.line">
+                                        <field name="name">Tahvil. Anapara. Borç. Taksit ve Faizleri</field>
+                                        <field name="code">TRBS_304</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '304%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_305" model="account.report.line">
+                                        <field name="name">Çıkarılmış Bonolar ve Senetler</field>
+                                        <field name="code">TRBS_305</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '305%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_306" model="account.report.line">
+                                        <field name="name">Çıkarılmış Diğer Menkul Kıymetler</field>
+                                        <field name="code">TRBS_306</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '306%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_308" model="account.report.line">
+                                        <field name="name">Menkul Kıymetler İhraç Farkı (-)</field>
+                                        <field name="code">TRBS_308</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_308_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '308%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_309" model="account.report.line">
+                                        <field name="name">Diğer Mali Borçlar</field>
+                                        <field name="code">TRBS_309</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '309%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_32" model="account.report.line">
+                                <field name="name">Ticari Borçlar</field>
+                                <field name="code">TRBS_32</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_320.balance + TRBS_321.balance - TRBS_322.balance + TRBS_326.balance + TRBS_329.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_320" model="account.report.line">
+                                        <field name="name">Satıcılar</field>
+                                        <field name="code">TRBS_320</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '320%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_321" model="account.report.line">
+                                        <field name="name">Borç Senetleri</field>
+                                        <field name="code">TRBS_321</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '321%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_322" model="account.report.line">
+                                        <field name="name">Borç Senetleri Reeskontu (-)</field>
+                                        <field name="code">TRBS_322</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_322_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '322%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_326" model="account.report.line">
+                                        <field name="name">Alınan Depozito ve Teminatlar</field>
+                                        <field name="code">TRBS_326</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '326%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_329" model="account.report.line">
+                                        <field name="name">Diğer Ticari Borçlar</field>
+                                        <field name="code">TRBS_329</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '329%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_33" model="account.report.line">
+                                <field name="name">Diğer Borçlar</field>
+                                <field name="code">TRBS_33</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_331.balance + TRBS_332.balance + TRBS_333.balance + TRBS_335.balance + TRBS_336.balance - TRBS_337.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_331" model="account.report.line">
+                                        <field name="name">Ortaklara Borçlar</field>
+                                        <field name="code">TRBS_331</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '331%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_332" model="account.report.line">
+                                        <field name="name">İstiraklere Borçlar</field>
+                                        <field name="code">TRBS_332</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '332%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_333" model="account.report.line">
+                                        <field name="name">Bağlı Ortaklıklara Borçlar</field>
+                                        <field name="code">TRBS_333</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '333%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_335" model="account.report.line">
+                                        <field name="name">Personele Borçlar</field>
+                                        <field name="code">TRBS_335</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '335%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_336" model="account.report.line">
+                                        <field name="name">Diğer Çeşitli Borçlar</field>
+                                        <field name="code">TRBS_336</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '336%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_337" model="account.report.line">
+                                        <field name="name">Diğer Borç Senetleri Reeskontu (-)</field>
+                                        <field name="code">TRBS_337</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_337_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '337%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_34" model="account.report.line">
+                                <field name="name">Alınan Avanslar</field>
+                                <field name="code">TRBS_34</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_340.balance + TRBS_349.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_340" model="account.report.line">
+                                        <field name="name">Alınan Sipariş Avansları</field>
+                                        <field name="code">TRBS_340</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '340%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_349" model="account.report.line">
+                                        <field name="name">Alınan Diğer Avanslar</field>
+                                        <field name="code">TRBS_349</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '349%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_35" model="account.report.line">
+                                <field name="name">Yıllara Yaygın İnş. ve Onarım Hakedişleri</field>
+                                <field name="code">TRBS_35</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_350.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_350" model="account.report.line">
+                                        <field name="name">35.Yıllara Yaygın İnş. ve Onarım Hakedişleri</field>
+                                        <field name="code">TRBS_350</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '350%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_36" model="account.report.line">
+                                <field name="name">Ödenecek Vergi ve Diğer Yükümlülükler</field>
+                                <field name="code">TRBS_36</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_360.balance + TRBS_361.balance + TRBS_368.balance + TRBS_369.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_360" model="account.report.line">
+                                        <field name="name">Ödenecek Vergi ve Fonlar</field>
+                                        <field name="code">TRBS_360</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '360%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_361" model="account.report.line">
+                                        <field name="name">Ödenecek Sosyal Güvenlik Kesintileri</field>
+                                        <field name="code">TRBS_361</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '361%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_368" model="account.report.line">
+                                        <field name="name">Vadesi Geçmiş,Ertelenmiş veya Taksitlendirilmiş</field>
+                                        <field name="code">TRBS_368</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '368%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_369" model="account.report.line">
+                                        <field name="name">Ödenecek Diğer Yükümlülükler</field>
+                                        <field name="code">TRBS_369</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '369%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_37" model="account.report.line">
+                                <field name="name">Borç ve Gider Karşılıkları</field>
+                                <field name="code">TRBS_37</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_370.balance + TRBS_371.balance + TRBS_372.balance + TRBS_373.balance + TRBS_379.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_370" model="account.report.line">
+                                        <field name="name">Dönem Karı Vergi ve Diğer Yasal </field>
+                                        <field name="code">TRBS_370</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '370%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_371" model="account.report.line">
+                                        <field name="name">Dönem Karının Peşin Ödenen Vergi ve Diğer</field>
+                                        <field name="code">TRBS_371</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '371%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_372" model="account.report.line">
+                                        <field name="name">Kıdem Tazminatı Karşılığı</field>
+                                        <field name="code">TRBS_372</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '372%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_373" model="account.report.line">
+                                        <field name="name">Maliyet Giderleri Karşılığı</field>
+                                        <field name="code">TRBS_373</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '373%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_379" model="account.report.line">
+                                        <field name="name">Diğer Borç ve Gider Karşılıkları</field>
+                                        <field name="code">TRBS_379</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '379%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_38" model="account.report.line">
+                                <field name="name">Gelecek Aylara Ait Gelirler ve Gid. Tahakkuk</field>
+                                <field name="code">TRBS_38</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_380.balance + TRBS_381.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_380" model="account.report.line">
+                                        <field name="name">Gelecek Aylara Ait Gelirler</field>
+                                        <field name="code">TRBS_380</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '380%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_381" model="account.report.line">
+                                        <field name="name">Gider Tahakkukları</field>
+                                        <field name="code">TRBS_381</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '381%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_39" model="account.report.line">
+                                <field name="name">Diğer Kısa Vadeli Yabancı Kaynaklar</field>
+                                <field name="code">TRBS_39</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_391.balance + TRBS_392.balance + TRBS_393.balance + TRBS_397.balance + TRBS_399.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_391" model="account.report.line">
+                                        <field name="name">Hesaplanan KDV</field>
+                                        <field name="code">TRBS_391</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '391%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_392" model="account.report.line">
+                                        <field name="name">Diğer KDV</field>
+                                        <field name="code">TRBS_392</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '392%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_393" model="account.report.line">
+                                        <field name="name">Merkez ve Şubeler Cari Hesabı</field>
+                                        <field name="code">TRBS_393</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '393%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_397" model="account.report.line">
+                                        <field name="name">Sayım ve Tesellüm Fazlaları</field>
+                                        <field name="code">TRBS_397</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '397%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_399" model="account.report.line">
+                                        <field name="name">Diğer Çeşitli Yabancı Kaynaklar</field>
+                                        <field name="code">TRBS_399</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '399%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_trbs_4" model="account.report.line">
+                        <field name="name">UZUN VADELİ YABANCI KAYNAKLAR</field>
+                        <field name="code">TRBS_4</field>
+                        <field name="aggregation_formula">TRBS_40.balance + TRBS_42.balance + TRBS_43.balance + TRBS_44.balance + TRBS_47.balance + TRBS_48.balance + TRBS_49.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_trbs_40" model="account.report.line">
+                                <field name="name">Mali Borçlar</field>
+                                <field name="code">TRBS_40</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_400.balance + TRBS_405.balance + TRBS_407.balance - TRBS_408.balance + TRBS_409.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_400" model="account.report.line">
+                                        <field name="name">Banka Borçları</field>
+                                        <field name="code">TRBS_400</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '400%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_405" model="account.report.line">
+                                        <field name="name">Çıkarılmış Tahviller</field>
+                                        <field name="code">TRBS_405</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '405%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_407" model="account.report.line">
+                                        <field name="name">Çıkarılmış Diğer Menkul Kıymetler</field>
+                                        <field name="code">TRBS_407</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '407%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_408" model="account.report.line">
+                                        <field name="name">Menkul Kıymetler İhraç Farkı (-)</field>
+                                        <field name="code">TRBS_408</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_408_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '408%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_409" model="account.report.line">
+                                        <field name="name">Diğer Mali Borçlar</field>
+                                        <field name="code">TRBS_409</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '409%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_42" model="account.report.line">
+                                <field name="name">Ticari Borçlar</field>
+                                <field name="code">TRBS_42</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_420.balance + TRBS_421.balance - TRBS_422.balance + TRBS_426.balance + TRBS_429.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_420" model="account.report.line">
+                                        <field name="name">Satıcılar</field>
+                                        <field name="code">TRBS_420</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '420%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_421" model="account.report.line">
+                                        <field name="name">Borç Senetleri</field>
+                                        <field name="code">TRBS_421</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '421%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_422" model="account.report.line">
+                                        <field name="name">Borç Senetleri Reeskontu (-)</field>
+                                        <field name="code">TRBS_422</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_422_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '422%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_426" model="account.report.line">
+                                        <field name="name">Alınan Depozito ve Teminatlar</field>
+                                        <field name="code">TRBS_426</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '426%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_429" model="account.report.line">
+                                        <field name="name">Diğer Ticari Borçlar</field>
+                                        <field name="code">TRBS_429</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '429%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_43" model="account.report.line">
+                                <field name="name">Diğer Borçlar</field>
+                                <field name="code">TRBS_43</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_431.balance + TRBS_432.balance + TRBS_433.balance + TRBS_436.balance - TRBS_437.balance + TRBS_438.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_431" model="account.report.line">
+                                        <field name="name">Ortaklara Borçlar</field>
+                                        <field name="code">TRBS_431</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '431%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_432" model="account.report.line">
+                                        <field name="name">İştiraklere Borçlar</field>
+                                        <field name="code">TRBS_432</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '432%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_433" model="account.report.line">
+                                        <field name="name">Bağlı Ortaklıklara Borçlar</field>
+                                        <field name="code">TRBS_433</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '433%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_436" model="account.report.line">
+                                        <field name="name">Diğer Çeşitli Borçlar</field>
+                                        <field name="code">TRBS_436</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '436%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_437" model="account.report.line">
+                                        <field name="name">Diğer Borç Senetleri Reeskontu (-)</field>
+                                        <field name="code">TRBS_437</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_437_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '437%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_438" model="account.report.line">
+                                        <field name="name">Kamuya Olan Ertelenmiş Veya</field>
+                                        <field name="code">TRBS_438</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '438%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_44" model="account.report.line">
+                                <field name="name">Alınan Avanslar</field>
+                                <field name="code">TRBS_44</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_440.balance + TRBS_449.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_440" model="account.report.line">
+                                        <field name="name">Alınan Sipariş Avansları</field>
+                                        <field name="code">TRBS_440</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '440%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_449" model="account.report.line">
+                                        <field name="name">Alınan Diğer Avanslar</field>
+                                        <field name="code">TRBS_449</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '449%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_47" model="account.report.line">
+                                <field name="name">Borç ve Gider Karşılıkları</field>
+                                <field name="code">TRBS_47</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_472.balance + TRBS_479.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_472" model="account.report.line">
+                                        <field name="name">Kıdem Tazminatı Karşılığı</field>
+                                        <field name="code">TRBS_472</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '472%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_479" model="account.report.line">
+                                        <field name="name">Diğer Borç ve Gider Karşılıkları</field>
+                                        <field name="code">TRBS_479</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '479%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_48" model="account.report.line">
+                                <field name="name">Gelecek Yıllara Ait Gel.ve Gid.Karşılıkları</field>
+                                <field name="code">TRBS_48</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_480.balance + TRBS_481.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_480" model="account.report.line">
+                                        <field name="name">Gelecek Yıllara Ait Gelirler</field>
+                                        <field name="code">TRBS_480</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '480%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_481" model="account.report.line">
+                                        <field name="name">Gider Tahakkukları</field>
+                                        <field name="code">TRBS_481</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '481%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_49" model="account.report.line">
+                                <field name="name">Diğer Uzun Vadeli Yabancı Kaynaklar</field>
+                                <field name="code">TRBS_49</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_492.balance + TRBS_493.balance + TRBS_499.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_492" model="account.report.line">
+                                        <field name="name">Gelecek Yıllara Ertelenen veya Terkin</field>
+                                        <field name="code">TRBS_492</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '492%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_493" model="account.report.line">
+                                        <field name="name">Tesise Katılma Payları</field>
+                                        <field name="code">TRBS_493</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '493%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_499" model="account.report.line">
+                                        <field name="name">Diğer Çeşitli Uzun Vadeli Yabancı Kaynaklar</field>
+                                        <field name="code">TRBS_499</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '499%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_trbs_5" model="account.report.line">
+                        <field name="name">ÖZKAYNAKLAR</field>
+                        <field name="code">TRBS_5</field>
+                        <field name="aggregation_formula">TRBS_50.balance + TRBS_52.balance + TRBS_54.balance + TRBS_57.balance - TRBS_58.balance + TRBS_59.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_trbs_50" model="account.report.line">
+                                <field name="name">Ödenmiş Sermaye</field>
+                                <field name="code">TRBS_50</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_500.balance - TRBS_501.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_500" model="account.report.line">
+                                        <field name="name">Sermaye</field>
+                                        <field name="code">TRBS_500</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '500%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_501" model="account.report.line">
+                                        <field name="name">Ödenmemiş Sermaye (-)</field>
+                                        <field name="code">TRBS_501</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_501_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '501%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_52" model="account.report.line">
+                                <field name="name">Sermaye Yedekleri</field>
+                                <field name="code">TRBS_52</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_520.balance + TRBS_521.balance + TRBS_522.balance + TRBS_523.balance + TRBS_529.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_520" model="account.report.line">
+                                        <field name="name">Hisse Senetleri İhraç Primleri</field>
+                                        <field name="code">TRBS_520</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '520%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_521" model="account.report.line">
+                                        <field name="name">Hisse Senedi İptal Karları</field>
+                                        <field name="code">TRBS_521</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '521%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_522" model="account.report.line">
+                                        <field name="name">M.D.V Yeniden Değerleme Artışları</field>
+                                        <field name="code">TRBS_522</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '522%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_523" model="account.report.line">
+                                        <field name="name">İştirakler Yeniden Değerleme Artışları</field>
+                                        <field name="code">TRBS_523</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '523%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_529" model="account.report.line">
+                                        <field name="name">Diğer Sermaye Yedekleri</field>
+                                        <field name="code">TRBS_529</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '529%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_54" model="account.report.line">
+                                <field name="name">Kar Yedekleri</field>
+                                <field name="code">TRBS_54</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_540.balance + TRBS_541.balance + TRBS_542.balance + TRBS_548.balance + TRBS_549.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_540" model="account.report.line">
+                                        <field name="name">Yasal Yedekler</field>
+                                        <field name="code">TRBS_540</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '540%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_541" model="account.report.line">
+                                        <field name="name">Statü Yedekleri</field>
+                                        <field name="code">TRBS_541</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '541%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_542" model="account.report.line">
+                                        <field name="name">Olağanüstü Yedekler</field>
+                                        <field name="code">TRBS_542</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '542%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_548" model="account.report.line">
+                                        <field name="name">Diğer Kar Yedekleri</field>
+                                        <field name="code">TRBS_548</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '548%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_549" model="account.report.line">
+                                        <field name="name">Özel Fonlar</field>
+                                        <field name="code">TRBS_549</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '549%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_57" model="account.report.line">
+                                <field name="name">Geçmiş Yıllar Karları</field>
+                                <field name="code">TRBS_57</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_570.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_570" model="account.report.line">
+                                        <field name="name">Geçmiş Yıllar Karları</field>
+                                        <field name="code">TRBS_570</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '570%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_58" model="account.report.line">
+                                <field name="name">Geçmiş Yıllar Zararları (-)</field>
+                                <field name="code">TRBS_58</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_trbs_58_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TRBS_580.balance</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_580" model="account.report.line">
+                                        <field name="name">Geçmiş Yıllar Zararları</field>
+                                        <field name="code">TRBS_580</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '580%')])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_trbs_59" model="account.report.line">
+                                <field name="name">Dönem Net Karı (Zararı)</field>
+                                <field name="code">TRBS_59</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_590.balance - TRBS_591.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_trbs_590" model="account.report.line">
+                                        <field name="name">Dönem Net Karı</field>
+                                        <field name="code">TRBS_590</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('account_id.code', '=ilike', '590%')])</field>
+                                    </record>
+                                    <record id="account_financial_report_line_trbs_591" model="account.report.line">
+                                        <field name="name">Dönem Net Zararı (-)</field>
+                                        <field name="code">TRBS_591</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_trbs_591_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.code', '=ilike', '591%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

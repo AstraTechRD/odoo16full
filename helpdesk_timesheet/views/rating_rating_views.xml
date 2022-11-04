@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rating_rating_view_search_inherit_helpdesk_timesheet" model="ir.ui.view">
+        <field name="name">rating.rating.search.helpdesk.timesheet</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="helpdesk.rating_rating_view_search_inherit_helpdesk"/>
+        <field name="arch" type="xml">
+            <filter name="my_ratings" position="after">
+                <filter string="My Team's Ratings" name="my_team_rating" domain="[('rated_partner_id.user_ids.employee_parent_id.user_id', '=', uid)]"/>
+                <filter string="My Department" name="department" domain="[('rated_partner_id.user_ids.employee_id.member_of_department', '=', True)]" help="My Department"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

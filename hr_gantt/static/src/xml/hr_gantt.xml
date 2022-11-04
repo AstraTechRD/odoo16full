@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="HrGanttView.Row" t-extend="GanttView.Row">
+        <t t-jquery="*[t-esc='widget.name']" t-operation="replace">
+            <div t-if="widget.showEmployeeAvatar" t-attf-class="o_gantt_row_employee_avatar d-inline-flex #{widget.isGroup ? 'ms-1' : ''}" />
+            <t t-else="" t-esc="widget.name"/>
+        </t>
+        <t t-jquery="*[t-attf-class~='o_gantt_row_title']" t-operation="attributes">
+            <attribute name="t-att-style" value="widget.showEmployeeAvatar &amp;&amp; 'text-overflow: clip'"/>
+        </t>
+    </t>
+</templates>

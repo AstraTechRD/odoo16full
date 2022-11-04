@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx_edi_inh_res_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_mx_edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_mx_edi_external_trade" position="replace"/>
+            <field name="l10n_mx_edi_no_tax_breakdown" position="after">
+                <field name="l10n_mx_edi_external_trade_type"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

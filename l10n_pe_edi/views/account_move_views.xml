@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- TODO: ask to a PO to check the view -->
+                <xpath expr="//group[@id='header_left_group']" position="inside">
+                    <field name="l10n_pe_edi_is_required" invisible="1"/>
+
+                    <div class="o_td_label">
+                        <label for="l10n_pe_edi_operation_type"
+                               string="Operation Type"
+                               attrs="{'invisible': [('l10n_pe_edi_is_required', '=', False)]}"/>
+                    </div>
+                    <field name="l10n_pe_edi_operation_type"
+                           nolabel="1"
+                           attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('l10n_pe_edi_is_required', '=', False)]}"/>
+                </xpath>
+                <!-- TODO: => Other info? -->
+                <xpath expr="//page[@name='other_info']" position="after">
+                    <page string="Peruvian EDI"
+                          name="l10n_pe_edi"
+                          attrs="{'invisible': [('l10n_pe_edi_is_required', '=', False)]}">
+                        <group name="l10n_pe_edi_electronic_info">
+                            <field name="l10n_pe_edi_cancel_reason"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="l10n_pe_edi_refund_reason"
+                                   attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('l10n_pe_edi_refund_reason', '=', False)]}"/>
+                            <field name="l10n_pe_edi_charge_reason"
+                                   attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('l10n_pe_edi_charge_reason', '=', False)]}"/>
+                            <field name="l10n_pe_edi_legend"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="l10n_pe_edi_legend_value"
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']//tree/field[@name='tax_ids']" position="after">
+                    <field name="l10n_pe_edi_affectation_reason"
+                           optional="show"
+                           attrs="{'column_invisible': [('parent.l10n_pe_edi_is_required', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']//tree/field[@name='discount']" position="after">
+                    <field name="l10n_pe_edi_allowance_charge_reason_code"
+                           string="Disc. Code"
+                           optional="show"
+                           attrs="{'column_invisible': [('parent.l10n_pe_edi_is_required', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']//tree/field[@name='tax_ids']" position="after">
+                    <field name="l10n_pe_edi_affectation_reason" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

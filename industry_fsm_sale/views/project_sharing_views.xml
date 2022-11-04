@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_sharing_project_task_inherit_view_form" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="text-center alert alert-primary" role="alert" attrs="{'invisible': ['|', ('warning_message', '=', False), ('warning_message', '=', '')]}">
+                    <field name="warning_message"/>
+                </div>
+            </xpath>
+            <field name="is_fsm" position="after">
+                <field name="allow_material" invisible="1"/>
+            </field>
+            <xpath expr="//button[@name='action_project_sharing_view_parent_task']" position="before">
+                <button class="oe_stat_button pe-none" name="action_fsm_view_material" type="object" icon="fa-cart-plus" special="cancel"
+                        attrs="{'invisible': ['|', '|', ('partner_id', '=', False), ('allow_material', '=', False), ('material_line_product_count', '=', 0)]}">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="material_line_product_count" widget="statinfo" nolabel="1" class="me-1"/>
+                            <span>Products</span>
+                        </span>
+                        <field name="material_line_total_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="currency_id" invisible="True"/>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_project_sharing_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                        attrs="{'invisible': ['|', ('allow_billable', '=', False), ('portal_invoice_count', '=', 0)]}">
+                    <field name="portal_invoice_count" widget="statinfo" string="Invoices"/>
+                </button>
+                <field name="allow_quotations" invisible="1" />
+                <button name="action_project_sharing_view_quotations"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-dollar"
+                    attrs="{'invisible': ['|', ('allow_quotations', '=', False), ('portal_quotation_count', '=', 0)]}">
+                    <field string="Quotations" name="portal_quotation_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

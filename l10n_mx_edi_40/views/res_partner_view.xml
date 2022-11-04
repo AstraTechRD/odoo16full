@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="l10n_mx_edi_inh_40_res_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form40.inherit.l10n_mx_edi</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page name="addenda" position="attributes">
+                    <attribute name="string">MX EDI</attribute>
+                    <attribute name="attrs">{}</attribute>
+                </page>
+                <page name="addenda" position="inside">
+                    <group>
+                        <field name="country_code" invisible="1"/>
+                        <field name="l10n_mx_edi_fiscal_regime" attrs="{'invisible': [('country_code', 'not in', ['MX', False])]}"/>
+                        <field name="l10n_mx_edi_no_tax_breakdown"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+    </data>
+</odoo>

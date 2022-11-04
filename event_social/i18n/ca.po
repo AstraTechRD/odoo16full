@@ -1,0 +1,55 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_social
+# 
+# Translators:
+# Arnau Ros, 2022
+# marcescu, 2022
+# M Palau <mpalau@tda.ad>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 11:00+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: M Palau <mpalau@tda.ad>, 2022\n"
+"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: event_social
+#: code:addons/event_social/models/event_mail.py:0
+#: code:addons/event_social/models/event_type_mail.py:0
+#, python-format
+msgid ""
+"As social posts have no recipients, they cannot be triggered by "
+"registrations."
+msgstr ""
+"Com les publicacions socials no tenen destinataris, no poden ser activades "
+"per els registres."
+
+#. module: event_social
+#: model:ir.model,name:event_social.model_event_mail
+msgid "Event Automated Mailing"
+msgstr "Enviament automatitzat d'esdeveniments"
+
+#. module: event_social
+#: model:ir.model,name:event_social.model_event_type_mail
+msgid "Mail Scheduling on Event Category"
+msgstr "Programació de correu a la categoria d'esdeveniments"
+
+#. module: event_social
+#: model:ir.model.fields,field_description:event_social.field_event_mail__notification_type
+#: model:ir.model.fields,field_description:event_social.field_event_type_mail__notification_type
+msgid "Send"
+msgstr "Enviar"
+
+#. module: event_social
+#: model:ir.model.fields.selection,name:event_social.selection__event_mail__notification_type__social_post
+#: model:ir.model.fields.selection,name:event_social.selection__event_type_mail__notification_type__social_post
+msgid "Social Post"
+msgstr "Correu social"

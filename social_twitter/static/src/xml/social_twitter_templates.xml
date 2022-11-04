@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('o_social_original_post_author_image')]" position="inside">
+            <img t-if="originalPost.twitter_profile_image_url.value" t-att-src="originalPost.twitter_profile_image_url.value" alt="Author Image"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_social_comments_modal_original_post_content')]" position="inside">
+            <div class="o_social_original_post_twitter_stats d-flex justify-content-around"
+                t-if="originalPost.media_type.raw_value === 'twitter'">
+                <div class="o_social_twitter_likes ps-2 pe-3"
+                     t-att-class="{'o_social_twitter_user_likes': originalPost.twitter_user_likes.raw_value}"
+                    t-att-data-user-likes="originalPost.twitter_user_likes.raw_value"
+                    t-att-data-post-id="originalPost.id.raw_value">
+                    <t t-if="originalPost.twitter_likes_count.raw_value !== 0">
+                        <i class="fa fa-heart me-1" title="Likes"/>
+                        <b class="o_social_likes_count" t-esc="originalPost.twitter_likes_count.value"/>
+                    </t>
+                </div>
+                <div class="flex-grow-1 d-flex text-muted justify-content-end">
+                    <div t-if="originalPost.twitter_retweet_count.raw_value > 0">
+                        <t t-esc="originalPost.twitter_retweet_count.value"/>
+                        Retweets
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="social.StreamPostCommentsReply" t-inherit-mode="extension" owl="1">
+        <xpath expr="//form" position="inside">
+            <input t-if="comment &amp;&amp; comment.from &amp;&amp; comment.from.screen_name"
+                type="hidden" name="answering_to"
+                t-att-value="isCommentReply ? comment.from.screen_name : ''"/>
+        </xpath>
+    </t>
+
+    <t t-name="social_twitter.TwitterQuoteDialog" owl="1">
+        <Dialog title="props.title" size="'md'" bodyClass="'o_social_quote_modal'">
+            <StreamPostCommentsReplyTwitterQuote
+                    mediaSpecificProps="props.mediaSpecificProps"
+                    originalPost="props.originalPost"/>
+            <t t-call="social_twitter.StreamPostCommentsOriginalPostQuote"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_confirmQuoteTweet">Post</button>
+                <button class="btn btn-secondary" t-on-click="() => props.close()">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="social_twitter.StreamPostCommentsReplyQuote" t-inherit="social.StreamPostCommentsReply" t-inherit-mode="primary" owl="1">
+        <xpath expr="//textarea[@name='message']" position="attributes">
+            <attribute name="t-on-keydown"/>
+        </xpath>
+        <xpath expr="//div[@name='o_social_textarea_helper']" position="replace"/>
+    </t>
+
+    <t t-name="social_twitter.StreamPostCommentsOriginalPostQuote" t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_social_comments_modal_original_post')]" position="attributes">
+            <attribute name="class">d-flex bg-white p-3 mt-3 border rounded</attribute>
+        </xpath>
+    </t>
+
+    <!--Old-->
+
+    <li t-name="social_twitter.users_autocomplete_element">
+        <div role="menuitem" href="#"
+            t-attf-class="dropdown-item o_social_twitter_users_autocomplete_suggestion clearfix#{suggestion_index == 0 and ' active' or ''}">
+            <img t-att-src="suggestion['profile_image_url_https']" alt="Twitter Profile Image"/>
+            <div class="o_twitter_users_autocomplete_info">
+                <strong><span class="o_twitter_users_autocomplete_info_name">
+                    <t t-esc="suggestion['name']" /> - @<t t-esc="suggestion['screen_name']" />
+                </span></strong>
+                <br/>
+                <span><small t-esc="suggestion['description']" /></span>
+            </div>
+        </div>
+    </li>
+</odoo>

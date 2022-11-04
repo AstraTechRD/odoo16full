@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_cron_load_xsd_file" model="ir.cron">
+        <field name="name">Load XSD File (Mexican reports)</field>
+        <field name="model_id" ref="base.model_ir_attachment" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <!-- Highest priority at time of module install. -->
+        <field name="priority" eval="0"/>
+        <field name="state">code</field>
+        <field name="code">model._l10n_mx_reports_load_xsd_files(force_reload=True)</field>
+        <!-- Setting `nextcall` date relatively old to make sure this cron runs right after module installation finishes. -->
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(years=-1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+</odoo>

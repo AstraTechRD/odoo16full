@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit_documents_project_sale" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.documents.project.sale</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="product_tooltip" position="before">
+                <field name="documents_allowed_company_id" invisible="1"/>
+                <field name="template_folder_id" attrs="{'invisible': [('service_tracking', 'not in', ('task_in_project', 'project_only'))]}" context="{'documents_project': True, 'default_company_id': company_id}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

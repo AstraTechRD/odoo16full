@@ -1,0 +1,24 @@
+.workorder_picture, .quality_picture {
+    margin: 5px 0;
+
+    .o_field_tablet_image {
+        img {
+            height: 80px;
+            cursor: zoom-in;
+        }
+
+        button {
+            @include o-hover-opacity(0.6, 0.9);
+            width: 30px;
+            height: 30px;
+            background-color: #00A09D !important;
+            cursor: pointer;
+            color: white;
+        }
+    }
+
+    #picture_button {
+        margin-top: 0;
+        @include o-position-absolute($top: 33%, $left: 106%);
+    }
+}

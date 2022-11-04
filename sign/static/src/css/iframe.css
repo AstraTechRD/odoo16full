@@ -1,0 +1,384 @@
+#viewerContainer { /* PDFJS Viewer */
+    visibility: hidden;
+    opacity: 0.01;
+}
+
+#viewer { /* PDFJS Viewer */
+    padding-top: 21px; /* Allow space for the types toolbar */
+}
+
+.page { /* PDFJS Viewer */
+    position: relative;
+}
+
+.o_sign_sign_item {
+    position: absolute;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: center;
+
+    border: 1px dashed #875A7B;
+    vertical-align: middle;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0px 0px 3px 1px #875A7B;
+    resize: none;
+
+    background-color: rgba(255, 255, 255, 0.9);
+
+    font-family: Helvetica;
+    line-height: 1.25;
+
+    z-index: 100;
+
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.o_sign_sign_item.o_readonly_mode {
+    border:none;
+}
+
+.o_sign_sign_item .o_placeholder {
+    vertical-align: middle;
+    padding-left: 30px;
+}
+
+textarea.o_sign_sign_item {
+    font-size: 12pt !important;
+}
+
+.o_sign_sign_item_required {
+    background-color: rgba(255, 235, 235, 0.9);
+    font-size: 10pt;
+}
+
+.o_sign_sign_textarea {
+    white-space: pre-wrap !important;
+    font-size: 12pt !important;
+}
+
+.o_sign_sign_item_pdfview {
+    border: 1px dashed silver;
+    box-shadow: 0px 0px 0px 0px white;
+    overflow: visible;
+    background: transparent;
+    color: black;
+    cursor: auto;
+    white-space: pre;
+}
+
+.o_sign_sign_item .o_sign_helper {
+    vertical-align: middle;
+    height: 100%;
+    color: #757575;
+    display: inline-block;
+}
+
+.o_sign_sign_item img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.o_sign_sign_item .o_sign_config_area {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.5em;
+    text-align: right;
+    margin-right: 2px;
+    padding-right: 2px;
+}
+
+.o_sign_sign_item .o_sign_config_area .fa.fa-times {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+}
+
+.o_sign_config_handle {
+    display: block;
+    float: left;
+    height: calc(100% - 2px);
+    background-color: rgba(197, 166, 182, 0.9);
+    width: 25px;
+    border: 1px dashed black;
+    text-align: center;
+}
+
+.o_sign_config_handle .fa-arrows {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.o_sign_sign_item .o_sign_config_area .o_sign_item_display {
+    display: block;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+.o_sign_select_options_display {
+    height: 100%;
+    width: calc(100% - 25px);
+    align-items: center;
+    justify-content: left;
+    padding-left: 25px;
+}
+
+.o_sign_select_options_display_edit{
+    display: flex;
+    padding-left: 0;
+}
+
+.o_sign_item_option {
+    padding: 5px;
+}
+
+.o_sign_option_separator {
+    padding: 5px;
+}
+
+.o_sign_selected_option {
+    text-decoration-line: none;
+    color: black;
+}
+
+.o_sign_not_selected_option  {
+    text-decoration-line: line-through;
+    color: black;
+}
+
+.ui-selected, .ui-selecting { /* jQuery UI */
+    box-shadow: 0px 0px 5px 1px orange;
+}
+.ui-resizable {
+    text-align: center;
+}
+
+.ui-draggable .ui-draggable-handle, .o_sign_field_type_button.ui-draggable { /* jQuery UI */
+    /* See o-grab-cursor mixin */
+    cursor: url(/web/static/img/openhand.cur), grab;
+}
+
+.ui-draggable-dragging .ui-draggable-handle,
+.o_sign_sign_item_to_add.ui-draggable-dragging,
+.o_sign_sign_item.ui-draggable-dragging { /* jQuery UI */
+    box-shadow: 0 5px 25px -10px black;
+    transition: box-shadow 0.3s;
+    cursor: grabbing;
+}
+
+.o_sign_sign_item_navigator {
+    position: fixed;
+    top: 15%;
+    left: 0;
+    background-color: transparent;
+    background-image: url(../../img/navigator.png);
+    background-size: 100% 100%;
+
+    line-height: 50px;
+    height: 50px;
+    font-size: 1.4em;
+    text-transform: uppercase;
+
+    z-index: 90;
+
+    padding: 0 20px 0 10px;
+    color: white;
+
+    cursor: pointer;
+}
+
+@media (max-width: 767px) { /* @screen-xs-max */
+    .o_sign_sign_item_navigator {
+        width: 100%;
+        top: initial !important;
+        bottom: 0;
+        z-index: 9999;
+        line-height: 25px;
+        height: 35px;
+        padding: 5px 0 0;
+        font-size: 0.8em;
+        background-image: none;
+        background-color: #875A7B;
+        box-shadow: 0 0 5px 0 rgba(0,0,0,0.75);
+        text-align: center;
+    }
+    .o_sign_sign_item_navline {
+        display: none !important;
+    }
+}
+
+.o_sign_sign_item_navline {
+    position: fixed;
+    top: 15%;
+    left: 1%;
+
+    pointer-events: none;
+    z-index: 80;
+
+    width: 99%;
+    height: 25px;
+    border-bottom: 1px dashed silver;
+    opacity: 0.5;
+}
+
+@media (max-width: 767px) { /* @screen-xs-max */
+    .o_sign_sign_item_navline {
+        line-height: 12.5px;
+        height: 12.5px;
+    }
+}
+
+.o_sign_field_type_toolbar {
+    width: 14rem;
+    z-index: 1030;
+    height: 100%;
+    position: absolute;
+    background-color: #404040;
+    background-image: url(../../img/texture.png);
+}
+
+.o_sign_field_type_button {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    border: none;
+
+    background-color: #00A09D;
+    color: white;
+
+    min-height: 30px;
+    margin: 0.5rem 0.5rem 0 0.5rem;
+    padding: 0.5rem 2rem;
+}
+
+.o_sign_field_type_button:hover {
+    transition: transform 200ms ease 0s;
+    box-shadow: 0 8px 15px -10px black;
+    transform: translateX(1px) translateY(-1px) scale(1.05) rotate(1deg);
+}
+
+.toolbarButton.rotateCw::before {
+    content: url(../../img/secondaryToolbarButton-rotateCw.png);
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 1.1), screen and (min-resolution: 1.1dppx) {
+    .toolbarButton.rotateCw::before {
+        content: url(../../img/secondaryToolbarButton-rotateCw@2x.png);
+    }
+}
+
+.o_sign_field_type_toolbar_title {
+    height: 12px;
+    color: white;
+    font-size: 12px;
+    background-color: #474747;
+    background-image: url(../../img/texture.png), -webkit-gradient(linear, left top, left bottom, from(hsla(0,0%,32%,.99)), to(hsla(0,0%,27%,.95)));
+    box-shadow: inset 0 1px 1px hsla(0,0%,0%,.15), inset 0 -1px 0 hsla(0,0%,100%,.05), 0 1px 0 hsla(0,0%,0%,.15), 0 1px 1px hsla(0,0%,0%,.1);
+    padding: 10px;
+}
+
+.o_sign_field_type_toolbar_items {
+    overflow: auto;
+}
+
+#outerContainer.o_sign_field_type_toolbar_visible {
+    margin-left: 14rem;
+    width: auto;
+}
+
+#outerContainer.o_sign_field_type_toolbar_visible #thumbnailView {
+    width: auto;
+}
+
+.o_sign_sign_item_navigator.o_sign_field_type_toolbar_visible {
+    margin-left: 14rem;
+}
+
+.o_tooltip > .o_tooltip_content {
+    font-size: 12px !important;
+    box-sizing: border-box;
+}
+
+.o_edit_mode_dropdown_content {
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  display: block;
+  padding: 5px;
+}
+
+.o_edit_mode_dropdown {
+    position: absolute;
+}
+
+.o_edit_mode_dropdown_item {
+    display: flex;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.o_edit_mode_dropdown_item:hover {
+    background-color:lightgray;
+    cursor: pointer;
+}
+
+.dropdown_close_icon {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.o_sign_editable_input {
+    z-index: 10;
+    position: relative;
+    background: inherit;
+    border: 0px;
+    font-size: 1em;
+    text-align: center;
+    vertical-align: middle;
+    width: calc(100% - 54px);
+}
+
+.o_sign_editable_config_area{
+    font-size: 0.4em !important;
+}
+
+.o_sign_drag_helper {
+    position: fixed;
+    z-index: 103;
+}
+
+.o_sign_drag_side_helper {
+    width: 0;
+    height: 100%;
+    border-left: 1px dashed orange;
+    top: 0;
+}
+
+.o_sign_drag_top_helper {
+    border-top: 1px dashed orange;
+    width: 100%;
+    height: 0;
+    left: 0;
+}

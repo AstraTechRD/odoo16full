@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_kp_payroll_fetch_payrun" model="ir.actions.server">
+        <field name="name">Fetch Payruns</field>
+        <field name="model_id" ref="base_setup.model_res_config_settings"/>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_kp_payroll_fetch_payrun()
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_au_keypay</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='account_reports_settings']" position="after">
+                <h2 attrs="{'invisible': [('country_code', '!=', 'AU')]}">Australian Localization</h2>
+                <div class="row mt16 o_settings_container" id="l10n_au" groups="account.group_account_manager" attrs="{'invisible': [('country_code', '!=', 'AU')]}">
+                    <field name="country_code" invisible="1" />
+                    <div class="col-12 col-lg-6 o_setting_box" id="l10n_au_keypay">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <div class="row">
+                                <label for="l10n_au_kp_api_key" class="col-lg-4"/>
+                                <field name="l10n_au_kp_api_key"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_au_kp_base_url" class="col-lg-4"/>
+                                <field name="l10n_au_kp_base_url"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="l10n_au_keypay_company">
+                        <div class="o_setting_left_pane">
+                            <field name="l10n_au_kp_enable"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="l10n_au_kp_enable"/>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                            <div class="text-muted">
+                                Allows to synchronize keypay payroll for this company
+                            </div>
+                            <div class="content-group" attrs="{'invisible':[('l10n_au_kp_enable', '=', False)]}">
+                                <div class="mt8">
+                                    <button name="%(action_kp_payroll_fetch_payrun)d" type="action" string="Fetch Payruns Manually" class="oe_link" id="action_kp_payroll_fetch_payrun"/>
+                                </div>
+                            </div>
+                            <div class="content-group mt8" attrs="{'invisible':[('l10n_au_kp_enable', '=', False)]}">
+                                <div class="row">
+                                    <label for="l10n_au_kp_identifier" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_au_kp_identifier"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_au_kp_lock_date" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_au_kp_lock_date"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_au_kp_journal_id" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_au_kp_journal_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

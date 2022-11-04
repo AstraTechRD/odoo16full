@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Contract View -->
+    <record id="hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="currency_id" invisible="1"/>
+            </field>
+            <field name="structure_type_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <xpath expr="//label[@for='wage']" position="before">
+                <field name="wage_type"/>
+                <label for="hourly_wage" attrs="{'invisible': [('wage_type', '!=', 'hourly')]}"/>
+                <div class="o_row" name="hourly_wage" attrs="{'invisible': [('wage_type', '!=', 'hourly')]}">
+                    <field name="hourly_wage" nolabel="1"/>
+                    <span>/ hour</span>
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='wage']" position="attributes">
+                <attribute name="attrs">{'invisible': [('wage_type', '=', 'hourly')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='wage']" position="attributes">
+                <attribute name="attrs">{'invisible': [('wage_type', '=', 'hourly')]}</attribute>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="action_open_payslips"
+                        type="object" icon="fa-dollar" groups="hr_payroll.group_hr_payroll_user"
+                        attrs="{'invisible': ['|', ('payslips_count', '=', 0), ('state', '=', 'draft')]}">
+                    <field name="payslips_count" string="Payslips" widget="statinfo"/>
+                </button>
+            </div>
+            <page name="information" position="after">
+                <page string="Part Time" name="part_time">
+                    <group>
+                        <group>
+                            <label for="time_credit"/>
+                            <div class="o_row">
+                                <field name="time_credit" class="oe_inline"/>
+                                <field name="work_time_rate" attrs="{'invisible': [('time_credit', '=', False)]}" widget="percentage"/>
+                            </div>
+                            <field name="standard_calendar_id" attrs="{'invisible': [('time_credit', '=', False)]}" help="The Standard Calendar is the calendar used by the people working at a 100% rate. It's used here to compute your part-time percentage."/>
+                            <field name="time_credit_type_id" attrs="{'invisible': [('time_credit', '=', False)], 'required': [('time_credit', '=', True)]}"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="hr_contract_search_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.search.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='not_running']" position="after">
+                <separator/>
+                <filter string="Change of Occupation" name="calendar_change" domain="[('calendar_changed', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_kanban" model="ir.ui.view">
+        <field name="name">hr.contract.kanban</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="activity_state" position="after">
+                <field name="wage_type"/>
+                <field name="currency_id"/>
+            </field>
+            <div name="div_job_id" position="after">
+                <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id" name="div_job_id">
+                    <t t-if="record.wage_type.raw_value == 'monthly'">
+                        <field name="contract_wage"/> / Month
+                    </t>
+                    <t t-if="record.wage_type.raw_value == 'hourly'">
+                        <field name="hourly_wage"/> / Hour
+                    </t>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.view.tree</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">hr_contract_tree</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_contract_repository" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">hr.contract</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('employee_id', '!=', False)]</field>
+        <field name="context">{'search_default_running': 1, 'search_default_to_renew': 1}</field>
+        <field name="search_view_id" ref="hr_contract.hr_contract_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new contract
+            </p>
+        </field>
+    </record>
+
+    <record id="action_new_salary_attachment" model="ir.actions.server">
+        <field name="name">Create Salary Attachment</field>
+        <field name="model_id" ref="hr_payroll.model_hr_contract"/>
+        <field name="binding_model_id" ref="hr_contract.model_hr_contract"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = record.action_new_salary_attachment()</field>
+    </record>
+</odoo>

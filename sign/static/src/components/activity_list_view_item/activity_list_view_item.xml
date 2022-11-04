@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ActivityListViewItem" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_ActivityListViewItem_markAsDone')]" position="after">
+            <button t-if="activityListViewItem.activity.category === 'sign_request'" class="o_ActivityListViewItem_actionLink o_ActivityListViewItem_requestSign position-relative btn btn-link shadow-none fs-4 fa fa-pencil-square-o" title="Request Signature" aria-label="Request Signature" role="img" t-on-click="activityListViewItem.onClickRequestSign"/>
+        </xpath>
+    </t>
+</templates>

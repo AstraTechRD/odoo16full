@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.StudioHomeMenu" t-inherit="web_enterprise.HomeMenu" t-inherit-mode="primary" owl="1" t-translation="off">
+    <xpath expr="//div[hasclass('o_home_menu')]" position="attributes">
+        <attribute name="class" add="o_studio_home_menu" separator=" " />
+    </xpath>
+    <!-- New App button -->
+    <xpath expr="//div[hasclass('o_apps')]/a[hasclass('o_app')][hasclass('o_menuitem')]" position="attributes">
+        <attribute name="t-att-class">{
+            o_focused: appIndex === app_index,
+            o_web_studio_new_app: app.isNewAppButton
+        }</attribute>
+    </xpath>
+    <!-- Edit icons -->
+    <xpath expr="//div[hasclass('o_apps')]/a[hasclass('o_app')][hasclass('o_menuitem')]" position="inside">
+        <a t-if="!app.isNewAppButton" class="o_web_studio_edit_icon" t-on-click.stop.prevent="() => this.onEditIconClick(app)">
+            <i class="fa fa-pencil-square" />
+        </a>
+    </xpath>
+</t>
+
+</templates>

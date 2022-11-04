@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    	Task Views in Project and FSM app
+	-->
+
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">view.task.form2.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="timesheet_grid.project_task_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_timer_start'][hasclass('btn-primary')]" position='after'>
+                <field name="allow_worksheets" invisible="1"/>
+                <field name="allow_timesheets" invisible="1"/>
+                <field name="is_fsm" invisible="1"/>
+                <field name="fsm_is_sent" invisible="1"/>
+                <field name="worksheet_signature" invisible="1"/>
+                <field name="fsm_done" invisible="1"/>
+                <field name="display_timesheet_timer" invisible="1"/>
+                <field name="display_enabled_conditions_count" invisible="1"/>
+                <field name="display_satisfied_conditions_count" invisible="1"/>
+                <field name="display_mark_as_done_primary" invisible="1"/>
+                <field name="display_mark_as_done_secondary" invisible="1"/>
+                <field name="display_sign_report_primary" invisible="1"/>
+                <field name="display_sign_report_secondary" invisible="1"/>
+                <field name="display_send_report_primary" invisible="1"/>
+                <field name="display_send_report_secondary" invisible="1"/>
+                <field name="comment" invisible="1"/>
+                <button name="action_preview_worksheet" type="object" string="Sign Report" class="btn-primary"
+                    attrs="{'invisible': [('display_sign_report_primary', '=', False)]}" data-hotkey="y"/>
+                <button name="action_send_report" type="object" string="Send Report" class="btn-primary"
+                    attrs="{'invisible': [('display_send_report_primary', '=', False)]}" data-hotkey="g"/>
+                <button class="btn-primary" name="action_fsm_validate" type="object" string="Mark as done"
+                        attrs="{'invisible': [('display_mark_as_done_primary', '=', False)]}" data-hotkey="v"/>
+                <button name="action_preview_worksheet" type="object" string="Sign Report" class="btn-secondary"
+                    attrs="{'invisible': [('display_sign_report_secondary', '=', False)]}" data-hotkey="y"/>
+                <button name="action_send_report" type="object" string="Send Report" class="btn-secondary"
+                    attrs="{'invisible': [('display_send_report_secondary', '=', False)]}" data-hotkey="g"/>
+                <button class="btn-secondary" name="action_fsm_validate" type="object" string="Mark as done"
+                        attrs="{'invisible': [('display_mark_as_done_secondary', '=', False)]}" data-hotkey="v"/>
+            </xpath>
+            <xpath expr="//button[@name='action_recurring_tasks']" position="before">
+                <button
+                    string="Worksheet"
+                    class="oe_stat_button oe_worksheet"
+                    name="action_fsm_worksheet"
+                    icon="fa-pencil" type="object"
+                    groups="project.group_project_user"
+                    attrs="{'invisible': ['|', '&amp;', ('partner_id', '=', False), ('is_fsm', '=', False), '|', ('allow_worksheets', '=', False), ('comment', '!=', False)]}">
+                </button>
+                <button
+                    string="Worksheet Complete"
+                    class="oe_stat_button oe_worksheet_completed text-success"
+                    name="action_fsm_worksheet"
+                    icon="fa-check" type="object"
+                    groups="project.group_project_user"
+                    attrs="{'invisible': ['|', '|', ('partner_id', '=', False), ('allow_worksheets', '=', False), ('comment', '=', False)]}">
+                </button>
+            </xpath>
+            <!-- FIXME: refactor this as in project_sharing_views.xml -->
+            <xpath expr="//field[@name='date_deadline']" position="replace">
+                <field name="date_deadline" attrs="{'invisible': [('is_fsm', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//page[@name='extra_info']" position="attributes">
+                <attribute name="groups">base.group_no_one</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="d-sm-inline d-md-none oe_stat_button" name="action_view_timesheets" type="object" icon="fa-clock-o" help="Time recorded on this task" attrs="{'invisible': ['|', '|', ('is_fsm', '=', False), ('allow_timesheets', '=', False), ('display_timesheet_timer', '=', False)]}">
+                    <div class="o_stat_info">
+                        <div>Time</div>
+                        <span class="o_stat_value">
+                            <field name="total_hours_spent" widget="float_time" nolabel="1" class="me-1" />
+                        </span>
+                    </div>
+                </button>
+                <button
+                    string="Customer Preview"
+                    class="oe_stat_button"
+                    name="action_preview_worksheet"
+                    icon="fa-globe" type="object"
+                    groups="project.group_project_user"
+                    attrs="{'invisible': [('worksheet_signature', '=', False)]}">
+                </button>
+            </xpath>
+            <field name="is_fsm" string="is FSM ?" invisible="1"/>
+            <field name="partner_id" position="attributes">
+                <attribute name="options">{'always_reload': True}</attribute>
+                <attribute name="context">{'show_address': is_fsm, 'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="attrs">{'required': [('is_fsm', '=', True)]}</attribute>
+            </field>
+            <field name="partner_id" position="after">
+                <label for="action_fsm_navigate" attrs="{'invisible': [('is_fsm', '=', False)]}"/>
+                <div attrs="{'invisible': [('is_fsm', '=', False)]}">
+                    <button
+                        name="action_fsm_navigate" type="object" class="btn btn-link ps-0 pt-0 pb-2"
+                        icon="fa-arrow-right" string="Navigate To" colspan="2"
+                        attrs="{'invisible': [('is_fsm', '=', False)]}"/>
+                </div>
+            </field>
+            <field name="project_id" position="attributes">
+                <attribute name="context">{
+                    'default_is_fsm': context.get('fsm_mode'),
+                }
+                </attribute>
+                <attribute name="domain">[
+                    ('active', '=', True),
+                    ('company_id', '=', company_id),
+                    ('is_fsm', '=?', context.get('fsm_mode'))
+                ]</attribute>
+            </field>
+            <xpath expr="//group/field[@name='project_id']" position="attributes">
+                <attribute name="context">{
+                    'default_is_fsm': context.get('fsm_mode'),
+                }
+                </attribute>
+                <attribute name="domain">[
+                    ('active', '=', True),
+                    ('company_id', '=', company_id),
+                    ('is_fsm', '=?', context.get('fsm_mode'))
+                ]</attribute>
+            </xpath>
+            <field name="partner_phone" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('is_fsm', '=', False)]}
+                </attribute>
+            </field>
+        </field>
+    </record>
+
+    <!--
+    	Project Views (in project app)
+	-->
+
+    <record id="quick_create_task_form_fsm" model="ir.ui.view">
+        <field name="name">project.task.form.quick_create</field>
+        <field name="model">project.task</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="project.quick_create_task_form"/>
+        <field name="arch" type="xml">
+            <field name="user_ids" position="attributes">
+                <attribute name="widget">many2many_avatar_user</attribute>
+            </field>
+            <field name="user_ids" position="before">
+                <field name="is_fsm" invisible="1"/>
+                <field name="allow_worksheets" invisible="1"/>
+                <field name="partner_id" attrs="{'required': [('is_fsm', '=', True)], 'invisible': [('is_fsm', '=', False)]}" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"/>
+                <field name="project_id" attrs="{'invisible': [('is_fsm', '=', False)]}" domain="[('is_fsm', '=', True)]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_view_form_inherit" model="ir.ui.view">
+        <field name="name">project.view.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath  expr="//group[@name='group_documents_analytics']" position="after">
+                <group name="group_field_service" string="Field Service" col="1" class="row mt16 o_settings_container col-lg-6">
+                    <div>
+                        <div class="o_setting_box" groups="base.group_no_one">
+                            <div class="o_setting_left_pane">
+                                <field name="is_fsm"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="is_fsm"/>
+                                <div class="text-muted" id="allow_billable_setting">
+                                    Manage tasks in the Field Service module
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_setting_box mt-4" id="industry_fsm">
+                            <div class="o_setting_left_pane">
+                                <field name="allow_worksheets"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="allow_worksheets"/>
+                                <div class="text-muted" id="allow_billable_setting">
+                                    Create reports to be signed off by your customers
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fsm_form_view_comment" model="ir.ui.view">
+        <field name="name">project.task.fsm.comment.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <form string="comment" create="false" delete="false">
+                <sheet>
+                    <field name="comment"/>
+                    <field name="name" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

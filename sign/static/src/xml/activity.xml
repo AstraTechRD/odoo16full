@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-extend="mail.activities-list-group-item">
+        <t t-jquery="a.o_mark_as_done" t-operation="attributes">
+            <attribute name="t-if" value="log.activity_category !== 'sign_request'" />
+        </t>
+        <t t-jquery="a.o_mark_as_done" t-operation="after">
+            <a  t-if="log.activity_category == 'sign_request'"
+                t-att-data-chaining-type-activity="log.chaining_type"
+                t-att-data-previous-activity-type-id="log.activity_type_id[0]"
+                t-att-data-activity-id="log.id"
+                t-attf-href="#o_mark_done_form{{log.id}}"
+                class="o_mark_as_done_request_sign o_activity_link_kanban fa fa-pencil-square-o"
+                data-bs-toggle="collapse" title="Request Signature" role="img" aria-label="Request Signature"/>
+        </t>
+    </t>
+</templates>

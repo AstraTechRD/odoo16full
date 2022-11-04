@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Views definition -->
+        <record id="timesheet_view_tree_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.hr_timesheet</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="sale_timesheet.hr_timesheet_line_tree_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='so_line']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('id', '!=', False), ('validated', '=', True)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_view_form_so_line_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.so_line.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.timesheet_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='task_id']" position="after">
+                    <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/>
+                    <field name="so_line" groups="sales_team.group_sale_salesman" options='{"no_create": True}' attrs="{'readonly': [('id', '!=', False), ('validated', '=', True)]}" context="{'create': False, 'edit': False, 'delete': False}"/>
+                </xpath>
+                <xpath expr="//group" position="before">
+                    <t groups="sales_team.group_sale_salesman">
+                        <field name="order_id" invisible="1"/>
+                        <field name="timesheet_invoice_id" invisible="1"/>
+                        <field name="has_so_access" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="fa-dollar" attrs="{'invisible':['|', ('has_so_access', '=', False), ('order_id', '=', False)]}" >
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Sales Order</span>
+                                </div>
+                            </button>
+                            <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible':['|', ('has_so_access', '=', False), ('timesheet_invoice_id', '=', False)]}" >
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Invoice</span>
+                                </div>
+                            </button>
+                        </div>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Grid View -->
+        <record id="timesheet_view_grid_by_billing_rate" model="ir.ui.view">
+            <field name="name">account.analytic.line.grid.billing.rate</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <grid string="Timesheets"
+                      adjustment="object"
+                      adjust_name="adjust_grid"
+                      create="false"
+                      js_class="timesheet_grid"
+                      barchart_total="1"
+                      create_inline="1"
+                      display_empty="1">
+                    <field name="timesheet_invoice_type" type="row"/>
+                    <field name="date" type="col">
+                        <range name="week" string="Week" span="week" step="day"/>
+                        <range name="month" string="Month" span="month" step="day"/>
+                    </field>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </grid>
+            </field>
+        </record>
+
+        <record id="timesheet_action_from_sales_order_item_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">grid</field>
+            <field name="view_id" ref="timesheet_grid.timesheet_view_grid_by_employee"/>
+            <field name="act_window_id" ref="sale_timesheet.timesheet_action_from_sales_order_item"/>
+        </record>
+
+        <record id="sale_timesheet.timesheet_action_from_sales_order_item_form" model="ir.actions.act_window.view">
+            <field name="view_id" ref="timesheet_grid.timesheet_view_form"/>
+        </record>
+
+    </data>
+</odoo>

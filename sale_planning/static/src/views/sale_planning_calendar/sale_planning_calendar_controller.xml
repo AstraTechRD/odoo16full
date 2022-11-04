@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sale_planning.SalePlanningCalendarController.controlButtons" t-inherit="planning.PlanningCalendarController.controlButtons" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_calendar_buttons')]" position="inside">
+            <button t-if="model.canCreate" class="btn btn-secondary me-1" title="Plan Orders"
+                t-on-click.prevent="onClickPlanOrders">
+                Plan Orders
+            </button>
+        </xpath>
+    </t>
+</templates>

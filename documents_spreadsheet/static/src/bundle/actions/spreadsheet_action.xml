@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<div t-name="documents_spreadsheet.SpreadsheetAction" class="o_spreadsheet_action" owl="1">
+    <DocumentsSpreadsheetControlPanel
+        spreadsheetName="state.spreadsheetName"
+        isReadonly="isReadonly"
+        onFavoriteToggled.bind="_onSpreadSheetFavoriteToggled"
+        isFavorited="state.isFavorited"
+        isSpreadsheetSynced="state.isSynced"
+        numberOfConnectedUsers="state.numberOfConnectedUsers"
+        onSpreadsheetNameChanged.bind="_onSpreadSheetNameChanged"
+    />
+    <SpreadsheetComponent
+        name="state.spreadsheetName"
+        data="spreadsheetData"
+        isReadonly="isReadonly"
+        thumbnailSize="750"
+        stateUpdateMessages="stateUpdateMessages"
+        initCallback="initCallback"
+        asyncInitCallback="asyncInitCallback"
+        transportService="transportService"
+        snapshotRequested="snapshotRequested"
+        onDownload.bind="_onDownload"
+        spreadsheetSyncStatus.bind="_onSpreadsheetSyncStatus"
+        onUnexpectedRevisionId.bind="_onUnexpectedRevisionId"
+        onMakeCopy.bind="_onMakeCopy"
+        onNewSpreadsheet.bind="_onNewSpreadsheet"
+        onSpreadsheetSaved.bind="_onSpreadsheetSaved"
+        exposeSpreadsheet.bind="exposeSpreadsheet"
+    />
+</div>
+
+</templates>

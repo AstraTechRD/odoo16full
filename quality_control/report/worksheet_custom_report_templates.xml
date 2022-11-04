@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="worksheet_page">
+            <div class="page">
+                <h1 class="mt-4 mb-4">
+                    Quality Check: <span t-field="doc.name"/>
+                    <span style="float:right" t-field="doc.quality_state"/>
+                </h1>
+                <t name="origin">
+                    <div name="picking" t-if="doc.picking_id">
+                        <strong>Transfer : </strong>
+                        <span t-field="doc.picking_id.display_name"/>
+                    </div>
+                </t>
+                <div>
+                    <strong>Product : </strong>
+                    <span t-field="doc.product_id.display_name"/>
+                </div>
+                <div name="lot" t-if="doc.lot_id">
+                    <strong>Lot/Serial Number : </strong>
+                    <span t-field="doc.lot_id.display_name"/>
+                </div>
+                <div t-if="doc.user_id">
+                    <strong>Tested by : </strong>
+                    <span t-field="doc.user_id.display_name"/>
+                </div>
+                <div t-if="doc.control_date">
+                    <strong>Tested on : </strong>
+                    <span t-field="doc.control_date"/>
+                </div>
+                <div>
+                    <strong>Test Type : </strong>
+                    <span t-field="doc.test_type_id.display_name"/>
+                </div>
+                <div t-if="doc.additional_note">
+                    <strong>Notes : </strong>
+                    <span t-field="doc.additional_note"/>
+                </div>
+                <t name="qc_content">
+                    <div t-if="doc.test_type == 'measure'">
+                        <hr/>
+                        <div>
+                            <strong>Measure : </strong>
+                            <span t-field="doc.result"/>
+                        </div>
+                        <div t-if="doc.warning_message">
+                            <strong>Warning : </strong>
+                            <span t-field="doc.warning_message"/>
+                        </div>
+                    </div>
+                    <div t-if="doc.test_type == 'picture'">
+                        <hr/>
+                        <img width="750" t-attf-src="#{image_data_uri(doc.picture)}" alt="Quality Check Picture"/>
+                    </div>
+                </t>
+            </div>
+        </template>
+
+        <template id="quality_worksheet">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <t t-call="quality_control.worksheet_page" t-lang="doc.partner_id.lang"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="quality_worksheet_internal">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.internal_layout">
+                        <t t-call="quality_control.worksheet_page"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

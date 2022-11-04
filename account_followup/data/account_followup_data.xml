@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_followup_1" model="mail.template">
+            <field name="name">Payment Reminder</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from">{{ object._get_followup_responsible().email_formatted }}</field>
+            <field name="partner_to">{{ object.id }}</field>
+            <field name="subject">{{ (object.company_id or object._get_followup_responsible().company_id).name }} Payment Reminder - {{ object.commercial_company_name }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <t t-if="object.id != object.commercial_partner_id.id">Dear <t t-out="object.name or ''"/> (<t t-out="object.commercial_partner_id.name or ''"/>),</t>
+                        <t t-else="">Dear <t t-out="object.name or ''"/>,</t>
+                        <br />
+                    </p>
+                    <p>
+                        Exception made if there was a mistake of ours, it seems that an amount of <t t-out="format_amount(object.total_overdue, object.currency_id) or ''"/>
+                        stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.
+                    </p>
+                    <p>
+                        Would your payment have been carried out after this mail was sent, please ignore this message.
+                        Do not hesitate to contact our accounting department.
+                    </p>
+                    <p>
+                        Best Regards,
+                        <t t-if="not is_html_empty(object._get_followup_responsible().signature)">
+                            <br />
+                            <t t-out="object._get_followup_responsible().signature"/>
+                        </t>
+                        <t t-else="">
+                            <br />
+                            --
+                            <br />
+                            <t t-out="object._get_followup_responsible().name"/>
+                        </t>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <record id="demo_followup_line1" model="account_followup.followup.line" forcecreate="False">
+            <field name="name">15 Days</field>
+            <field name="delay">15</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="send_email">True</field>
+            <field name="mail_template_id" ref="email_template_followup_1"/>
+        </record>
+
+        <record id="action_account_followup" model="ir.actions.client">
+            <field name="name">Customers Statement</field>
+            <field name="tag">account_report_followup</field>
+            <field name="context" eval="{'model': 'account.followup.report'}" />
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,752 @@
+{
+    "version": 12,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 31,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "18": {
+                    "size": 40
+                },
+                "19": {
+                    "size": 40
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 275
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 275
+                },
+                "5": {
+                    "size": 100
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "style": 1,
+                    "content": "[New Employees by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"count_new_employee\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"hr.contract.employee.report\",\"views\":[[false,\"dashboard\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Employees Analysis\"})",
+                    "border": 1
+                },
+                "A19": {
+                    "style": 1,
+                    "content": "[Top Departments](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"department_id\",\"!=\",false]],\"context\":{\"group_by\":[\"department_id\"],\"pivot_measures\":[\"count_new_employee\",\"employee_id\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"department_id\"]},\"modelName\":\"hr.contract.employee.report\",\"views\":[[false,\"dashboard\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Employees Analysis\"})",
+                    "border": 1
+                },
+                "A20": {
+                    "style": 2,
+                    "content": "=_t(\"Department\")",
+                    "border": 2
+                },
+                "A21": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",1)"
+                },
+                "A22": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",2)"
+                },
+                "A23": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",3)"
+                },
+                "A24": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",4)"
+                },
+                "A25": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",5)"
+                },
+                "A26": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",6)"
+                },
+                "A27": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",7)"
+                },
+                "A28": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",8)"
+                },
+                "A29": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",9)"
+                },
+                "A30": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#department_id\",10)"
+                },
+                "B20": {
+                    "style": 5,
+                    "content": "=_t(\"Hires\")",
+                    "border": 2
+                },
+                "B21": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",1)"
+                },
+                "B22": {
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",2)"
+                },
+                "B23": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",3)"
+                },
+                "B24": {
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",4)"
+                },
+                "B25": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",5)"
+                },
+                "B26": {
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",6)"
+                },
+                "B27": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",7)"
+                },
+                "B28": {
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",8)"
+                },
+                "B29": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",9)"
+                },
+                "B30": {
+                    "content": "=ODOO.PIVOT(1,\"count_new_employee\",\"#department_id\",10)"
+                },
+                "C20": {
+                    "style": 5,
+                    "content": "=_t(\"Employees\")",
+                    "border": 2
+                },
+                "C21": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",1)"
+                },
+                "C22": {
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",2)"
+                },
+                "C23": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",3)"
+                },
+                "C24": {
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",4)"
+                },
+                "C25": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",5)"
+                },
+                "C26": {
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",6)"
+                },
+                "C27": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",7)"
+                },
+                "C28": {
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",8)"
+                },
+                "C29": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",9)"
+                },
+                "C30": {
+                    "content": "=ODOO.PIVOT(1,\"employee_id\",\"#department_id\",10)"
+                },
+                "E19": {
+                    "style": 1,
+                    "content": "[Top Paid Job Positions](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"active_employee\",\"=\",true],[\"job_id\",\"!=\",false]],\"context\":{\"group_by\":[\"job_id\"],\"pivot_measures\":[\"__count\",\"wage\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"job_id\"]},\"modelName\":\"hr.contract.history\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Employees\"})",
+                    "border": 1
+                },
+                "E20": {
+                    "style": 2,
+                    "content": "=_t(\"Job Position\")",
+                    "border": 2
+                },
+                "E21": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",1)"
+                },
+                "E22": {
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",2)"
+                },
+                "E23": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",3)"
+                },
+                "E24": {
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",4)"
+                },
+                "E25": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",5)"
+                },
+                "E26": {
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",6)"
+                },
+                "E27": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",7)"
+                },
+                "E28": {
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",8)"
+                },
+                "E29": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",9)"
+                },
+                "E30": {
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#job_id\",10)"
+                },
+                "F20": {
+                    "style": 5,
+                    "content": "=_t(\"Contracts\")",
+                    "border": 2
+                },
+                "F21": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",1)"
+                },
+                "F22": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",2)"
+                },
+                "F23": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",3)"
+                },
+                "F24": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",4)"
+                },
+                "F25": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",5)"
+                },
+                "F26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",6)"
+                },
+                "F27": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",7)"
+                },
+                "F28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",8)"
+                },
+                "F29": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",9)"
+                },
+                "F30": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#job_id\",10)"
+                },
+                "G20": {
+                    "style": 5,
+                    "content": "Avg. Salary",
+                    "border": 2
+                },
+                "G21": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",1)"
+                },
+                "G22": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",2)"
+                },
+                "G23": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",3)"
+                },
+                "G24": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",4)"
+                },
+                "G25": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",5)"
+                },
+                "G26": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",6)"
+                },
+                "G27": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",7)"
+                },
+                "G28": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",8)"
+                },
+                "G29": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",9)"
+                },
+                "G30": {
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"#job_id\",10)"
+                },
+                "A8": {
+                    "border": 2
+                },
+                "B7": {
+                    "border": 1
+                },
+                "B8": {
+                    "border": 2
+                },
+                "B19": {
+                    "border": 1
+                },
+                "C7": {
+                    "border": 1
+                },
+                "C8": {
+                    "border": 2
+                },
+                "C19": {
+                    "border": 1
+                },
+                "D7": {
+                    "border": 1
+                },
+                "D8": {
+                    "border": 2
+                },
+                "E7": {
+                    "border": 1
+                },
+                "E8": {
+                    "border": 2
+                },
+                "F7": {
+                    "border": 1
+                },
+                "F8": {
+                    "border": 2
+                },
+                "F19": {
+                    "border": 1
+                },
+                "G7": {
+                    "border": 1
+                },
+                "G8": {
+                    "border": 2
+                },
+                "G19": {
+                    "border": 1
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "f2791b10-860a-49c4-a95b-c58fc4619ff2",
+                    "x": 0,
+                    "y": 178,
+                    "width": 1000,
+                    "height": 230,
+                    "tag": "chart",
+                    "data": {
+                        "title": "",
+                        "background": "#FFFFFF",
+                        "legendPosition": "none",
+                        "metaData": {
+                            "groupBy": [
+                                "date:month"
+                            ],
+                            "measure": "count_new_employee",
+                            "order": null,
+                            "resModel": "hr.contract.employee.report"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "context": {},
+                            "domain": [],
+                            "groupBy": [
+                                "date:month"
+                            ],
+                            "orderBy": []
+                        },
+                        "type": "odoo_bar",
+                        "verticalAxisPosition": "left",
+                        "stacked": false
+                    }
+                },
+                {
+                    "id": "e58ddf24-719e-44c2-9042-cd327e0fb7e0",
+                    "x": 0,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": "Employees",
+                        "type": "scorecard",
+                        "background": "",
+                        "keyValue": "Data!C1"
+                    }
+                }
+            ],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        },
+        {
+            "id": "0467c29d-1d03-4f8e-a8f0-d90c86e0bb6b",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 100,
+            "rows": {},
+            "cols": {},
+            "merges": [
+                "B5:C5"
+            ],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"Employees\")"
+                },
+                "A5": {
+                    "style": 7
+                },
+                "A6": {
+                    "style": 8
+                },
+                "A7": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"job_id\",3)"
+                },
+                "A8": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"job_id\",6)"
+                },
+                "A9": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"job_id\",5)"
+                },
+                "A10": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"job_id\",4)"
+                },
+                "A11": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"job_id\",2)"
+                },
+                "A12": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT.HEADER(2)"
+                },
+                "B1": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(3,\"__count\")"
+                },
+                "B5": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT.HEADER(2)"
+                },
+                "B6": {
+                    "style": 8,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"measure\",\"__count\")"
+                },
+                "B7": {
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"job_id\",3)"
+                },
+                "B8": {
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"job_id\",6)"
+                },
+                "B9": {
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"job_id\",5)"
+                },
+                "B10": {
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"job_id\",4)"
+                },
+                "B11": {
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"job_id\",2)"
+                },
+                "B12": {
+                    "content": "=ODOO.PIVOT(2,\"__count\")"
+                },
+                "C1": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(B1)"
+                },
+                "C5": {
+                    "style": 7
+                },
+                "C6": {
+                    "style": 8,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"measure\",\"wage\")"
+                },
+                "C7": {
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"job_id\",3)"
+                },
+                "C8": {
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"job_id\",6)"
+                },
+                "C9": {
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"job_id\",5)"
+                },
+                "C10": {
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"job_id\",4)"
+                },
+                "C11": {
+                    "content": "=ODOO.PIVOT(2,\"wage\",\"job_id\",2)"
+                },
+                "C12": {
+                    "content": "=ODOO.PIVOT(2,\"wage\")"
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        }
+    ],
+    "entities": {},
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "bold": true
+        },
+        "3": {
+            "fillColor": "#f2f2f2",
+            "textColor": "#741b47"
+        },
+        "4": {
+            "textColor": "#741b47"
+        },
+        "5": {
+            "bold": true,
+            "align": "right"
+        },
+        "6": {
+            "fillColor": "#f2f2f2"
+        },
+        "7": {
+            "bold": true,
+            "fillColor": "#f2f2f2"
+        },
+        "8": {
+            "fillColor": "#f2f2f2",
+            "textColor": "#756f6f"
+        }
+    },
+    "formats": {
+        "1": "0",
+        "2": "[$$]#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": [
+                "thin",
+                "#000"
+            ]
+        },
+        "2": {
+            "top": [
+                "thin",
+                "#000"
+            ]
+        }
+    },
+    "revisionId": "START_REVISION",
+    "chartOdooMenusReferences": {
+        "f2791b10-860a-49c4-a95b-c58fc4619ff2": "hr.menu_hr_root",
+        "e58ddf24-719e-44c2-9042-cd327e0fb7e0": "hr.menu_hr_employee_user"
+    },
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
+    "pivots": {
+        "1": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "department_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "1",
+            "measures": [
+                {
+                    "field": "count_new_employee"
+                },
+                {
+                    "field": "employee_id"
+                }
+            ],
+            "model": "hr.contract.employee.report",
+            "rowGroupBys": [
+                "department_id"
+            ],
+            "name": "Employees Analysis by Department",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "employee_id",
+                "order": "desc"
+            }
+        },
+        "2": {
+            "colGroupBys": [],
+            "context": {
+                "params": {
+                    "action": 353,
+                    "model": "hr.contract.history",
+                    "view_type": "pivot",
+                    "menu_id": 182,
+                    "cids": 1
+                }
+            },
+            "domain": [
+                "&",
+                [
+                    "active_employee",
+                    "=",
+                    true
+                ],
+                [
+                    "job_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "2",
+            "measures": [
+                {
+                    "field": "__count"
+                },
+                {
+                    "field": "wage"
+                }
+            ],
+            "model": "hr.contract.history",
+            "rowGroupBys": [
+                "job_id"
+            ],
+            "name": "Contract history by Job Position",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "wage",
+                "order": "desc"
+            }
+        },
+        "3": {
+            "colGroupBys": [],
+            "context": {
+                "chat_icon": true
+            },
+            "domain": [],
+            "id": "3",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "hr.employee",
+            "rowGroupBys": [],
+            "name": "Employee",
+            "sortedColumn": null
+        }
+    },
+    "pivotNextId": 4,
+    "globalFilters": [
+        {
+            "id": "768a5e57-a46a-4703-a7aa-870bca65bae9",
+            "type": "date",
+            "label": "Period",
+            "defaultValue": "last_year",
+            "rangeType": "relative",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {},
+            "listFields": {},
+            "graphFields": {
+                "f2791b10-860a-49c4-a95b-c58fc4619ff2": {
+                    "field": "date",
+                    "type": "date",
+                    "offset": 0
+                }
+            }
+        },
+        {
+            "id": "c565eee4-374b-4779-8c12-f59634a490bf",
+            "type": "relation",
+            "label": "Department",
+            "modelName": "hr.department",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "department_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "department_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "department_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "f2791b10-860a-49c4-a95b-c58fc4619ff2": {
+                    "field": "department_id",
+                    "type": "many2one"
+                }
+            }
+        }
+    ]
+}

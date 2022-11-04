@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="rule_parameter_max_mortgage_interest" model="hr.rule.parameter">
+        <field name="name">Kenya: Max Mortgage Interest</field>
+        <field name="code">l10n_ke_max_mortgage_interest</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_max_mortgage_interest_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">25000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_max_mortgage_interest"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_max_pension_contribution" model="hr.rule.parameter">
+        <field name="name">Kenya: Max Pension Contribution</field>
+        <field name="code">l10n_ke_max_pension_contribution</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_max_pension_contribution_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">20000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_max_pension_contribution"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_max_insurance_relief" model="hr.rule.parameter">
+        <field name="name">Kenya: Max Insurance Relief</field>
+        <field name="code">l10n_ke_max_insurance_relief</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_max_insurance_relief_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">5000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_max_insurance_relief"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_paye_lower_bound" model="hr.rule.parameter">
+        <field name="name">Kenya: Paye Lower Bound</field>
+        <field name="code">l10n_ke_paye_lower_bound</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_paye_lower_bound_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">24000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_paye_lower_bound"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_paye_higher_bound" model="hr.rule.parameter">
+        <field name="name">Kenya: Paye Higher Bound</field>
+        <field name="code">l10n_ke_paye_higher_bound</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_paye_higher_bound_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">32333</field>
+        <field name="rule_parameter_id" ref="rule_parameter_paye_higher_bound"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_paye_lower_fixed_amount" model="hr.rule.parameter">
+        <field name="name">Kenya: Paye Lower Fixed Amount</field>
+        <field name="code">l10n_ke_paye_lower_fixed_amount</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_paye_lower_fixed_amount_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">2400</field>
+        <field name="rule_parameter_id" ref="rule_parameter_paye_lower_fixed_amount"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_paye_higher_fixed_amount" model="hr.rule.parameter">
+        <field name="name">Kenya: Paye Higher Fixed Amount</field>
+        <field name="code">l10n_ke_paye_higher_fixed_amount</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_paye_higher_fixed_amount_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">2083.25</field>
+        <field name="rule_parameter_id" ref="rule_parameter_paye_higher_fixed_amount"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_personal_relief" model="hr.rule.parameter">
+        <field name="name">Kenya: Personal Relief</field>
+        <field name="code">l10n_ke_personal_relief</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_personal_relief_amount_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">2400</field>
+        <field name="rule_parameter_id" ref="rule_parameter_personal_relief"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+</odoo>

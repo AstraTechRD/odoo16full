@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="slot_planning_select_send_view_form" model="ir.ui.view">
+        <field name="name">slot.planning.select.send.form</field>
+        <field name="model">slot.planning.select.send</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="slot_id" options="{'no_open': True}"/></h1>
+                    </div>
+                    <field name="employee_ids" widget="many2many_tags"/>
+                    <field name="company_id" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_send" type="object" string="Send" class='btn-primary' data-hotkey="q"/>
+                    <button name="discard" string="Discard" class='btn-secondary' special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

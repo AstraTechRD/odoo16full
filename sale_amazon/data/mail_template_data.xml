@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Mail templates -->
+    <record id="order_sync_failure" model="mail.template">
+        <field name="name">Amazon: Order Synchronization Failure</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="subject">Synchronization of Amazon order {{ ctx.get('amazon_order_ref') }} has failed</field>
+        <field name="email_from">{{ (object.company_id.email or object.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ ctx.get('email_to') }}</field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="body_html" type="html">
+        <div>
+            <p>The synchronization of the Amazon order with reference <t t-out="ctx.get('amazon_order_ref') or ''">REF</t> encountered an error and was not completed.</p>
+            <p>Unless the order is canceled in SellerCentral, no other synchronization will be attempted.</p>
+            <p>To schedule a new synchronization attempt, proceed as follows:
+                <ol>
+                    <li>Enter the Developer Tools.</li>
+                    <li>Open the form of the Amazon Account on which the order was placed.</li>
+                    <li>Navigate to the Order Follow-up tab.</li>
+                    <li>Set a date for <em>Last Orders Sync</em> that is anterior to the last status update of the order.</li>
+                    <li>Save the changes and click on the <em>SYNC ORDERS</em> button.</li>
+                </ol>
+            </p>
+            <p>If the problem persists, contact <a href="https://www.odoo.com/help/">Odoo support</a>.</p>
+        </div>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_user_view_pivot" model="ir.ui.view">
+        <field name="name">report.project.task.user.pivot</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="arch" type="xml">
+            <pivot string="Tasks Analysis" display_quantity="1" sample="1">
+                <field name="project_id" type="row"/>
+                <field name="hours_effective" widget="timesheet_uom" type="measure"/>
+                <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
+                <field name="hours_planned" widget="timesheet_uom" type="measure"/>
+                <field name="working_days_close" type="measure" string="Working Days to Close"/>
+                <field name="working_days_open" type="measure" string="working days to assign"/>
+                <field name="nbr" invisible="1"/>
+                <field name="delay_endings_days" invisible="1"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="project_task_user_view_graph" model="ir.ui.view">
+        <field name="name">report.project.task.user.graph</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="arch" type="xml">
+            <graph string="Tasks Analysis" sample="1" js_class="hr_timesheet_graphview">
+                <field name="project_id"/>
+                <field name="nbr" type="measure" invisible="1"/>
+                <field name="delay_endings_days" type="measure"/>
+                <field name="hours_effective" widget="timesheet_uom" type="measure"/>
+                <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
+                <field name="working_days_close" type="measure" string="Working Days to Close"/>
+                <field name="working_days_open" type="measure" string="Working Days to Assign"/>
+                <field name="hours_planned" widget="timesheet_uom" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="report_project_task_user_fsm_view_tree" model="ir.ui.view">
+        <field name="name">report.project.task.user.fsm.view.tree</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="arch" type="xml">
+            <tree string="Tasks Analysis" editable="top" delete="false">
+                <field name="name"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="project_id" optional="show"/>
+                <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
+                <field name="hours_effective" optional="show" widget="float_time" sum="Sum of Effective Hours"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="report_project_task_user_fsm_view_search" model="ir.ui.view">
+        <field name="name">report.project.task.user.fsm.search</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="arch" type="xml">
+            <search string="Search planning">
+                <field name="name" string="Tasks"/>
+                <field name="tag_ids"/>
+                <field name="user_ids" context="{'active_test': False}"/>
+                <field name="stage_id"/>
+                <field name="project_id"/>
+                <field name="ancestor_id" groups="project.group_subtask_project"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="active"/>
+                <field name="parent_id"/>
+                <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_ids.employee_parent_id.user_id', '=', uid)]" />
+                <filter string="My Department's Tasks" name="my_department_tasks" domain="[('user_ids.employee_id.member_of_department', '=', True)]"/>
+                <filter string="Followed Tasks" name="my_followed_tasks" domain="[('task_id.message_is_follower', '=', True)]" />
+                <filter string="Unassigned" name="unassigned_task" domain="[('user_ids', '=', False)]"/>
+                <separator/>
+                <filter string="My Projects" name="my_projects" domain="[('project_id.user_id', '=', uid)]"/>
+                <filter string="My Favorites Projects" name="my_favorite_project" domain="[('project_id.favorite_user_ids', 'in', uid)]"/>
+                <filter string="My Team's Projects" name="my_team_projects" domain="[('project_id.user_id.employee_id.parent_id.user_id', '=', uid)]"/>
+                <filter string="My Department's Projects" name="my_department_tasks" domain="[('project_id.user_id.employee_id.member_of_department', '=', True)]"/>
+                <separator />
+                <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
+                <separator />
+                <filter string="To Schedule" name="schedule" domain="[
+                    '|',
+                    ('user_ids', '=', False),
+                    '&amp;',
+                        ('planned_date_begin', '=', False),
+                        ('planned_date_end', '=', False)
+                ]" groups="industry_fsm.group_fsm_manager"/>
+                <filter string="To Do" name="todo" domain="[('fsm_done', '=', False), ('user_ids', '!=', False), ('planned_date_begin', '!=', False), ('planned_date_end', '!=', False)]"/>
+                <filter name="in_progress" string="In Progress" domain="[('task_id.timer_start', '!=', False), ('task_id.timer_pause', '=', False)]"/>
+                <filter string="Closed" name="closed" domain="[('is_closed', '=', True)]"/>
+                <separator />
+                <filter name="planned_today" string="Today" domain="[
+                    ('planned_date_begin','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))),
+                    ('planned_date_begin','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter name="planned_future" string="Future" domain="[('planned_date_begin', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter name="planned_past" string="Past" domain="[('planned_date_end', '&lt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <separator />
+                <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
+                <filter name="not_starred" string="Not Starred" domain="[('priority', '=', 0)]"/>
+                <separator/>
+                <filter name="conflict_task" string="Tasks in Conflict" domain="[('planning_overlap', '&gt;', 0)]"/>
+                <filter string="Late Tasks" name="late" domain="[('planned_date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('fsm_done', '=', False)]"/>
+                <separator/>
+                <filter name="rating_satisfied" string="Satisfied" domain="[('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
+                <filter name="rating_okay" string="Okay" domain="[('rating_avg', '&lt;', 3.66), ('rating_avg', '&gt;=', 2.33)]" groups="project.group_project_rating"/>
+                <filter name="dissatisfied" string="Dissatisfied" domain="[('rating_avg', '&lt;', 2.33), ('rating_last_value', '!=', 0)]" groups="project.group_project_rating"/>
+                <filter name="no_rating" string="No Rating" domain="[('rating_last_value', '=', 0)]" groups="project.group_project_rating"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Assignees" name="groupby_user" context="{'group_by':'user_ids'}"/>
+                    <filter string="Stage" name="groupby_stage" context="{'group_by':'stage_id'}"/>
+                    <filter string="Project" name="groupby_project" context="{'group_by':'project_id'}"/>
+                    <filter string="Ancestor Task" name="groupby_ancestor_task" context="{'group_by': 'ancestor_id'}" groups="project.group_subtask_project"/>
+                    <filter string="Customer" name="groupby_customer" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Start Date" name="groupby_planned_date_begin" context="{'group_by': 'planned_date_begin:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_task_user_action_report_fsm" model="ir.actions.act_window">
+        <field name="name">Tasks Analysis</field>
+        <field name="res_model">report.project.task.user.fsm</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="industry_fsm.report_project_task_user_fsm_view_search"/>
+        <field name="context">{
+            'group_by_no_leaf': 1,
+            'group_by': [],
+            'pivot_measures': ['__count__', 'hours_planned', 'hours_effective', 'remaining_hours'],
+            'graph_measure': '__count__',
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p><p>
+                Analyze the progress of your tasks and the performance of your workers.
+            </p>
+        </field>
+    </record>
+
+</odoo>

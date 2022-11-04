@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_run_view_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.view.tree.inherit.l10n.be.hr.payroll</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="l10n_be_display_eco_voucher_button" invisible="1"/>
+            </field>
+            <button name="action_draft" position="after">
+                <button string="Eco-Vouchers" name="action_l10n_be_eco_vouchers" type="object" attrs="{'invisible': [('l10n_be_display_eco_voucher_button', '=', False)]}"/>
+            </button>
+        </field>
+    </record>
+</odoo>

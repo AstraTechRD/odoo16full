@@ -1,0 +1,162 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="hr_appraisal_goal_view_form" model="ir.ui.view">
+        <field name="name">hr.appraisal.goal.view.form</field>
+        <field name="model">hr.appraisal.goal</field>
+        <field name="arch" type="xml">
+            <form class="o_appraisal_goal_form">
+                <header>
+                    <button name="action_confirm" type="object"
+                            string="Mark as Done" class="oe_highlight"
+                            attrs="{'invisible': [('progression', '=', '100')]}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Done" bg_color="bg-success" attrs="{'invisible': [('progression', '!=', '100')]}"/>
+                    <div class="oe_title">
+                        <label for="name" string="Goal"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Present yourself to your new team"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="is_manager" invisible="1"/>
+                            <field name="employee_autocomplete_ids" invisible="1"/>
+                            <field name="is_implicit_manager" invisible="1"/>
+                            <field name="employee_id" domain="[['id', 'in', employee_autocomplete_ids]]" attrs="{'readonly': [('is_manager', '=', False), ('is_implicit_manager', '=', False)]}"/>
+                            <field name="progression" class="pe-3" widget="selection_badge"/>
+                        </group>
+                        <group>
+                            <field name="manager_id" force_save="1" attrs="{'readonly': [('is_manager', '=', False)]}"/>
+                            <field name="deadline"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_goal_view_tree" model="ir.ui.view">
+        <field name="name">hr.appraisal.goal.view.tree</field>
+        <field name="model">hr.appraisal.goal</field>
+        <field name="arch" type="xml">
+            <tree sample="1" class="o_goal_list">
+                <field name="name" class="fw-bold"/>
+                <field name="deadline" widget="remaining_days"/>
+                <field name="activity_ids" widget="list_activity"/>
+                <field name="progression" widget="badge" decoration-success="progression == '100'"/>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="manager_id" widget="many2one_avatar_employee"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_goal_view_kanban" model="ir.ui.view">
+        <field name="name">hr.appraisal.goal.view.kanban</field>
+        <field name="model">hr.appraisal.goal</field>
+        <field name="arch" type="xml">
+            <kanban quick_create="false" class="o_hr_employee_kanban" js_class="appraisal_kanban" sample="1">
+                <field name="description"/>
+                <field name="progression"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click oe_kanban_content">
+                            <div class="ribbon ribbon-top-right" attrs="{'invisible': [('progression', '!=', '100')]}">
+                                <span class="bg-success">Done</span>
+                            </div>
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.deletable"><a type="delete" class="dropdown-item" role="menuitem">Delete</a></t>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_top mb-0">
+                                <div class="o_kanban_record_top_left">
+                                    <span><field name="name"/></span>
+                                </div>
+                                <t t-if="record.progression.raw_value != 100">
+                                    <div class="o_kanban_top_right me-2 fw-bold">
+                                        <t t-esc="record.progression.value"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="o_kanban_record_subtitle" >
+                                <field name="employee_id" />
+                            </div>
+                            <div class="o_kanban_record_bottom mt-auto d-flex justify-content-between align-items-end">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="activity_ids" widget="kanban_activity"/>
+                                    <field name="deadline" widget="remaining_days"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_goal_view_graph" model="ir.ui.view">
+        <field name="name">hr.appraisal.goal.view.kanban</field>
+        <field name="model">hr.appraisal.goal</field>
+        <field name="arch" type="xml">
+            <graph string="Goals" type="bar" stacked="0" order="asc" sample="1">
+                <field name="employee_id"/>
+                <field name="progression"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_goal_view_search" model="ir.ui.view">
+        <field name="name">hr.appraisal.goal.view.search</field>
+        <field name="model">hr.appraisal.goal</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="manager_id"/>
+                <filter string="My Goals" name="filter_my_goals" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="People I Manage" name="people_i_manage" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_appraisal.group_hr_appraisal_user"/>
+                <separator/>
+                <filter string="Late" name="filter_late" domain="[('deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Deadline" name="filter_deadline" date="deadline"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_appraisal_goal" model="ir.actions.act_window">
+        <field name="name">Goals</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.appraisal.goal</field>
+        <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new goals
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Goals"
+        parent="menu_hr_appraisal_root"
+        id="menu_hr_appraisal_goal"
+        action="action_hr_appraisal_goal"
+        sequence="2"/>
+
+    <!-- YTI Manage goal security -->
+
+</odoo>

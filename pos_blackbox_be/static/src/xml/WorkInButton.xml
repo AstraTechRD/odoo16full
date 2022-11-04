@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="WorkInButton" owl="1">
+        <span class="control-button js_reprint">
+            <i class="fa fa-retweet"></i>
+            <span> </span>
+            <span>Work
+                <t t-if="state.status">Out</t>
+                <t t-else="">In</t>
+            </span>
+        </span>
+    </t>
+
+</templates>

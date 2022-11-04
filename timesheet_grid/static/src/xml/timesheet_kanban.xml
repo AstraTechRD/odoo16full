@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="TimesheetKanbanView.buttons" t-extend="KanbanView.buttons">
+        <t t-jquery="button" t-operation="after">
+            <button type="button" class="btn btn-secondary o_timesheet_kanban_validate">
+                Validate
+            </button>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="template_general_ledger_report" inherit_id="account_reports.main_template" primary="True">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class">o_account_reports_table table-hover table-bold-unfold</attribute>
+        </xpath>
+    </template>
+
+    <template id="line_template_general_ledger_report" inherit_id="account_reports.line_template" primary="True">
+        <!--Also used by partner ledger-->
+        <xpath expr="//span[hasclass('account_report_line_name')]" position="inside">
+            &amp;nbsp;<a t-if="line.get('unfoldable')"
+                         t-att-data-line_id="line.get('id')"
+                         t-att-data-name="line.get('name')"
+                         t-att-data-view_ref="'account.view_move_line_tree_grouped_partner'"
+                         action="open_journal_items"
+                         class="no_print oe_link_reports">
+                            ⇒ Journal Items
+                        </a>
+        </xpath>
+    </template>
+
+    <record id="general_ledger_report" model="account.report">
+        <field name="name">General Ledger</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="default_opening_date_filter">this_month</field>
+        <field name="search_bar" eval="True"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="main_template">account_reports.template_general_ledger_report</field>
+        <field name="line_template">account_reports.line_template_general_ledger_report</field>
+        <field name="custom_handler_model_id" ref="model_account_general_ledger_report_handler"/>
+        <field name="column_ids">
+            <record id="general_ledger_report_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="general_ledger_report_communication" model="account.report.column">
+                <field name="name">Communication</field>
+                <field name="expression_label">communication</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="general_ledger_report_partner_name" model="account.report.column">
+                <field name="name">Partner</field>
+                <field name="expression_label">partner_name</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="general_ledger_report_amount_currency" model="account.report.column">
+                <field name="name">Currency</field>
+                <field name="expression_label">amount_currency</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="general_ledger_report_debit" model="account.report.column">
+                <field name="name">Debit</field>
+                <field name="expression_label">debit</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="general_ledger_report_credit" model="account.report.column">
+                <field name="name">Credit</field>
+                <field name="expression_label">credit</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="general_ledger_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+</odoo>

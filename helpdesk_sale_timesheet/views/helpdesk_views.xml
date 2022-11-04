@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_team_view_form_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.team.form.inherit.timesheet</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='helpdesk_sale_timesheet']" position='attributes'>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position='attributes'>
+                <attribute name="context">{'default_allow_timesheets': 1, 'default_allow_billable': use_helpdesk_sale_timesheet}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_form_inherit_helpdesk_sale_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.form.inherit.sale.timesheet</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='timesheet_ids']" position="attributes">
+                <attribute name="widget">so_line_one2many</attribute>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
+                <attribute name="decoration-muted">timesheet_invoice_id != False</attribute>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
+                <field name="timesheet_invoice_id" invisible="1"/>
+                <field name="is_so_line_edited" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
+                <field name="so_line"
+                    groups="!sales_team.group_sale_salesman"
+                    attrs="{'column_invisible': ['|', ('parent.use_helpdesk_sale_timesheet', '=', False), ('parent.partner_id', '=', False)]}"
+                    domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]"
+                    optional="hide" options="{'no_create': True, 'no_open': True}"/>
+                <field name="so_line"
+                    groups="sales_team.group_sale_salesman"
+                    attrs="{'column_invisible': ['|', ('parent.use_helpdesk_sale_timesheet', '=', False), ('parent.partner_id', '=', False)]}"
+                    domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]"
+                    context="{'with_remaining_hours': True, 'with_price_unit': True}"
+                    optional="hide" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="before">
+                <field name="use_helpdesk_sale_timesheet" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_open_helpdesk_ticket']" position="before">
+                <button class="oe_stat_button"
+                        type="object" name="action_view_so" icon="fa-dollar"
+                        attrs="{'invisible': ['|', ('use_helpdesk_sale_timesheet', '=', False), '&amp;', ('sale_order_id', '=', False), ('sale_line_id', '=', False)]}"
+                        string="Sales Order"
+                        groups="sales_team.group_sale_salesman"/>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="sale_line_id" groups="!sales_team.group_sale_salesman" attrs="{'invisible': ['|', ('use_helpdesk_sale_timesheet', '=', False), ('partner_id', '=', False)]}" options="{'no_create': True, 'no_open': True}" context="{'create': False}"/>
+                <field name="sale_line_id" groups="sales_team.group_sale_salesman" attrs="{'invisible': ['|', ('use_helpdesk_sale_timesheet', '=', False), ('partner_id', '=', False)]}" options="{'no_create': True}" context="{'with_remaining_hours': True, 'with_price_unit': True, 'create': False, 'edit': False}"/>
+            </xpath>
+            <xpath expr="//field[@name='total_hours_spent']" position="after">
+                <t groups="sales_team.group_sale_salesman">
+                    <field name="remaining_hours_available" invisible="1"/>
+                    <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', '|', '|', ('sale_order_id', '=', False), ('use_helpdesk_sale_timesheet', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}">
+                        <label class="fw-bold" for="remaining_hours_so" string="Remaining Hours on SO"
+                            attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours_so', '&lt;', 0)]}"/>
+                        <label class="fw-bold" for="remaining_hours_so" string="Remaining Days on SO"
+                            attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&lt;', 0)]}"/>
+                        <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Hours on SO"
+                            attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours_so', '&gt;=', 0)]}"/>
+                        <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
+                            attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&gt;=', 0)]}"/>
+                    </span>
+                    <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|', '|', '|', ('sale_order_id', '=', False), ('use_helpdesk_sale_timesheet', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" decoration-danger="remaining_hours_so &lt; 0"/>
+                </t>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_view_form_inherit_sale_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.sla.form.inherit.sale.timesheet</field>
+        <field name="model">helpdesk.sla</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_form"/>
+        <field name="arch" type="xml">
+            <field name='partner_ids' position="after">
+                <field name="sale_line_ids" widget="many2many_tags" options="{'no_create_edit': True, 'no_create': True}" groups="sales_team.group_sale_salesman"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_tree_inherit_sale_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.tree.inherit.sale.timesheet</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">90</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <field name='partner_id' position="after">
+                <field name="sale_line_id" readonly="1" optional="hide" groups="helpdesk_sale.group_use_helpdesk_sale_timesheet"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_search_inherit_helpdesk_sale_timesheet" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.search.inherit.sale.timesheet</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_sale.helpdesk_ticket_view_search_inherit_helpdesk_sale"/>
+        <field name="arch" type="xml">
+            <field name="sale_order_id" position="after">
+                <field name="sale_line_id" string="Sales Order Item" groups="helpdesk_sale.group_use_helpdesk_sale_timesheet"/>
+            </field>
+            <filter name='message_needaction' position="after">
+                <filter string="Tickets in Overtime" domain="[('remaining_hours_so','&lt;',0)]" name="negative_remaining_hours" groups="helpdesk_timesheet.group_use_helpdesk_timesheet"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_view_tree_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">helpdesk.sla.tree.inherit.sale.timesheet</field>
+        <field name="model">helpdesk.sla</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ids']" position="after">
+                <field name="sale_line_ids" widget="many2many_tags" optional="hide"
+                    options="{'no_create_edit': True, 'no_create': True}" groups="sales_team.group_sale_salesman"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_view_search_inherit_sale_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.sla.search.inherit.sale.timesheet</field>
+        <field name="model">helpdesk.sla</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_sla_view_search"/>
+        <field name="arch" type="xml">
+            <field name='partner_ids' position="after">
+                <field name="sale_line_ids" groups="sales_team.group_sale_salesman"/>
+            </field>
+        </field>
+    </record>
+</odoo>

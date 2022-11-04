@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="hr_payroll.ContractTreeIndexButton" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-if='props.showButtons']">
+             <button t-if="isUserContractManager" type="button" class="btn btn-secondary o_button_index_contracts" t-on-click.prevent.stop="indexWage">
+                Index Contracts
+            </button>
+        </xpath>
+    </t>
+</templates>

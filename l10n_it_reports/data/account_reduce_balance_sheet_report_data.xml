@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_it_sp_reduce" model="account.report">
+        <field name="name">Stato Patrimoniale (Semplificazioni)</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.it"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_it_sp_reduce_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_it_sp_reduce_assets" model="account.report.line">
+                <field name="name">ATTIVO</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_it_sp_reduce_ATT_B" model="account.report.line">
+                        <field name="name">B. IMMOBILIZZAZIONI</field>
+                        <field name="code">ITR_ATT_B</field>
+                        <field name="aggregation_formula">ITR_ATT_B_I.balance + ITR_ATT_B_II.balance + ITR_ATT_B_III.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_it_sp_reduce_ATT_B_I" model="account.report.line">
+                                <field name="name">I. Immobilizzazioni immaterial</field>
+                                <field name="code">ITR_ATT_B_I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">11</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_ATT_B_II" model="account.report.line">
+                                <field name="name">II. Immobilizzazioni materiali</field>
+                                <field name="code">ITR_ATT_B_II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">12</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_ATT_B_III" model="account.report.line">
+                                <field name="name">III. Immobilizzazioni finanziarie</field>
+                                <field name="code">ITR_ATT_B_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_reduce_ATT_C" model="account.report.line">
+                        <field name="name">C. ATTIVO CIRCOLANTE</field>
+                        <field name="code">ITR_ATT_C</field>
+                        <field name="aggregation_formula">ITR_ATT_C_I.balance + ITR_ATT_C_II.balance + ITR_ATT_C_III.balance + ITR_ATT_C_IV.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_it_sp_reduce_ATT_C_I" model="account.report.line">
+                                <field name="name">I. Rimanenze</field>
+                                <field name="code">ITR_ATT_C_I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">14</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_ATT_C_II" model="account.report.line">
+                                <field name="name">II. Crediti</field>
+                                <field name="code">ITR_ATT_C_II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">15 + 16 + 19</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_ATT_C_III" model="account.report.line">
+                                <field name="name">III. Attività finanziarie</field>
+                                <field name="code">ITR_ATT_C_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">17</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_ATT_C_IV" model="account.report.line">
+                                <field name="name">IV. Disponibilità liquide</field>
+                                <field name="code">ITR_ATT_C_IV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">18</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_it_sp_reduce_assets_total" model="account.report.line">
+                <field name="name">TOTALE ATTIVO</field>
+                <field name="code">ITR_ASSETS_TOTAL</field>
+                <field name="aggregation_formula">ITR_ATT_B.balance + ITR_ATT_C.balance</field>
+            </record>
+            <record id="account_financial_report_line_it_sp_reduce_passif" model="account.report.line">
+                <field name="name">PASSIVO</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_it_sp_reduce_PASS_A" model="account.report.line">
+                        <field name="name">A. PATRIMONIO NETTO</field>
+                        <field name="code">ITR_PASS_A</field>
+                        <field name="aggregation_formula">ITR_PASS_A_I.balance + ITR_PASS_A_II.balance + ITR_PASS_A_III.balance + ITR_PASS_A_IV.balance + ITR_PASS_A_V.balance + ITR_PASS_A_VI.balance + ITR_PASS_A_VIII.balance + ITR_PASS_A_IX.balance + ITR_PASS_A_X.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_I" model="account.report.line">
+                                <field name="name">I. Capitale</field>
+                                <field name="code">ITR_PASS_A_I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2104 - 2101 - 2105</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_II" model="account.report.line">
+                                <field name="name">II. Riserva da sovrapprezzo azioni</field>
+                                <field name="code">ITR_PASS_A_II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2106</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_III" model="account.report.line">
+                                <field name="name">III. Riserve di rivalutazione</field>
+                                <field name="code">ITR_PASS_A_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2107</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_IV" model="account.report.line">
+                                <field name="name">IV. Riserva legale</field>
+                                <field name="code">ITR_PASS_A_IV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2108</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_V" model="account.report.line">
+                                <field name="name">V. Riserve statutarie</field>
+                                <field name="code">ITR_PASS_A_V</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2109</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_VI" model="account.report.line">
+                                <field name="name">VI. Altre riserve</field>
+                                <field name="code">ITR_PASS_A_VI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2110</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_VIII" model="account.report.line">
+                                <field name="name">VIII. Utili (perdite) portati a nuovo</field>
+                                <field name="code">ITR_PASS_A_VIII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2112</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_IX" model="account.report.line">
+                                <field name="name">IX. Utile (perdita) d'esercizio</field>
+                                <field name="code">ITR_PASS_A_IX</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_it_sp_reduce_PASS_A_IX_balance_account_codes" model="account.report.expression">
+                                        <field name="label">balance_account_codes</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2102 - 2103 - 9101</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_reduce_PASS_A_IX_balance_aggregate" model="account.report.expression">
+                                        <field name="label">balance_aggregate</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">UTILE_PERDITA.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_reduce_PASS_A_IX_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ITR_PASS_A_IX.balance_account_codes + ITR_PASS_A_IX.balance_aggregate</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_reduce_PASS_A_X" model="account.report.line">
+                                <field name="name">X. Riserva negativa per azioni proprie in portafoglio</field>
+                                <field name="code">ITR_PASS_A_X</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2113</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_reduce_PASS_B" model="account.report.line">
+                        <field name="name">B. FONDI PER RISCHI E ONERI</field>
+                        <field name="code">ITR_PASS_B</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-22</field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_reduce_PASS_C" model="account.report.line">
+                        <field name="name">C. TRATTAMENTO DI FINE RAPPORTO DI LAVORO SUBORDINATO</field>
+                        <field name="code">ITR_PASS_C</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2301</field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_reduce_PASS_D" model="account.report.line">
+                        <field name="name">D. DEBITI</field>
+                        <field name="code">ITR_PASS_D</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-26 - 25 - 27 - 24</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_it_sp_reduce_passif_total" model="account.report.line">
+                <field name="name">TOTALE PASSIVO</field>
+                <field name="code">ITR_PASSIF_TOTAL</field>
+                <field name="aggregation_formula">ITR_PASS_A.balance + ITR_PASS_B.balance + ITR_PASS_C.balance + ITR_PASS_D.balance</field>
+            </record>
+            <record id="account_financial_report_line_it_sp_reduce_CONTI_ORDINE" model="account.report.line">
+                <field name="name">CONTI D'ORDINE</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_it_sp_reduce_CONTI_ORDINE_RISCHI" model="account.report.line">
+                        <field name="name">Rischi</field>
+                        <field name="code">ITR_RISCHI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2921 - 2926 - 2931 - 2922</field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_reduce_CONTI_ORDINE_IMPEGNI" model="account.report.line">
+                        <field name="name">Impegni</field>
+                        <field name="code">ITR_IMPEGNI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2932 - 2927 - 291</field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_reduce_CONTI_ORDINE_BENI" model="account.report.line">
+                        <field name="name">Beni di terzi</field>
+                        <field name="code">ITR_BENI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-290</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="planning.Many2OneAvatarResourceField" t-inherit="web.Many2OneAvatarField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div" position="replace">
+            <t t-if="props.record.data.resource_type !== 'material'">$0</t>
+            <t t-else="">
+                <div class="d-flex">
+                    <span class="o_m2o_avatar">
+                        <span t-if="props.value !== false" class="d-inline-flex align-items-center justify-content-center rounded-circle o_material_resource cursor-default me-1" t-att-title="props.value[1]">
+                            <i class="fa fa-wrench"/>
+                        </span>
+                        <span t-elif="!props.readonly" class="o_m2o_avatar_empty"></span>
+                    </span>
+                    <Many2OneField t-props="props"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

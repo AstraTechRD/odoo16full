@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="appointment_slot_view_form" model="ir.ui.view">
+        <field name="name">appointment.slot.view.form</field>
+        <field name="model">appointment.slot</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="slot_type" invisible="1"/>
+                <group attrs="{'invisible': [('slot_type', '=', 'unique')]}">
+                    <group>
+                        <field name="appointment_type_id"/>
+                        <field name="restrict_to_user_ids" widget="many2many_avatar_user" options="{'no_create': True}"/>
+                        <field name="weekday"/>
+                    </group>
+                    <group>
+                        <field name="start_hour" widget="float_time"/>
+                        <field name="end_hour" widget="float_time"/>
+                    </group>
+                </group>
+                <group attrs="{'invisible': [('slot_type', '=', 'recurring')]}">
+                    <group>
+                        <field name="start_datetime"/>
+                        <field name="end_datetime"/>
+                    </group>
+                    <group>
+                        <field name="allday"/>
+                        <field name="duration" widget="float_time"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

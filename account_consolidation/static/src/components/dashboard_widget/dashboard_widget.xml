@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="account_consolidation.ConsolidatedDashboardTemplate" owl="1">
+        <div class="text-end col-5 p-0 pe-3">
+            <div t-foreach="datas" t-as="data" t-key="data" t-att-class="data.company_id ? '' : 'fw-bold'">
+                <t t-esc="data.name"/>
+            </div>
+        </div>
+        <div class="text-end col-7 p-0 pe-3">
+            <div t-foreach="datas" t-as="data" t-key="data">
+                <a t-if="data.company_id" class="d-block" href="#" t-on-click.prevent.stop="() => this.onUnmappedAccountClick(data.company_id)">
+                    <t t-esc="data.value"/> unmapped accounts
+                </a>
+                <div t-else=""><t t-esc="data.value"/></div>
+            </div>
+        </div>
+    </t>
+
+</templates>

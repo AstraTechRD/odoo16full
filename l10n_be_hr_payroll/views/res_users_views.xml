@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">hr.user.preferences.view.form.l10n.be.payroll.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_of_birth']" position="after">
+                <field name="resident_bool" eval="False" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='marital']" position="after">
+                <field name="spouse_fiscal_status" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'required': [('marital', 'in', ['married', 'cohabitant'])], 'readonly': [('can_edit', '=', False)]}" help="if spouse has professionnel income or not"/>
+                <p colspan="2" class="p-0 m-0 " attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}">
+                    <a class="btn btn-link p-0 mb-1" data-bs-toggle="collapse" href="#spouse_status_explanation" role="button" aria-expanded="false" aria-controls="#spouse_status_explanation">Toggle Explanation</a>
+                </p>
+                <div class="collapse" id="spouse_status_explanation" colspan="2" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}">
+                  <div class="card card-body">
+                    <field name="spouse_fiscal_status_explanation" nolabel="1" class="text-muted" widget="text"/>
+                  </div>
+                </div>
+                <field name="disabled_spouse_bool" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'readonly': [('can_edit', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='gender']" position="after">
+                <field name="disabled" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='children']" position="after">
+                <field name="disabled_children_bool" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                <field name="disabled_children_number" attrs="{'invisible':[('disabled_children_bool','!=',True)], 'readonly': [('can_edit', '=', False)]}" colspan="1" help="number of dependent children declared as disabled"/>
+                <field name="dependent_children" invisible="1"/>
+                <field name="other_dependent_people" invisible="1"/>
+                <field name="other_dependent_people" groups="hr.group_hr_user" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                <field name="other_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)], 'readonly': [('can_edit', '=', False)]}"/>
+                <field name="other_disabled_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)], 'readonly': [('can_edit', '=', False)]}"/>
+                <field name="other_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)], 'readonly': [('can_edit', '=', False)]}"/>
+                <field name="other_disabled_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)], 'readonly': [('can_edit', '=', False)]}"/>
+            </xpath>
+            <field name="study_school" position="after">
+                <field name="l10n_be_scale_seniority" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

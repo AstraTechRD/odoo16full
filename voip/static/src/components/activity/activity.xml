@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="voip.Activity" t-inherit="mail.Activity" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_Activity_info')]" position="after">
+            <t t-if="activityView.activity.phone">
+                <div class="o_Activity_voipNumberPhone">
+                    <t t-if="activityView.activity.mobile">
+                        Phone:
+                    </t>
+                    <a class="o_Activity_voipCallPhone" href="#" t-on-click="activityView.onClickLandlineNumber">
+                        <t t-esc="activityView.activity.phone"/>
+                    </a>
+                </div>
+            </t>
+            <t t-if="activityView.activity.mobile">
+                <div class="o_Activity_voipNumberMobile">
+                    <t t-if="activityView.activity.phone">
+                        Mobile:
+                    </t>
+                    <a class="o_Activity_voipCallMobile" href="#" t-on-click="activityView.onClickMobileNumber">
+                        <t t-esc="activityView.activity.mobile"/>
+                    </a>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

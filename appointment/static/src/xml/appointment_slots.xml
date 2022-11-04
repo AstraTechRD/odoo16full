@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="appointment.slots_list">
+        <div class="text-center o_appointment_selected_slot_date pt-1" t-out="slotDate"/>
+        <div class="o_slots_list row px-0">
+            <t t-foreach="slots" t-as="slot">
+                <div t-attf-class="col-md-6 col-12 mt-2 #{slot_index % 2 == 0 ? 'pe-md-1' : 'ps-md-1'}">
+                    <a class="d-flex btn btn-outline-primary align-items-center justify-content-center"
+                        t-attf-href="#{url}?#{slot['url_parameters']}&amp;#{commonUrlParams}"
+                        t-out="slot['hours']"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</template>

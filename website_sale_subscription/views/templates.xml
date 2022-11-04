@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="price_dynamic_filter_template_product_product_subscription"
+                inherit_id="website_sale.price_dynamic_filter_template_product_product">
+        <xpath expr="//del" position="after">
+            <span t-if="record.recurring_invoice and data.get('is_subscription', False) and data.get('is_recurrence_possible', False)" class="fw-bold">
+                <span>per</span>
+                <span t-if="data.get('subscription_duration') > 1" t-esc="data.get('subscription_duration')"/>
+                <span t-esc="data.get('subscription_unit')"/>
+            </span>
+        </xpath>
+    </template>
+
+    <template id="subscription_search_result_price">
+        <t t-esc="price"
+           t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+        <small>per</small>
+        <small t-if="duration > 1" t-esc="duration"/>
+        <small t-esc="unit" style="text-transform:lowercase;"/>
+    </template>
+
+    <template id="products_item" inherit_id="website_sale.products_item">
+        <xpath expr="//span[@itemprop='priceCurrency']" position="after">
+            <span t-if="product.recurring_invoice and template_price_vals['is_subscription'] and template_price_vals['is_recurrence_possible']" class="h6">
+                <span>per</span>
+                <span class="o_subscription_duration" t-if="template_price_vals['subscription_duration'] > 1" t-esc="template_price_vals['subscription_duration']"/>
+                <span class="o_subscription_unit" t-esc="template_price_vals['subscription_unit']" style="text-transform:lowercase;"/>
+            </span>
+        </xpath>
+    </template>
+
+    <template id="subscription_product_price" inherit_id="website_sale.product_price" name="Subscription Product Price">
+        <xpath expr="//h3[hasclass('css_editable_mode_hidden')]/del" position="after">
+            <t t-if="combination_info['is_subscription'] and combination_info['is_recurrence_possible']">
+                <span class="mb-3 align-bottom input-group-lg o_website_sale_subscription_pricing_id variant_attribute">
+                    <span>per</span>
+                    <span class="o_subscription_duration" t-esc="combination_info['subscription_duration'] if combination_info['subscription_duration'] > 1 else ''"/>
+                    <span class="o_subscription_unit" t-esc="combination_info['subscription_unit']" style="text-transform:lowercase;"/>
+                </span>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="cart_summary_inherit_website_sale_subscription" inherit_id="website_sale.cart_summary">
+        <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+            <div t-if="line.temporal_type == 'subscription'" class="text-muted d-none d-md-block small"
+                 t-esc="line.pricing_id.name"/>
+        </xpath>
+        <xpath expr="//td[hasclass('td-price')]/span" position="after">
+            <div t-if="line.temporal_type == 'subscription'">
+                <span>per</span>
+                <span t-if="line.pricing_id.recurrence_id.duration > 1" t-esc="line.pricing_id.recurrence_id.duration"/>
+                <span t-esc="line.pricing_id.recurrence_id.unit" style="text-transform:lowercase;"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="cart_lines_subscription" inherit_id="website_sale.cart_lines">
+        <xpath expr="//td[hasclass('td-product_name')]/div/t/strong" position="after">
+            <div t-if="line.temporal_type == 'subscription'" class="text-muted d-none d-md-block small"
+                 t-esc="line.pricing_id.name"/>
+        </xpath>
+        <xpath expr="//td[hasclass('td-price')]/small" position="before">
+            <div t-if="line.temporal_type == 'subscription'">
+                <span>per</span>
+                <span t-if="line.pricing_id.recurrence_id.duration > 1" t-esc="line.pricing_id.recurrence_id.duration"/>
+                <span t-esc="line.pricing_id.recurrence_id.unit" style="text-transform:lowercase;"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Appointment - ONBOARDING PANEL -->
+        <record id="appointment_onboarding_panel" model="onboarding.onboarding">
+            <field name="name">Appointment Onboarding</field>
+            <field name="route_name">appointment</field>
+            <field name="panel_background_color">blue</field>
+            <field name="panel_background_image" type="base64" file="onboarding/static/src/img/onboarding_bg.png"/>
+            <field name="panel_close_action_name">action_close_appointment_onboarding</field>
+            <field name="is_per_company" eval="False"/>
+        </record>
+
+        <!-- Appointment - ONBOARDING STEPS -->
+        <record id="appointment_onboarding_create_appointment_type_step" model="onboarding.onboarding.step">
+            <field name="onboarding_id" ref="appointment_onboarding_panel"/>
+            <field name="title">Set your availabilities</field>
+            <field name="description">to automate appointments</field>
+            <field name="done_icon">fa-check</field>
+            <field name="button_text">Configure</field>
+            <field name="done_text">Looks great! - Click to review</field>
+            <field name="panel_step_open_action_name">action_open_appointment_onboarding_create_appointment_type</field>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="appointment_onboarding_preview_invite_step" model="onboarding.onboarding.step">
+            <field name="onboarding_id" ref="appointment_onboarding_panel"/>
+            <field name="title">Get your link</field>
+            <field name="description">to schedule appointments</field>
+            <field name="button_text">Preview</field>
+            <field name="panel_step_open_action_name">action_open_appointment_onboarding_preview_invite</field>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="appointment_onboarding_configure_calendar_provider_step" model="onboarding.onboarding.step">
+            <field name="onboarding_id" ref="appointment_onboarding_panel"/>
+            <field name="title">Connect your calendar</field>
+            <field name="description">With Outlook or Google</field>
+            <field name="done_icon">fa-star</field>
+            <field name="button_text">Connect</field>
+            <field name="panel_step_open_action_name">action_open_appointment_onboarding_configure_calendar_provider</field>
+            <field name="sequence">9</field>
+        </record>
+    </data>
+</odoo>

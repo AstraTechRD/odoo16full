@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_social_balance_sheet_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.social.balance.sheet.view.form</field>
+        <field name="model">l10n.be.social.balance.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Social Balance Sheet">
+                <group>
+                    <label for="date_from" string="Period"/>
+                    <div>
+                        <field name="date_from" class="oe_inline"/> - <field name="date_to" class="oe_inline"/>
+                    </div>
+                    <field name="company_id"/>
+                    <field name="state" invisible="1"/>
+                    <div states="done">
+                        <h2 attrs="{'invisible': [('social_balance_sheet', '=', False)]}">Generation Complete</h2>
+                        <p attrs="{'invisible': [('social_balance_sheet', '=', False)]}">
+                            Download the Social Balance Sheet PDF file: <field name="social_balance_sheet" readonly="1" filename="social_balance_filename"/>
+                        </p>
+                    </div>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="btn-primary" states="draft" data-hotkey="q"/>
+                    <button name="action_validate" string="Validate" type="object" class="btn-primary" states="done" data-hotkey="w"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_social_balance_sheet_action" model="ir.actions.act_window">
+        <field name="name">Social Balance Sheet</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n.be.social.balance.sheet</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_social_balance_sheet"
+        name="Social Balance Sheet"
+        action="l10n_be_social_balance_sheet_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="500"
+    />
+
+</odoo>

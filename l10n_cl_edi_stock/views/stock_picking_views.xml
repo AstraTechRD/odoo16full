@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_edi_form" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.form</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="country_code" invisible="1"/>
+            </xpath>
+            <xpath expr="//header//button[@name='action_cancel']" position="after">
+                <field name="l10n_cl_sii_send_file" invisible="1"/>
+                <button name="create_delivery_guide" string="Create Delivery Guide" type="object" attrs="{'invisible':['|', '|', '|', '|', ('state', '!=', 'done'), ('l10n_cl_dte_status', 'in', ['accepted', 'objected', 'ask_for_status', 'rejected', 'cancelled']), ('picking_type_code', '!=', 'outgoing'), ('l10n_cl_draft_status', '=', True), ('country_code', '!=', 'CL')]}"/>
+                <button name="print_delivery_guide_pdf" string="Print Delivery Guide" type="object" attrs="{'invisible':[('l10n_cl_sii_send_file', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <field name="l10n_cl_dte_file" invisible="1"/>
+                <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': ['|', ('l10n_cl_dte_file', '!=', False), ('l10n_cl_draft_status', '=', False)]}">Sequence not found for delivery guide. Please, set the first number into Delivery Guide Number field</div>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="l10n_cl_draft_status" invisible="1"/>
+                <label for="l10n_latam_document_number" attrs="{'invisible': [('l10n_cl_draft_status', '=', False), ('l10n_latam_document_number', '=', False)]}"/>
+                <div attrs="{'invisible': [('l10n_cl_draft_status', '=', False), ('l10n_latam_document_number', '=', False)]}">
+                    <field name="l10n_latam_document_number" attrs="{'readonly': [('l10n_cl_draft_status', '=', False)]}"/>
+                    <button name="l10n_cl_set_delivery_guide_to_draft" type="object" attrs="{'invisible': [('l10n_cl_dte_status', 'not in', ['not_sent', 'rejected'])]}" string="⇒ Set to Draft" class="oe_inline oe_link" groups="base.group_user"/>
+                    <button name="l10n_cl_confirm_draft_delivery_guide" type="object" attrs="{'invisible': ['|', ('l10n_cl_draft_status', '=', False), ('l10n_latam_document_number', '=', False)]}" string="⇒ Confirm" class="oe_inline oe_link" groups="base.group_user"/>
+                </div>
+                <label for="l10n_cl_dte_status" attrs="{'invisible': [('l10n_cl_dte_status', '=', False)]}"/>
+                <div attrs="{'invisible': [('l10n_cl_dte_status', '=', False)]}">
+                    <field name="l10n_cl_dte_status" readonly="1" class="oe_inline" />
+                    <button name="l10n_cl_send_dte_to_sii" type="object" attrs="{'invisible': [('l10n_cl_dte_status', '!=', 'not_sent')]}" string="⇒ Send Now to SII" class="oe_inline oe_link" groups="base.group_user"/>
+                    <button name="l10n_cl_verify_dte_status" type="object" attrs="{'invisible': [('l10n_cl_dte_status', '!=', 'ask_for_status')]}" string="⇒ Verify on SII" class="oe_inline oe_link" groups="base.group_user"/>
+                </div>
+                <field name="l10n_cl_delivery_guide_reason" attrs="{'invisible': [('country_code', '!=', 'CL')], 'readonly': [('l10n_cl_dte_status', 'not in', [False, 'cancelled'])]}"/>
+            </xpath>
+            <xpath expr="//notebook//page[@name='note']" position="after">
+                <page string="Delivery Guide" name="electronic_invoice" attrs="{'invisible':['|', ('country_code', '!=', 'CL'), ('l10n_cl_dte_status', '=', False), ('l10n_latam_document_number', '=', False)]}">
+                    <group>
+                        <field name="l10n_latam_document_type_id" readonly="1"/>
+                        <field name="l10n_cl_sii_send_ident"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_edi_tree" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.tree</field>
+        <field name="inherit_id" ref="stock.vpicktree" />
+        <field name="arch" type="xml">
+            <field name="json_popover" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_cl_dte_status" widget="badge" decoration-success="l10n_cl_dte_status == 'accepted'"
+                       decoration-info="l10n_cl_dte_status == 'objected'"
+                       decoration-warning="l10n_cl_dte_status == 'ask_for_status'"
+                       decoration-danger="l10n_cl_dte_status == 'rejected'"
+                       attrs="{'invisible': [('country_code', '!=', 'CL')]}" optional="hide"/>
+                <field name="l10n_latam_document_number" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

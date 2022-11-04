@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="knowledge.EmbeddedViewManager" owl="1">
+        <div class="o_knowledge_toolbar o_knowledge_clean_for_save">
+            <div class="btn-group bg-white">
+                <button t-if="!props.readonly" t-on-click="_onRenameBtnClick" class="btn btn-primary btn-link btn-sm border-0" title="Rename">
+                    <i class="fa fa-pencil"/> <span class="o_knowledge_toolbar_button_text">Rename</span>
+                </button>
+                <button t-on-click="_onOpenBtnClick" class="btn btn-primary btn-link btn-sm border-0" title="Open">
+                    <i class="fa fa-external-link"/> <span class="o_knowledge_toolbar_button_text">Open</span>
+                </button>
+            </div>
+        </div>
+        <div class="o_knowledge_embedded_view o_knowledge_clean_for_save oe-blackbox d-flex flex-column flex-grow-1 border-top border-bottom">
+            <t t-component="EmbeddedView" t-props="EmbeddedViewProps"/>
+        </div>
+    </t>
+</templates>

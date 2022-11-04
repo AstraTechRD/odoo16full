@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mrp_workorder.overviewButtonsKanban" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_back_button')]" position="after">
+            <button t-if="workcenter.allow_employee" t-on-click="openEmployeeSelection" class="btn btn-secondary o_lock_employee">
+                <span>Log In</span>
+                <t t-if="employee.name">
+                    <span t-esc="employee.name" class="ml16 text-dark"></span>
+                </t>
+            </button>
+        </xpath>
+        <xpath expr="//div[last()]" position="after">
+            <div t-if="popup['SelectionPopup'].isShown" class="o_tablet_popups">
+                <SelectionPopup popupData="popup['SelectionPopup'].data" onClosePopup.bind="closePopup" onSelectEmployee.bind="selectEmployee"/>
+            </div>
+            <div t-if="popup['PinPopup'].isShown" class="o_tablet_popups">
+                <PinPopup popupData="popup['PinPopup'].data" onClosePopup.bind="closePopup" onPinValidate.bind="selectEmployee"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

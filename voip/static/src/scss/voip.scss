@@ -1,0 +1,74 @@
+.o_dial {
+    $o-dial-panel-width: 300px;
+    $o-dial-panel-max-height-desktop: 440px;
+
+    z-index: $zindex-modal - 1;
+    
+    @include media-breakpoint-up(md) {
+        width: $o-dial-panel-width !important;
+        height: auto !important;
+    }
+
+    :focus {
+        outline: none;
+    }
+
+    .o_dial_window_title {
+        height: $o-mail-chat-window-header-height-mobile;
+        background-color: var(--voip__windowTitle-bg, #{$o-brand-odoo});
+        color: #FFFFFF;
+    }
+
+    .o_dial_window_close:hover {
+        background-color: rgba($black, 0.1);
+    }
+
+    @include media-breakpoint-up(md) {
+        &,
+        .o_dial_fold,
+        .o_dial_window_title {
+            border-top-left-radius: $border-radius-lg;
+            border-top-right-radius: $border-radius-lg;
+        }
+
+        .o_dial_window_title {
+            height: $o-mail-chat-window-header-height;
+        }
+    }
+
+    &.folded{
+        .o_dial_fold ~ * {
+            display: none !important;
+        }
+    }
+
+    .details_in_call {
+        border: 1px solid rgba($o-success, .25);
+    }
+
+    .o_dial_panel {
+        .tab-content {
+            flex-basis: $o-dial-panel-max-height-desktop;
+        }
+
+        .o_dial_phonecall .fa-times {
+            left: 5px;
+            bottom: 6px;    
+            font-size: 8px;
+        }
+    }
+
+    // Bootstrap's 'd-*' utility classes adds an '!important'
+    // which prevents jQuery's show/hide methods to work properly
+    &,
+    .o_dial_panel,
+    .o_dial_main_buttons {
+        display: flex;
+    }
+
+    .o_dial_incoming_buttons,
+    .o_dial_postpone_button,
+    .o_phonecall_in_call {
+        display: none;
+    }
+}

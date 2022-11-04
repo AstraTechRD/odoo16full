@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Templates inherited -->
+
+    <template id="appointments_list_layout" name="Online Appointment: Appointments List Layout"
+              inherit_id="appointment.appointments_list_layout" track="1">
+        <xpath expr="//t[@t-call='portal.portal_layout']" position="attributes">
+            <attribute name="t-call">website.layout</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_appointment_choice')]" position="before">
+            <t t-call="website_appointment.website_calendar_index"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_appointment_index')]" position="attributes">
+            <attribute name="class">o_appointment_index bg-o-color-4 px-3</attribute>
+        </xpath>
+        <xpath expr='//div[hasclass("o_appointment_svg")]' position="before">
+            <div class="alert alert-info text-center d-none" groups="appointment.group_appointment_manager">
+                <p class="m-0">Use the top button '<b>+ New</b>' to create an appointment type.</p>
+            </div>
+        </xpath>
+    </template>
+
+    <record id="appointment.appointments_list_layout" model="ir.ui.view">
+        <!-- As the track field is not properly overridden (the value is different whether you get it by the base class
+        name or the overridden name), write it to the base class as well -->
+        <field name="track">1</field>
+    </record>
+
+    <template id="appointment_info" name="Online Appointment: Appointment Info" inherit_id="appointment.appointment_info" track="1">
+        <xpath expr="//t[@t-call='portal.portal_layout']" position="attributes">
+            <attribute name="t-call">website.layout</attribute>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class">o_wappointment_wrap</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='o_portal_fullwidth_alert']" position="replace"/>
+        <xpath expr="//div[hasclass('o_appointment')]" position="before">
+            <nav class="o_wappointment_navbar navbar navbar-light border-top shadow-sm d-print-none py-0">
+                <div class="container">
+                    <a t-if="appointment_type.category == 'website' and len(available_appointments) != 1"
+                       class="o_wappointment_navbar_link navbar-brand btn px-0 h4 my-0 me-auto"
+                       t-attf-href="/appointment?#{keep_query('filter_appointment_type_ids', 'filter_staff_user_ids', 'invite_token')}">
+                        <i class="fa fa-long-arrow-left me-2"/>All Appointments
+                    </a>
+                        <t t-call="website_appointment.appointment_progress_bar">
+                            <t t-set="step" t-value="20"/>
+                        </t>
+                </div>
+            </nav>
+        </xpath>
+        <xpath expr="//t[@t-call='appointment.staff_user_select']" position="attributes">
+            <attribute name="t-if">appointment_type.assign_method == 'chosen' and not skip_operator_selection</attribute>
+        </xpath>
+    </template>
+
+    <record id="appointment.appointment_info" model="ir.ui.view">
+        <!-- Write track=1 to the base class as well (see explanation above) -->
+        <field name="track">1</field>
+    </record>
+
+    <!-- Pages -->
+
+    <template id="appointment_select_operator" name="Online Appointment: Appointment Operators">
+        <t t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="website.layout">
+            <div id="wrap" class="o_wappointment_wrap">
+                <nav t-if="appointment_type.category == 'website'" class="o_wappointment_navbar navbar navbar-light border-top shadow-sm d-print-none py-0">
+                    <div class="container">
+                        <a t-if="len(available_appointments) != 1" class="o_wappointment_navbar_link navbar-brand btn px-0 h4 my-0 me-auto"
+                            t-attf-href="/appointment?#{keep_query('filter_appointment_type_ids', 'filter_staff_user_ids', 'invite_token')}">
+                            <i class="fa fa-long-arrow-left me-2"/>All Appointments
+                        </a>
+                        <t t-call="website_appointment.appointment_progress_bar">
+                            <t t-set="step" t-value="10"/>
+                        </t>
+                    </div>
+                </nav>
+                <div class="container pb64 o_appointment o_wappointment_select_operator">
+                    <h1 class="o_page_header mt32"> Schedule <span class="text-primary" t-out="appointment_type.name"/> Appointment</h1>
+                    <div class="row justify-content-between my-2">
+                        <h3 class="col-12 col-md-6 pt-1 pb-2">Choose who you will meet</h3>
+                        <div class="col-12 col-md-6 mb-md-0 my-3 mt-md-2 text-center text-md-end">
+                            <a t-attf-href="/appointment/#{ appointment_type.id }?#{keep_query('*', skip_operator_selection=1)}"
+                                class="o_wappointment_select_btn text-reset h6 px-3 py-2">
+                                <span> See all availabilities <i class="fa fa-long-arrow-right"/></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row px-0 pt-3">
+                        <div t-foreach="users_possible" t-as="staff_user" class="col-md-6 col-lg-4 mb-4">
+                            <article class="card border-1 shadow-sm h-100" itemscope="itemscope" itemtype="http://schema.org/Employee">
+                                <a t-attf-href="/appointment/#{appointment_type.id}?staff_user_id=#{staff_user.id}&amp;#{keep_query('*')}"
+                                   class="text-reset text-decoration-none h-100">
+                                    <header class="overflow-hidden bg-secondary rounded-top">
+                                        <img t-attf-src="/appointment/#{appointment_type.id}/avatar?user_id=#{staff_user.id}"
+                                             class="w-100 h-100 o_object_fit_cover o_appointment_avatar_background"/>
+                                    </header>
+                                    <main class="card-body">
+                                        <h2 class="mb-0" t-out="staff_user.name"/>
+                                        <div class="o_wappointment_card_user_fct text-black-50 h6">
+                                            <div t-field="staff_user.partner_id.function" placeholder="Add a function here..."/>
+                                        </div>
+                                        <div class="o_wappointment_card_user_dsc mt-3 mb48">
+                                            <div t-field="staff_user.partner_id.website_description" placeholder="Add a user description here..."/>
+                                        </div>
+                                        <div class="o_wappointment_card_user_select o_wappointment_select_btn position-absolute h6 p-2 mb-0">
+                                            <span class="d-block text-center h6 mb-0">Choose <t t-out="staff_user.name"/></span>
+                                        </div>
+                                    </main>
+                                </a>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="appointments_cards_layout" name="Appointment Types" track="1">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_appointment_index h-100">
+                <t t-call="website_appointment.website_calendar_index"/>
+                <t t-call="website_appointment.website_calendar_index_topbar"/>
+                <div class="oe_structure"/>
+                <div class="o_appointment_choice o_appointment_appointments_list h-100 mb-5">
+                    <div class="container">
+                        <div id="o_appointment_index_main_col" class="col-md px-0 o_wappointment_appointment_list_columns">
+                            <div class="row">
+                                <t t-call="website_appointment.appointments_cards"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure oe_empty"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="appointment_progress_bar">
+        <t t-set="STEP_OPERATOR_SELECT" t-value="10"/>
+        <t t-set="STEP_TIME" t-value="20"/>
+        <t t-set="STEP_FORM" t-value="30"/>
+        <t t-set="STEP_VALIDATION" t-value="40"/>
+        <t t-set="show_operator_select" t-value="step==STEP_OPERATOR_SELECT or appointment_type.avatars_display == 'show' and appointment_type.assign_method == 'chosen' and len(users_possible) > 1"/>
+        <ul class="o_wappointment_progress_bar list-unstyled my-0 ms-auto float-end d-none d-lg-block">
+            <t t-if="show_operator_select">
+                <li t-att-class="'position-relative float-start m-0 ' + (step==STEP_OPERATOR_SELECT and 'o_current_stage pe-none' or step&gt;STEP_OPERATOR_SELECT and 'o_passed_stage bg-transparent' or 'o_future_stage bg-transparent text-muted pe-none')">
+                    <a class="text-decoration-none text-reset"
+                       t-att-href="'#' if step&lt;STEP_OPERATOR_SELECT else '/appointment/%s?%s' % (appointment_type.id, keep_query('filter_appointment_type_ids', 'filter_staff_user_ids', 'invite_token'))">
+                        Operator<t t-out="operator_chevron_href"/><span class="chevron position-absolute d-block"></span>
+                    </a>
+                </li>
+            </t>
+            <li t-att-class="'position-relative float-start m-0 ' + (step==STEP_TIME and 'o_current_stage pe-none' or step&gt;STEP_TIME and 'o_passed_stage bg-transparent' or 'o_future_stage bg-transparent text-muted pe-none')">
+                <a class="text-decoration-none text-reset"
+                   t-att-href="'#' if step&lt;STEP_TIME else '/appointment/%s?%s' % (appointment_type.id, keep_query('*'))">
+                    Time<span class="chevron position-absolute d-block"></span>
+                </a>
+            </li>
+            <li t-att-class="'position-relative float-start m-0 ' + (step==STEP_FORM and 'o_current_stage pe-none' or step&gt;STEP_FORM and 'o_passed_stage bg-transparent' or 'o_future_stage bg-transparent text-muted pe-none')">
+                Details<span class="chevron position-absolute d-block"></span>
+            </li>
+            <li t-att-class="'position-relative float-start m-0 ' + (step==STEP_VALIDATION and 'o_current_stage pe-none' or step&gt;STEP_VALIDATION and 'o_passed_stage bg-transparent' or 'o_future_stage bg-transparent text-muted pe-none')">
+                Booked<span class="chevron position-absolute d-block"></span>
+            </li>
+        </ul>
+    </template>
+
+    <!-- Enable the customize option for the 2 layouts (cards and list)-->
+    <template id="website_calendar_index" name="Online Appointment"/>
+    <template id="opt_appointments_list_cards" inherit_id="website_appointment.website_calendar_index" active="True" name="Card Design"/>
+
+    <!-- Top bar -->
+    <template id="website_calendar_index_topbar" name="Topbar">
+        <nav class="o_wappointment_navbar navbar navbar-light border-top shadow-sm d-print-none">
+            <div class="container">
+                <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
+                    <span class="navbar-brand h4 my-0 me-auto my-auto">Choose Your Appointment</span>
+                    <div class="d-flex flex-wrap ps-sm-3 ms-auto pe-0 my-auto">
+                        <t t-call="website.website_search_box_input">
+                            <t t-set="_classes" t-valuef="w-100 my-1 my-lg-0 #{_classes}"/>
+                            <t t-set="search_type" t-valuef="appointments"/>
+                            <t t-set="action" t-valuef="/appointment"/>
+                            <t t-set="display_description" t-valuef="true"/>
+                            <t t-set="display_detail" t-valuef="false"/>
+                            <t t-set="display_image" t-valuef="false"/>
+                            <t t-set="placeholder">Search an appointment...</t>
+                            <t t-set="search" t-value="current_search"/>
+                            <t t-foreach="searches" t-as="search">
+                                <input t-if="item != 'search' and item_value != 'all'" type="hidden"
+                                    t-att-name="item" t-att-value="item_value"/>
+                            </t>
+                            <input type="hidden" name="filter_appointment_type_ids" t-att-value="filter_appointment_type_ids"/>
+                            <input type="hidden" name="filter_staff_user_ids" t-att-value="filter_staff_user_ids"/>
+                            <input type="hidden" name="invite_token" t-att-value="invite_token"/>
+                            <t t-out="0"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </template>
+
+    <template id="appointments_cards" name="Appointments Cards">
+        <div t-if="not appointment_types" class="col-12 o_appointment_not_found">
+            <h2 class="mt32 mb-3 d-none">No appointment found.</h2>
+            <div class="alert alert-info text-center d-none" groups="appointment.group_appointment_manager">
+                <p class="m-0">Use the top button '<b>+ New</b>' to create an appointment type.</p>
+            </div>
+            <div class="o_appointment_svg mx-auto text-center py-5 w-75">
+                <i class="mx-auto h3 fa fa-spinner fa-spin"/>
+            </div>
+        </div>
+        <div t-else="" class="col-12"><h1 class="o_page_header mb32 mt32">Schedule an Appointment</h1></div>
+        <div t-foreach="appointment_types" t-as="appointment" class="col-md-6 col-lg-4 mb-4">
+            <article class="card border-1 shadow-sm h-100" itemscope="itemscope" itemtype="http://schema.org/Appointments">
+                <a t-attf-href="/appointment/#{appointment.id}?#{keep_query('filter_appointment_type_ids', 'filter_staff_user_ids', 'invite_token')}"
+                    class="text-reset text-decoration-none h-100 d-flex flex-column">
+                    <header class="overflow-hidden bg-secondary rounded-top col-12">
+                        <div class="d-block h-100 w-100">
+                            <t t-call="website.record_cover">
+                                <t t-set="_record" t-value="appointment"/>
+                                <small t-if="not appointment.website_published" class="o_appointment_unpublished bg-danger position-absolute w-100 text-end" groups="base.group_user">
+                                    <i class="fa fa-ban me-2"/>Unpublished
+                                </small>
+                            </t>
+                        </div>
+                    </header>
+                    <main class="card-body d-flex flex-column">
+                        <h2 t-attf-class="fw-bold my-3">
+                            <span t-field="appointment.name" itemprop="name"/>
+                        </h2>
+                        <div class="text-muted flex-fill">
+                            <span t-field="appointment.message_intro" itemprop="message_intro"
+                                    placeholder="Add an intro message here..."/>
+                        </div>
+                        <div t-if="appointment.assign_method != 'random'" class="o_wappointment_card_staff_users lh-lg d-flex">
+                            <t t-if="len(appointment.staff_user_ids)" t-call="website_appointment.appointment_staff_users_description"/>
+                        </div>
+                        <div itemprop="location" class="o_wappointment_card_location mt-3 mb-5 d-flex">
+                            <i class="fa fa-map-marker text-center text-muted fs-5 me-2"/>
+                            <span t-if="appointment.location_id" t-field="appointment.location_id" t-options="{'widget': 'contact', 'fields': ['name']}"/>
+                            <span t-else="" class="o_not_editable">Online</span>
+                        </div>
+                        <div class="navbar-brand fw-bold text-primary text-uppercase h5 me-auto position-absolute w-100">
+                            View availability <i class="fa fa-arrow-right"/>
+                        </div>
+                    </main>
+                </a>
+            </article>
+        </div>
+        <div class="d-flex justify-content-center my-3">
+            <t t-call="website.pager"/>
+        </div>
+    </template>
+
+    <template id='appointment_staff_users_description' name="Staff Avatars">
+        <t t-set="staff_users_count" t-value="len(appointment.staff_user_ids)"/>
+        <t t-if="appointment.avatars_display == 'show'">
+            <span class="o_wappointment_user_avatars d-flex">
+                <t t-foreach="appointment.staff_user_ids[:5]" t-as="staff_user">
+                    <img t-attf-src="/appointment/#{appointment.id}/avatar?user_id=#{staff_user.id}&amp;avatar_size=128" t-att-title="staff_user.name"
+                        class="rounded-circle o_appointment_avatar_background o_wappointment_user_avatar"/>
+                </t>
+            </span>
+            <span t-if="staff_users_count == 1"><t t-out="appointment.staff_user_ids[0].name"/></span>
+            <span t-if="staff_users_count == 6" class="ps-2"> (+1 other) </span>
+            <span t-if="staff_users_count > 6" class="ps-2"> (+<t t-out="staff_users_count - 5"/> others) </span>
+        </t>
+        <t t-else="">
+            <t t-if="staff_users_count == 1"><span class="fa fa-user text-muted text-center fs-5 me-2 pt-1"/><t t-out="appointment.staff_user_ids[0].name"/></t>
+            <t t-else=""><span class="fa fa-group text-muted text-center fs-5 me-2 pt-1"/><t t-out="staff_users_count"/> people available </t>
+        </t>
+    </template>
+</odoo>

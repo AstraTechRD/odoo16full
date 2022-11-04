@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_report_cashflow" model="account.report">
+        <field name="name">Statement of cash flows</field>
+        <field name="root_report_id" ref="account_reports.cash_flow_report"/>
+        <field name="country_id" ref="base.mn"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_report_cashflow_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="report_cashflow_net" model="account.report.line">
+                <field name="name">Бүх цэвэр мөнгөн гүйлгээ</field>
+                <field name="code">MNCF_NET</field>
+                <field name="expression_ids">
+                    <record id="report_cashflow_net_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">MNCF_OPER.balance + MNCF_INV.balance + MNCF_FIN.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="report_cashflow_oper" model="account.report.line">
+                        <field name="name">Үндсэн үйл ажиллагааны мөнгөн гүйлгээ</field>
+                        <field name="code">MNCF_OPER</field>
+                        <field name="expression_ids">
+                            <record id="report_cashflow_oper_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MNCF_OPERIN.balance + MNCF_OPEROUT.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="report_cashflow_oper_in" model="account.report.line">
+                                <field name="name">Мөнгөн орлогын дүн (+)</field>
+                                <field name="code">MNCF_OPERIN</field>
+                                <field name="expression_ids">
+                                    <record id="report_cashflow_oper_in_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MNCF_OPERIN1.balance + MNCF_OPERIN2.balance + MNCF_OPERIN3.balance + MNCF_OPERIN4.balance + MNCF_OPERIN5.balance + MNCF_OPERIN6.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="report_cashflow_oper_in1" model="account.report.line">
+                                        <field name="name">Бараа борлуулсан, үйлчилгээ үзүүлсний орлого</field>
+                                        <field name="code">MNCF_OPERIN1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_product')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_in2" model="account.report.line">
+                                        <field name="name">Эрхийн шимтгэл, хураамж, төлбөрийн орлого</field>
+                                        <field name="code">MNCF_OPERIN2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_loyalty')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_in3" model="account.report.line">
+                                        <field name="name">Даатгалын нөхвөрөөс хүлээн авсан мөнгө</field>
+                                        <field name="code">MNCF_OPERIN3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_insurance2')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_in4" model="account.report.line">
+                                        <field name="name">Буцаан авсан албан татвар</field>
+                                        <field name="code">MNCF_OPERIN4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_taxrefund')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_in5" model="account.report.line">
+                                        <field name="name">Татаас, санхүүжилтийн орлого</field>
+                                        <field name="code">MNCF_OPERIN5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_funding')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_in6" model="account.report.line">
+                                        <field name="name">Бусад мөнгөн орлого</field>
+                                        <field name="code">MNCF_OPERIN6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('account.account_tag_operating')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="report_cashflow_oper_out" model="account.report.line">
+                                <field name="name">Мөнгөн зарлагын дүн (-)</field>
+                                <field name="code">MNCF_OPEROUT</field>
+                                <field name="expression_ids">
+                                    <record id="report_cashflow_oper_out_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MNCF_OPEROUT1.balance + MNCF_OPEROUT2.balance + MNCF_OPEROUT3.balance + MNCF_OPEROUT4.balance + MNCF_OPEROUT5.balance + MNCF_OPEROUT6.balance + MNCF_OPEROUT7.balance + MNCF_OPEROUT8.balance + MNCF_OPEROUT9.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="report_cashflow_oper_out1" model="account.report.line">
+                                        <field name="name">Ажиллагчдад төлсөн</field>
+                                        <field name="code">MNCF_OPEROUT1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_employee')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_out2" model="account.report.line">
+                                        <field name="name">Нийгмийн даатгалын байгууллагад төлсөн</field>
+                                        <field name="code">MNCF_OPEROUT2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_insurance')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_out3" model="account.report.line">
+                                        <field name="name">Бараа материал худалданавахад төлсөн</field>
+                                        <field name="code">MNCF_OPEROUT3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_product')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_out4" model="account.report.line">
+                                        <field name="name">Ашиглалтын зардалд төлсөн</field>
+                                        <field name="code">MNCF_OPEROUT4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_cost')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_out5" model="account.report.line">
+                                        <field name="name">Түлш шатахуун, тээврийн хөлс, сэлбэг хэрэгсэлдтөлсөн</field>
+                                        <field name="code">MNCF_OPEROUT5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_transport')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_out6" model="account.report.line">
+                                        <field name="name">Хүүний төлбөрт төлсөн</field>
+                                        <field name="code">MNCF_OPEROUT6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_interest')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_out7" model="account.report.line">
+                                        <field name="name">Татварын байгууллагад төлсөн</field>
+                                        <field name="code">MNCF_OPEROUT7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_taxrefund')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_out8" model="account.report.line">
+                                        <field name="name">Даатгалын төлбөрт төлсөн</field>
+                                        <field name="code">MNCF_OPEROUT8</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_operating_insurance2')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_oper_out9" model="account.report.line">
+                                        <field name="name">Бусад мөнгөн зарлага</field>
+                                        <field name="code">MNCF_OPEROUT9</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('account.account_tag_operating')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="report_cashflow_inv" model="account.report.line">
+                        <field name="name">Хөрөнгө оруулалтын үйл ажиллагааны мөнгөн гүйлгээ</field>
+                        <field name="code">MNCF_INV</field>
+                        <field name="expression_ids">
+                            <record id="report_cashflow_inv_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MNCF_INVIN.balance - MNCF_INVOUT.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="report_cashflow_inv_in" model="account.report.line">
+                                <field name="name">Мөнгөн орлогын дүн (+)</field>
+                                <field name="code">MNCF_INVIN</field>
+                                <field name="expression_ids">
+                                    <record id="report_cashflow_inv_in_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MNCF_INVIN1.balance + MNCF_INVIN2.balance + MNCF_INVIN3.balance + MNCF_INVIN4.balance + MNCF_INVIN5.balance + MNCF_INVIN6.balance + MNCF_INVIN7.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="report_cashflow_inv_in1" model="account.report.line">
+                                        <field name="name">Үндсэн хөрөнгө борлуулсны орлого</field>
+                                        <field name="code">MNCF_INVIN1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_fasset')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_in2" model="account.report.line">
+                                        <field name="name">Биет бус хөрөнгө борлуулсны орлого</field>
+                                        <field name="code">MNCF_INVIN2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_iasset')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_in3" model="account.report.line">
+                                        <field name="name">Хөрөнгө оруулалт борлуулсны орлого</field>
+                                        <field name="code">MNCF_INVIN3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_invest')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_in4" model="account.report.line">
+                                        <field name="name">Бусад урт хугацаат хөрөнгө борлуулсны орлого</field>
+                                        <field name="code">MNCF_INVIN4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('account.account_tag_financing')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_in5" model="account.report.line">
+                                        <field name="name">Бусдад олгосон зээл, мөнгөн урьдчилгааны буцаан төлөлт</field>
+                                        <field name="code">MNCF_INVIN5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_loan')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_in6" model="account.report.line">
+                                        <field name="name">Хүлээн авсан хүүний орлого</field>
+                                        <field name="code">MNCF_INVIN6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_interest')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_in7" model="account.report.line">
+                                        <field name="name">Хүлээн авсан ногдол ашиг</field>
+                                        <field name="code">MNCF_INVIN7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('credit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_dividends')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="report_cashflow_inv_out" model="account.report.line">
+                                <field name="name">Мөнгөн зарлагын дүн (-)</field>
+                                <field name="code">MNCF_INVOUT</field>
+                                <field name="expression_ids">
+                                    <record id="report_cashflow_inv_out_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MNCF_INVOUT1.balance + MNCF_INVOUT2.balance + MNCF_INVOUT3.balance + MNCF_INVOUT4.balance + MNCF_INVOUT5.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="report_cashflow_inv_out1" model="account.report.line">
+                                        <field name="name">Үндсэн хөрөнгө олж эзэмшихэд төлсөн</field>
+                                        <field name="code">MNCF_INVOUT1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_fasset')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_out2" model="account.report.line">
+                                        <field name="name">Биет бус хөрөнгө олж эзэмшихэд төлсөн</field>
+                                        <field name="code">MNCF_INVOUT2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_iasset')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_out3" model="account.report.line">
+                                        <field name="name">Хөрөнгө оруулалт олж эзэмшихэд төлсөн</field>
+                                        <field name="code">MNCF_INVOUT3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_invest')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_out4" model="account.report.line">
+                                        <field name="name">Бусад урт хугацаат хөрөнгө олж эзэмшихэд төлсөн</field>
+                                        <field name="code">MNCF_INVOUT4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('account.account_tag_financing')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_inv_out5" model="account.report.line">
+                                        <field name="name">Бусдад олгосон зээл болон урьдчилгаа</field>
+                                        <field name="code">MNCF_INVOUT5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_investing_loan')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="report_cashflow_fin" model="account.report.line">
+                        <field name="name">Санхүүгийн үйл ажиллагааны мөнгөн гүйлгээ</field>
+                        <field name="code">MNCF_FIN</field>
+                        <field name="expression_ids">
+                            <record id="report_cashflow_fin_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MNCF_FININ.balance - MNCF_FINOUT.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="report_cashflow_fin_in" model="account.report.line">
+                                <field name="name">Мөнгөн орлогын дүн (+)</field>
+                                <field name="code">MNCF_FININ</field>
+                                <field name="expression_ids">
+                                    <record id="report_cashflow_fin_in_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MNCF_FININ1.balance + MNCF_FININ2.balance + MNCF_FININ3.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="report_cashflow_fin_in1" model="account.report.line">
+                                        <field name="name">Зээл авсан, өрийн үнэт цаас гаргаснаас хүлээн авсан</field>
+                                        <field name="code">MNCF_FININ1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_financing_loan')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_fin_in2" model="account.report.line">
+                                        <field name="name">Хувьцаа болон өмчийн бусад үнэт цаас гаргаснаас хүлээн авсан</field>
+                                        <field name="code">MNCF_FININ2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_financing_stock')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_fin_in3" model="account.report.line">
+                                        <field name="name">Төрөл бүрийн хандив</field>
+                                        <field name="code">MNCF_FININ3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_financing_donation')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="report_cashflow_fin_out" model="account.report.line">
+                                <field name="name">Мөнгөнзарлагын дүн (-)</field>
+                                <field name="code">MNCF_FINOUT</field>
+                                <field name="expression_ids">
+                                    <record id="report_cashflow_fin_out_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">MNCF_FINOUT1.balance + MNCF_FINOUT2.balance + MNCF_FINOUT3.balance + MNCF_FINOUT4.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="report_cashflow_fin_out1" model="account.report.line">
+                                        <field name="name">Зээл, өрийн үнэт цаасны төлбөрт төлсөн мөнгө</field>
+                                        <field name="code">MNCF_FINOUT1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_financing_loan')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_fin_out2" model="account.report.line">
+                                        <field name="name">Санхүүгийн түрээсийн өглөгт төлсөн</field>
+                                        <field name="code">MNCF_FINOUT2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_financing_rental')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_fin_out3" model="account.report.line">
+                                        <field name="name">Хувьцаа буцаан худалдаж авахад төлсөн</field>
+                                        <field name="code">MNCF_FINOUT3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('l10n_mn.account_tag_financing_stock')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                    <record id="report_cashflow_fin_out4" model="account.report.line">
+                                        <field name="name">Төлсөн ногдол ашиг</field>
+                                        <field name="code">MNCF_FINOUT4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('debit', '&gt;', 0.0), ('account_id.tag_ids', '=', ref('account.account_tag_investing')),('journal_id.type','in',('bank','cash'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="report_cashflow_ex" model="account.report.line">
+                        <field name="name">Валютын ханшийн зөрүү</field>
+                        <field name="code">MNCF_EXCH</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">sum([('account_id.tag_ids', '=', ref('l10n_mn.account_tag_exchange')),('journal_id.type','in',('bank','cash'))])</field>
+                    </record>
+                </field>
+            </record>
+            <record id="report_cashflow_cashinit" model="account.report.line">
+                <field name="name">Мөнгө, түүнтэй адилтгах хөрөнгийн эхний үлдэгдэл</field>
+                <field name="code">MNCF_CASHSTART</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="report_cashflow_cashinit_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.account_type', 'in', ('asset_cash', 'liability_credit_card'))]"/>
+                        <field name="date_scope">to_beginning_of_period</field>
+                        <field name="subformula">sum</field>
+                    </record>
+                </field>
+            </record>
+            <record id="report_cashflow_cashbalance" model="account.report.line">
+                <field name="name">Мөнгө, түүнтэй адилтгах хөрөнгийн эцсийн үлдэгдэл</field>
+                <field name="code">MNCF_CASHEND</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="report_cashflow_cashbalance_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.account_type', 'in', ('asset_cash', 'liability_credit_card'))]"/>
+                        <field name="date_scope">normal</field>
+                        <field name="subformula">sum</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

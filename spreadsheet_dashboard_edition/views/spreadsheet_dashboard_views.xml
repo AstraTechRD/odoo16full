@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_view_list" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.list.view</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="inherit_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position='attributes'>
+                <attribute name="create">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='group_ids']" position='after'>
+                <field name="spreadsheet_snapshot" groups="base.group_no_one" widget="binary"/>
+                <field name="data" groups="base.group_no_one" widget="binary"/>
+                <button string="Edit" class="float-end" icon="fa-pencil" type="object" name="action_edit_dashboard"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

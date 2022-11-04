@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="appointment.AppointmentCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension" owl="1">
+        <DatePicker position="before">
+            <div id="scheduling_box" class="mb-3">
+                <div t-if="env.calendarState.mode === 'slots-creation' || appointmentState.lastAppointmentUrl" class="o_appointment_scheduling_message_box">
+                    <div class="pt-2">
+                        <p t-if="appointmentState.lastAppointmentUrl" class="mx-2 user-select-none">
+                            Link Copied in your clipboard !
+                        </p>
+                        <p t-else="" class="mx-2 user-select-none">
+                            Click in your calendar to pick meeting time proposals.
+                        </p>
+                    </div>
+                    <span class="o_appointment_scheduling_buttons d-flex px-2">
+                        <button t-attf-class="btn btn-primary col-9 mb-2 o_appointment_get_link ${this.appointmentState.lastAppointmentUrl || this.hasSlotEvents() ? '' : 'disabled pe-none'}" aria-label="Get Share Link"
+                            t-on-click="onClickGetShareLink" t-ref="copyLinkRef">
+                            Get Share Link
+                        </button>
+                        <button class="btn btn-secondary col-2 ms-auto mb-2 o_appointment_discard_slots" aria-label="Discard"
+                            t-on-click="onClickDiscard">
+                            <i class="fa fa-trash"/>
+                        </button>
+                    </span>
+                </div>
+                <div t-else="" class="btn-group px-0 o_appointment_calendar_group_buttons w-100">
+                    <button t-on-click="onClickSelectAvailabilities" class="btn btn-primary o_appointment_select_slots" aria-label="Share Availabilities" title="Share Availabilities">
+                        Share Availabilities
+                    </button>
+                    <button id="dropdownAppointmentLink" class="btn btn-primary col-2 dropdown-toggle flex-grow-0" data-bs-toggle="dropdown">
+                        <span class="fa fa-2x fa-angle-down"/>
+                    </button>
+                    <div id="dropdownMenuAppointmentLink" class="dropdown-menu dropdown-menu-end col w-100" data-labelledby="dropdownAppointmentLink">
+                        <button t-on-click="onClickSelectAvailabilities" id="select_availabilities" class="btn btn-secondary dropdown-item text-uppercase font-weigth-bold ps-3 o_appointment_select_slots">
+                            <span class="align-bottom">Select Dates</span>
+                        </button>
+                        <button t-on-click="onClickSearchCreateAnytimeAppointment"
+                            class="btn btn-secondary dropdown-item text-uppercase font-weigth-bold ps-3 o_appointment_button_link o_appointment_search_create_anytime_appointment">
+                            <span class="align-bottom">Any Time</span>
+                        </button>
+                        <t t-set="appointments" t-value="appointmentState.data.appointment_types_info"/>
+                        <div t-if="appointments.length > 0" role="separator" class="dropdown-divider"/>
+                        <t t-foreach="appointments" t-as="appointment" t-key="appointment.id">
+                            <button t-att-title="appointment.name" t-on-click.stop.prevent="() => this.onClickGetAppointmentUrl(appointment.id)"
+                                class="btn btn-secondary dropdown-item text-uppercase font-weigth-bold ps-3 o_appointment_button_link o_appointment_appointment_link_clipboard text-truncate">
+                                <span class="align-bottom" t-out="appointment.name"/>
+                            </button>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </DatePicker>
+    </t>
+</templates>

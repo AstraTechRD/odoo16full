@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="xaf_audit_file">
+        <auditfile xmlns="http://www.auditfiles.nl/XAF/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <header>
+                <fiscalYear t-esc="fiscal_year"/>
+                <startDate t-esc="date_from"/>
+                <endDate t-esc="date_to"/>
+                <curCode t-esc="company.currency_id.name"/>
+                <dateCreated t-esc="date_created"/>
+                <softwareDesc>Odoo</softwareDesc>
+                <softwareVersion t-esc="software_version"/>
+            </header>
+            <company>
+                <companyIdent t-esc="company.company_registry"/>
+                <companyName t-esc="company.name"/>
+                <taxRegistrationCountry t-esc="company.country_id.code"/>
+                <taxRegIdent t-esc="company.vat"/>
+                <streetAddress>
+                    <t t-set="company_street_detail" t-value="company.partner_id._get_street_split()"/>
+                    <streetname t-if="company_street_detail['street_name']" t-esc="company_street_detail['street_name']"/>
+                    <number t-if="company_street_detail['street_number']" t-esc="company_street_detail['street_number']"/>
+                    <city t-if="company.city" t-esc="company.city"/>
+                    <postalCode t-if="company.zip" t-esc="company.zip"/>
+                    <region t-if="company.state_id" t-esc="company.state_id.name"/>
+                    <country t-if="company.country_id" t-esc="company.country_id.code"/>
+                </streetAddress>
+                <customersSuppliers>
+                    <customerSupplier t-foreach="partner_data" t-as="p">
+                        <custSupID t-esc="p.get('partner_id')"/>
+                        <custSupName t-esc="(p.get('partner_name'))"/>
+                        <contact t-if="p.get('partner_contact_name')" t-esc="p['partner_contact_name']"/>
+                        <telephone t-if="p.get('partner_phone')" t-esc="p['partner_phone'][:30]"/>
+                        <eMail t-esc="p.get('partner_email')"/>
+                        <website t-esc="p.get('partner_website')"/>
+                        <taxRegistrationCountry t-if="p.get('partner_country_id')" t-esc="p.get('partner_country_code')"/>
+                        <taxRegIdent t-esc="p.get('partner_vat')"/>
+                        <custSupTp t-esc="p.get('partner_type')"/>
+
+                        <custCreditLimit t-if="p.get('partner_credit_limit')" t-esc="p.get('partner_credit_limit')"/>
+                        <supplierLimit t-if="p.get('partner_credit_limit')" t-esc="p.get('partner_credit_limit')"/>
+                        <streetAddress>
+                            <streetname t-if="p.get('partner_street_name')" t-esc="p.get('partner_street_name')"/>
+                            <number t-if="p.get('partner_street_number')" t-esc="p['partner_street_number'][:15]"/>
+                            <numberExtension t-if="p.get('partner_street_number2')" t-esc="p.get('partner_street_number2')"/>
+                            <city t-if="p.get('partner_city')" t-esc="p.get('partner_city')"/>
+                            <postalCode t-if="p.get('partner_zip')" t-esc="p.get('partner_zip')[:10]"/>
+                            <region t-if="p.get('partner_state_name')" t-esc="p.get('partner_state_name')"/>
+                            <country t-if="p.get('partner_country_id')" t-esc="p.get('partner_country_code')"/>
+                        </streetAddress>
+                        <bankAccount t-foreach="p.get('partner_bank_data', {}).items()" t-as="b">
+                            <bankAccNr t-esc="b[1].get('partner_sanitized_acc_number')"/>
+                            <bankIdCd t-esc="b[1].get('partner_bic')"/>
+                        </bankAccount>
+                        <changeInfo t-if="p.get('partner_write_uid')">
+                            <userID t-esc="p.get('partner_xaf_userid')"/>
+                            <changeDateTime t-esc="p.get('partner_write_date')"/>
+                            <changeDescription>Last write</changeDescription>
+                        </changeInfo>
+                    </customerSupplier>
+                </customersSuppliers>
+                <generalLedger>
+                    <ledgerAccount t-foreach="account_data" t-as="a">
+                        <accID t-esc="a.get('account_code')"/>
+                        <accDesc t-esc="a.get('account_name')"/>
+                        <accTp t-esc="a.get('account_type')"/>
+                        <changeInfo t-if="a.get('account_write_uid')">
+                            <userID t-esc="a.get('account_xaf_userid')"/>
+                            <changeDateTime t-esc="a.get('account_write_date')"/>
+                            <changeDescription>Last write</changeDescription>
+                        </changeInfo>
+                    </ledgerAccount>
+                </generalLedger>
+                <vatCodes>
+                    <vatCode t-foreach="tax_data" t-as="t">
+                        <vatID t-esc="t.get('tax_id')"/>
+                        <vatDesc t-esc="t.get('tax_name')"/>
+                    </vatCode>
+                </vatCodes>
+                <periods>
+                    <period t-foreach="periods" t-as="p">
+                        <periodNumber t-esc="p.number"/>
+                        <periodDesc t-esc="p.name"/>
+                        <startDatePeriod t-esc="p.date_from"/>
+                        <endDatePeriod t-esc="p.date_to"/>
+                    </period>
+                </periods>
+                <!-- The XAF XSD only supports 2 decimal places -->
+                <openingBalance>
+                    <opBalDate><t t-esc="date_from" /></opBalDate>
+                    <linesCount><t t-esc="opening_lines_count" /></linesCount>
+                    <totalDebit><t t-esc="round(opening_debit, 2)" /></totalDebit>
+                    <totalCredit><t t-esc="round(opening_credit, 2)" /></totalCredit>
+                    <obLine t-foreach="opening_lines" t-as="line">
+                        <nr><t t-esc="line['id']" /></nr>
+                        <accID><t t-esc="line['account_code']" /></accID>
+                        <amnt><t t-esc="round(abs(line['balance']), 2)" /></amnt>
+                        <amntTp><t t-esc="'C' if line['balance'] &lt; 0 else 'D'" /></amntTp>
+                    </obLine>
+                </openingBalance>
+                <transactions>
+                    <linesCount t-esc="moves_count"/>
+                    <totalDebit t-esc="round(moves_debit, 2)"/>
+                    <totalCredit t-esc="round(moves_credit, 2)"/>
+                    <journal t-foreach="journal_data" t-as="j">
+                        <jrnID t-esc="j.get('journal_code')"/>
+                        <desc t-esc="j.get('journal_name')"/>
+                        <jrnTp t-esc="j.get('journal_type')"/>
+                        <transaction t-foreach="j.get('journal_move_data', {}).items()" t-as="m">
+                            <nr t-esc="m[1].get('move_id')"/>
+                            <desc t-esc="m[1].get('move_name')"/>
+                            <periodNumber t-esc="m[1].get('move_period_number')"/>
+                            <trDt t-esc="m[1].get('move_date')"/>
+                            <amnt t-esc="m[1].get('move_amount')"/>
+                            <trLine t-foreach="m[1].get('move_line_data').items()" t-as="l" t-if="l[1].get('line_display_type') not in ('line_note', 'line_section')">
+                                <nr t-esc="l[1].get('line_id')"/>
+                                <accID t-esc="l[1].get('line_account_code')"/>
+                                <docRef t-esc="l[1].get('line_ref')[:999]"/>
+                                <effDate t-esc="l[1].get('line_date')"/>
+                                <desc t-esc="l[1].get('line_name')"/>
+                                <amnt t-esc="l[1].get('line_credit') or l[1].get('line_debit')"/>
+                                <amntTp t-esc="l[1].get('line_type')"/>
+                                <recRef t-if="l[1].get('line_reconcile_id')" t-esc="l[1].get('line_reconcile_name')"/>
+                                <custSupID t-if="l[1].get('line_partner_id')" t-esc="l[1].get('line_partner_id')"/>
+                                <invRef t-if="l[1].get('line_move_name')" t-esc="l[1].get('line_move_name')"/>
+                                <currency t-if="l[1].get('line_currency_name') and l[1].get('line_amount_currency')">
+                                    <curCode t-esc="l[1].get('line_currency_name')"/>
+                                    <curAmnt t-esc="l[1].get('line_amount_currency')"/>
+                                </currency>
+                            </trLine>
+                        </transaction>
+                    </journal>
+                </transactions>
+            </company>
+        </auditfile>
+    </template>
+</odoo>

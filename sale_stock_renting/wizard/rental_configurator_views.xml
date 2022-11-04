@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="rental_configurator_view_form" model="ir.ui.view">
+        <field name="name">rental.configurator.form.inherit.stock</field>
+        <field name="model">rental.wizard</field>
+        <field name="inherit_id" ref="sale_renting.rental_configurator_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='qty_to_reserve']" position="replace">
+                <div name="qty_to_reserve">
+                    <field name="quantity" class="text-start ps-0" style="max-width: 5rem"/>
+                    <field name="is_product_storable" invisible="1"/>
+                    <field name="tracking" invisible="1"/>
+                    <field name="uom_id"
+                        class="oe_inline"
+                        options="{'no_open': 1}"
+                        attrs="{'invisible': [('is_product_storable', '=', True)]}"/>
+                    <span class="oe_inline" attrs="{'invisible': [('is_product_storable', '=', False)]}">
+                        (<field name="qty_available_during_period" class="oe_inline" nolabel="1"/>
+                        <text class="oe_inline"> </text>
+                        <field name="product_uom_id" class="oe_inline"/>
+                        Available)
+                    </span>
+                </div>
+                <field name="rented_lot_ids" invisible="1"/>
+                <field name="rentable_lot_ids" invisible="1"/>
+                <field name="lot_ids"
+                    widget="many2many_tags"
+                    placeholder="Select available serial numbers."
+                    attrs="{'invisible': [('tracking', '!=', 'serial')]}"
+                    options="{'no_open': 1, 'no_create_edit': 1}"/>
+            </xpath>
+            <notebook position="inside">
+                <page string="Stock" name="stock" attrs="{'invisible': [('is_product_storable', '=', False)]}">
+                    <group>
+                        <group>
+                            <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                        </group>
+                        <group>
+                            <field name="rentable_qty"/>
+                            <field name="rented_qty_during_period"/>
+                            <field name="qty_available_during_period"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Serials Tracking"
+                    name="serials_tracking"
+                    attrs="{'invisible': [('tracking', '!=', 'serial')]}">
+                    <group>
+                        <field name="rented_lot_ids" widget="many2many_tags"/>
+                        <field name="rentable_lot_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

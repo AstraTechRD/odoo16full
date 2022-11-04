@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_workorder.StepComponent" owl="1">
+        <div class="list-group-item o_tablet_step" t-att-class="stepClass" t-on-click="selectStep">
+            <div class="row">
+                <div class="col-9 o_step_title">
+                    <t t-esc="title"/>
+                </div>
+                <div class="col-3 o_tablet_quality_state">
+                    <div t-if="props.step.quality_state == 'pass'" class="o_tablet_step_ok">
+                        <i class="fa fa-check"/>
+                    </div>
+                    <div t-elif="props.step.quality_state == 'fail'" class="o_tablet_step_fail" >
+                        <i class="fa fa-times"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

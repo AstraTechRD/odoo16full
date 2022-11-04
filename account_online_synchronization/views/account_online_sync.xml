@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_online_link_view_form" model="ir.ui.view">
+            <field name="name">account.online.link.form</field>
+            <field name="model">account.online.link</field>
+            <field name="arch" type="xml">
+                <form create="false">
+                    <header>
+                        <button name="action_fetch_transactions" string="Fetch Transactions" class="oe_highlight"
+                                type="object" groups="account.group_account_user"
+                                attrs="{'invisible': ['|', ('state', '=', 'disconnected'), ('provider_data', '=', False)]}"/>
+                        <button groups="account.group_account_manager" name="action_update_credentials" string="Update Credentials" class="btn-secondary" type="object" attrs="{'invisible': ['|', ('state', '=', 'disconnected'), ('provider_data', '=', False)]}"/>
+                        <button groups="account.group_account_manager" name="action_initialize_update_accounts" string="Fetch Accounts" class="btn-secondary" type="object" attrs="{'invisible': ['|', ('state', '=', 'disconnected'), ('provider_data', '=', False)]}"/>
+                        <button groups="account.group_account_manager" name="action_reconnect_account" string="Reconnect" class="btn-primary" type="object" attrs="{'invisible': ['|', ('state', '!=', 'disconnected'), ('provider_data', '=', False)]}"/>
+                        <button groups="account.group_account_manager" name="action_new_synchronization" string="Connect" class="btn-primary" type="object" attrs="{'invisible': ['|', ('state', '!=', 'disconnected'), ('provider_data', '!=', False)]}"/>
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="client_id" readonly="1" string="Client id"/>
+                                <field name="auto_sync" attrs="{'invisible': [('provider_data', '=', False)]}"/>
+                                <field name="provider_data" readonly="1" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="last_refresh" readonly="1" string="Last refresh" attrs="{'invisible': [('provider_data', '=', False)]}"/>
+                                <field name="next_refresh" readonly="1" attrs="{'invisible': ['|', ('provider_data', '=', False), ('auto_sync', '=', False)]}"/>
+                                <field name="expiring_synchronization_date" readonly="1" attrs="{'invisible': [('provider_data', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="account_online_account_ids" nolabel="1" widget="one2many" mode="tree" string="Online Accounts" attrs="{'invisible': [('provider_data', '=', False)]}">
+                                <tree create="false" editable="bottom"> <!-- Clicks on records (for edit) are blocked -->
+                                    <field name="name" required="1"/>
+                                    <field name="account_number"/>
+                                    <field name="journal_ids"
+                                        widget="many2many_tags"
+                                        domain="[('type', '=', 'bank'), ('account_online_account_id', '=', False)]"
+                                        context="{'default_type': 'bank', 'default_bank_statements_source': 'online_sync', 'default_account_online_account_id': id}"/>
+                                    <field name="last_sync"/>
+                                    <field name="balance" readonly="1"/>
+                                    <field name="inverse_balance_sign" groups="base.group_no_one" optional="hide"/>
+                                    <field name="inverse_transaction_sign" groups="base.group_no_one" optional="hide"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="activity_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_online_account_view_form" model="ir.ui.view">
+            <field name="name">account.online.account.form</field>
+            <field name="model">account.online.account</field>
+            <field name="arch" type="xml">
+                <form create="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="account_number" readonly="1"/>
+                                <field name="journal_ids" widget="many2many_tags" domain="[('type', '=', 'bank'), ('account_online_account_id', '=', False)]"/>
+                            </group>
+                            <group>
+                                <field name="last_sync"/>
+                                <field name="balance" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_online_link_view_tree" model="ir.ui.view">
+            <field name="name">account.online.link.tree</field>
+            <field name="model">account.online.link</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="state != 'connected'" create="false" js_class="online_sync_tree">
+                    <field name="name" readonly="1"/>
+                    <field name="state"/>
+                    <field name="last_refresh" readonly="1"/>
+                    <field name="next_refresh" readonly="1" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_online_link_form">
+            <field name="name">Online Synchronization</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account_online_link_view_tree"/>
+            <field name="res_model">account.online.link</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Online Synchronization
+              </p>
+              <p>
+                To create a synchronization with your banking institution,<br/>
+                please click on <b>Add a Bank Account</b>.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            name="Online Synchronization"
+            parent="account.account_banks_menu"
+            action="action_account_online_link_form"
+            id="menu_action_online_link_account"
+            groups="account.group_account_manager"
+            sequence="4"/>
+
+        <!-- Cron to synchronize transaction -->
+        <record id="online_sync_cron" model="ir.cron">
+            <field name="name">Account: Journal online sync</field>
+            <field name="model_id" ref="account.model_account_journal"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_fetch_online_transactions()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <record id="account_journal_dashboard_inherit_online_sync" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.inherit.online.sync</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="kanban_dashboard" position="after">
+                    <field name="expiring_synchronization_date"/>
+                    <field name="expiring_synchronization_due_day"/>
+                    <field name="next_link_synchronization"/>
+                    <field name="account_online_account_id"/>
+                    <field name="account_online_link_state"/>
+                </field>
+
+                <xpath expr='//div[@name="bank_journal_cta"]' position='inside'>
+                    <t t-if="dashboard.bank_statements_source === 'online_sync'">
+                        <t t-if="record.account_online_link_state.raw_value === 'connected'">
+                            <t t-set="test_danger_expiring_date" t-value="record.expiring_synchronization_due_day.value &lt;= 3"/>
+                            <t t-set="test_warning_expiring_date" t-value="record.expiring_synchronization_due_day.value &lt;= 7"/>
+                            <a groups="account.group_account_user" attrs="{'invisible': [('expiring_synchronization_date', '=', None)]}"
+                               type="object" name="action_open_account_online_link"
+                               t-att-class="'oe_inline ' + (test_warning_expiring_date ? test_danger_expiring_date ? 'text-danger' : 'text-warning' : '')">
+                                <t t-if="record.expiring_synchronization_due_day.value &gt; 7">
+                                    Consent expires on <t t-esc="luxon.DateTime.fromISO(record.expiring_synchronization_date.raw_value).toFormat('dd MMM')"/>
+                                </t>
+                                <t t-elif="record.expiring_synchronization_due_day.value == 0">
+                                    Consent expires today
+                                </t>
+                                <t t-elif="record.expiring_synchronization_due_day.value &lt; 0">
+                                    Consent expired
+                                </t>
+                                <t t-else="">
+                                    Consent expires in <t t-esc="record.expiring_synchronization_due_day.value"/> day<t t-if="record.expiring_synchronization_due_day.value &gt; 1">s</t>
+                                </t>
+                            </a>
+                            <br attrs="{'invisible': [('expiring_synchronization_date', '=', None)]}"/>
+                            <a attrs="{'invisible': [('account_online_account_id', '=', False)]}" type="object"
+                                name="manual_sync" class="oe_inline" groups="account.group_account_user">Synchronize now</a>
+                            <br/>
+                        </t>
+                    </t>
+
+                    <t t-if="record.account_online_link_state.raw_value === 'connected'">
+                        <span groups="account.group_account_user" class="text-muted" t-if="(record.next_link_synchronization !== undefined)">
+                            Next sync: <t t-esc="luxon.DateTime.fromISO(record.next_link_synchronization.raw_value).toFormat('dd MMM HH:mm:ss')"/>
+                        </span>
+                        <br/>
+                    </t>
+                    <t t-if="record.account_online_link_state.raw_value &amp;&amp; record.account_online_link_state.raw_value !== 'connected'">
+                        <span class="text-muted" t-if="(record.account_online_link_state.raw_value === 'error')">Problem during synchronization</span>
+                        <span class="text-muted" t-if="(record.account_online_link_state.raw_value === 'disconnected')">Synchronization link disconnected</span>
+                        <br/>
+                        <a type="action" name="%(action_account_online_link_form)d" groups="account.group_account_manager" class="oe_inline">View problem</a>
+                        <br/>
+                    </t>
+                </xpath>
+
+                <!-- Replace individualy this element because it wasn't override before.. -->
+                <xpath expr='//button[@name="action_configure_bank_journal"]' position='replace'>
+                    <button t-if="dashboard.number_to_reconcile == 0" groups="account.group_account_manager" attrs="{'invisible': [('account_online_account_id', '!=', False)]}"
+                            type="object" name="action_configure_bank_journal" class="btn btn-primary">Online Synchronization</button>
+                </xpath>
+
+                <xpath expr='//a[@name="action_configure_bank_journal"]' position='replace'>
+                    <a t-if="dashboard.number_to_reconcile > 0" groups="account.group_account_manager" attrs="{'invisible': [('account_online_account_id', '!=', False)]}"
+                            type="object" name="action_configure_bank_journal" class="oe_inline">Online Synchronization</a>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_bank_statement_line_tree_inherit" model="ir.ui.view">
+            <field name="name">bank.statement.line.tree.inherit</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="inherit_id" ref="account_accountant.view_bank_statement_line_tree_bank_rec_widget"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_number']" position="after">
+                    <field name="online_transaction_identifier" optional="hide"/>
+                    <field name="online_account_id" optional="hide"/>
+                    <field name="online_link_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

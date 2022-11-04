@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="industry_fsm_sale.FsmProductQuantity" t-inherit="web.FloatField" t-inherit-mode="primary" owl="1">
+        <xpath expr="span" position="attributes">
+            <attribute name="t-if">state.readonly</attribute>
+            <attribute name="t-att-class">state.addSmallClass ? 'small' : ''</attribute>
+            <attribute name="t-on-click.prevent.stop">() => this.setReadonly(false)</attribute>
+        </xpath>
+        <xpath expr="input" position="attributes">
+            <attribute name="t-if">!state.readonly</attribute>
+            <attribute name="class" separator=" " add="text-center"></attribute>
+            <attribute name="t-att-class">state.addSmallClass ? 'small' : ''</attribute>
+            <attribute name="t-on-input">onInput</attribute>
+            <attribute name="t-on-keydown">onKeyDown</attribute>
+            <attribute name="t-on-blur">() => this.setReadonly(true)</attribute>
+            <attribute name="min">0</attribute>
+            <attribute name="max">999999999</attribute>
+        </xpath>
+        <xpath expr="span" position="before">
+            <button
+                t-if="!props.hideButtons"
+                t-att-disabled="props.value === 0"
+                name="fsm_remove_quantity"
+                t-on-click.prevent.stop="removeQuantity"
+                t-attf-class="m-1 btn d-flex align-items-center justify-content-center o_qty_button {{ props.value === 0 ? 'btn-light text-muted' : 'btn-primary' }}"
+            >
+                <i class="fa fa-minus center"/>
+            </button>
+        </xpath>
+        <xpath expr="input" position="after">
+            <button
+                t-if="!props.hideButtons"
+                name="fsm_add_quantity"
+                t-on-click.prevent.stop="addQuantity"
+                t-attf-class="m-1 btn d-flex align-items-center justify-content-center o_qty_button {{ props.value === 0 ? 'btn-light text-muted' : 'btn-primary' }}"
+            >
+                <i class="fa fa-plus"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

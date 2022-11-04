@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_map.MapView" owl="1">
+        <div t-att-class="props.className">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-component="props.Renderer" t-props="rendererProps" />
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web_map.MapView.Buttons"  owl="1">
+        <div class="o-map-view--buttons">
+            <a class="btn btn-primary text-white" t-att-href="googleMapUrl" target="_blank" data-hotkey="m">View in Google Maps</a>
+        </div>
+    </t>
+
+</templates>

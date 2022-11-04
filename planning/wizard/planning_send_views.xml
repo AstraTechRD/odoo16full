@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_send_view_form" model="ir.ui.view">
+        <field name="name">planning.send.form</field>
+        <field name="model">planning.send</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <label for="start_datetime">Period</label>
+                        <div class="o_row">
+                            <field name="start_datetime" widget="daterange" options='{"related_end_date": "end_datetime"}'/>
+                            <i class="fa fa-long-arrow-right mx-1" aria-label="Arrow icon" title="Arrow"/>
+                            <field name="end_datetime" widget="daterange" options='{"related_start_date": "start_datetime"}'/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="include_unassigned"/>
+                        <field name="slot_ids" invisible="1"/>
+                    </group>
+                </group>
+                <group col="2">
+                    <field name="employee_ids" widget="many2many_avatar_employee" default_focus="1"/>
+                    <field name="note" nolabel="1" colspan="2" placeholder="Additional message"/>
+                </group>
+                <footer>
+                    <button name="action_check_emails" type="object" string="Publish &amp; Send" class='btn-primary' data-hotkey="q"/>
+                    <button name="action_publish" type="object" string="Publish" class='btn-primary' data-hotkey="w"/>
+                    <button name="discard" string="Discard" class='btn-secondary' special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_no_email_list_wizard" model="ir.ui.view">
+        <field name="name">planning.send.employee.no.mail.wizard</field>
+        <field name="model">planning.send</field>
+        <field name="arch" type="xml">
+            <form string="Employees with no Work Email">
+                <group>
+                    <p>
+                        Define a work email address for the following employees so they will receive the planning. 
+                    </p>
+                </group>
+                <group>
+                    <field name="employees_no_email" nolabel="1" options="{'link': false, 'unlink': false}">
+                        <tree editable="bottom">
+                            <field name="name" required="1" readonly="1"/>
+                            <field name="work_email" required="1"/>
+                        </tree>
+                    </field> 
+                </group>
+                <footer>
+                    <button name="action_send" type="object" string="Save &amp; Send Schedule" 
+                            class='btn-primary'/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="planning_send_action" model="ir.actions.act_window">
+        <field name="name">Send Planning By Email</field>
+        <field name="res_model">planning.send</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="planning_send_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

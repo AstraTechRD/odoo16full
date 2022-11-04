@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.EditorMenu" owl="1">
+    <div class="o_web_studio_menu">
+        <div class="o_web_studio_breadcrumb o_web_studio_menu_item">
+            <ol class="breadcrumb">
+                <li t-foreach="breadcrumbs"
+                    t-as="crumb"
+                    t-key="crumb.id"
+                    t-on-click="crumb.handler"
+                    class="breadcrumb-item cursor-default"
+                    t-att-class="{active: crumb_last, o_back_button: !crumb_last}"
+                    t-esc="crumb.name"/>
+            </ol>
+        </div>
+
+        <div
+            t-if="studio.editedViewType or studio.editedReport"
+            class="
+                o_web_studio_menu_item
+                o_web_studio_menu_undo_redo">
+            <div class="o_web_studio_menu_before_undo_redo"/>
+            <div t-attf-class="o_web_studio_undo {{ state.undo_available ? 'o_web_studio_active' : '' }}" t-on-click="() => { this.studio.bus.trigger('undo_clicked'); }">
+                <button class="btn o_web_studio_undo_redo_button cursor-default"><i class="fa fa-undo"/><span>Undo</span></button>
+            </div>
+            <div class="o_web_studio_undo_redo_separator">
+                <div class="o_web_studio_undo_redo_separator_line"/>
+            </div>
+            <div t-attf-class="o_web_studio_redo  {{ state.redo_available ? 'o_web_studio_active' : '' }}" t-on-click="() => { this.studio.bus.trigger('redo_clicked'); }">
+                <button class="btn o_web_studio_undo_redo_button cursor-default"><i class="fa fa-repeat"/><span>Redo</span></button>
+            </div>
+        </div>
+
+        <div
+            class="
+                o_web_studio_menu_before_snackbar
+                o_web_studio_menu_item"/>
+        <div
+            class="
+                o_web_studio_menu_item
+                o_web_studio_snackbar">
+            <t t-if="state.snackbar === 'saved'">
+                <i class="o_web_studio_snackbar_icon show fa fa-check"/>
+                <span class="o_web_studio_snackbar_text" t-esc="env._t('Saved')"/>
+            </t>
+            <t t-elif="state.snackbar === 'saving'">
+                <i class="o_web_studio_snackbar_icon show fa fa-circle-o-notch fa-spin"/>
+                <span class="o_web_studio_snackbar_text" t-esc="env._t('Saving')"/>
+            </t>
+        </div>
+        <div
+            class="
+                o_web_studio_menu_after_snackbar
+                o_web_studio_menu_item"/>
+
+        <div
+            class="
+                o_web_studio_menu_item
+                o_web_studio_menu_before_sections"/>
+        <ul class="o_menu_sections">
+            <li t-foreach="editorTabs" t-as="tab"
+                t-key="tab.id"
+                class="o_web_studio_menu_item" role="button"
+                t-on-click.prevent="() => this.openTab(tab.id)">
+                <a href="#" t-esc="tab.name"/>
+            </li>
+
+            <div class="
+                o_web_studio_views_icons_before_separator
+                o_web_studio_menu_item"/>
+            <div class="o_web_studio_views_icons_separator"/>
+            <div class="
+                o_web_studio_views_icons_after_separator
+                o_web_studio_menu_item"/>
+            <li class="
+                o_web_studio_menu_item
+                o_web_studio_submenu_icons">
+                <div class="o_web_studio_views_icons">
+                    <a href="#" t-foreach="activeViews" t-as="view" t-key="view.type" t-att-title="view.title" t-att-aria-label="view.title"
+                       t-on-click.prevent="() => { this.props.switchView({viewType: view.type}); }">
+                        <i t-att-class="view.iconClasses" />
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</t>
+
+</templates>

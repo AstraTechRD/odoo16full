@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+      <record id="product_template_kanban_view" model="ir.ui.view">
+        <field name="name">product.template.product.kanban.inherit.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="activity_state" position="after">
+                <field name="product_pricing_ids"/>
+            </field>
+            <field name="list_price" position="replace">
+                <t t-if="record.product_pricing_ids.value">
+                  <field name="display_price"/>
+                </t>
+                <t t-else="">
+                    <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                </t>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.tree.inherit.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="list_price" position="after">
+                <field name="display_price"/>
+            </field>
+            <field name="list_price" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="standard_price" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+
+  <record id="product_template_form_view_pricing" model="ir.ui.view">
+    <field name="name">product.template.form.inherit.multipricing</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_form_view"/>
+    <field name="arch" type="xml">
+      <xpath expr="//header" position="inside">
+          <field name="is_temporal" invisible="1"/>
+      </xpath>
+      <page name="sales" position="after">
+        <page string="Price" name="pricing" attrs="{'invisible': [('is_temporal','=',False)]}">
+          <group>
+            <group name="pricing">
+                <field name="product_pricing_ids" nolabel="1" colspan="2">
+                  <tree editable="bottom">
+                    <control>
+                        <create name="add_product_pricing" string="Add a price"/>
+                    </control>
+                    <field name="product_variant_ids" widget="many2many_tags"
+                      groups="product.group_product_variant"
+                      domain="[('product_tmpl_id', '=', parent.id)]"
+                      attrs="{'column_invisible': [('parent.product_variant_count', '&lt;', 2)]}"/>
+                    <field name="recurrence_id"/>
+                    <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="price"/>
+                  </tree>
+                </field>
+            </group>
+          </group>
+        </page>
+      </page>
+    </field>
+  </record>
+
+</odoo>

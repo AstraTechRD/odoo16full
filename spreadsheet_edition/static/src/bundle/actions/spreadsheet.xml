@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <div t-name="spreadsheet_edition.SpreadsheetComponent" class="o_spreadsheet_container o_field_highlight" owl="1">
+        <Spreadsheet model="model"
+                     exposeSpreadsheet.bind="exposeSpreadsheet"
+                     onUnexpectedRevisionId="props.onUnexpectedRevisionId"
+        />
+        <Dialog t-if="state.dialog.isDisplayed"
+            title="state.dialog.title || 'Odoo Spreadsheet'"
+            size="'medium'"
+            onClosed.bind="closeDialog"
+            >
+            <div t-if="dialogContent" t-esc="dialogContent" />
+            <t t-if="state.dialog.isEditText">
+                <input type="text" class="form-control" t-model="state.inputContent" />
+                <span t-if="state.dialog.errorText" class="o_dialog_error_text text-danger" t-esc="state.dialog.errorText" />
+            </t>
+            <t t-if="state.dialog.isEditInteger">
+                <input t-if="state.dialog.isEditInteger" type="number" class="form-control" t-model="state.dialog.inputIntegerContent" />
+            </t>
+            <t t-set-slot="buttons">
+                <t t-if="state.dialog.isEditText or state.dialog.isEditInteger">
+                    <button class="btn btn-primary" t-on-click="confirmDialog">Confirm</button>
+                    <button class="btn btn-secondary" t-on-click="closeDialog">Cancel</button>
+                </t>
+                <t t-else="1">
+                    <button class="btn btn-primary" t-on-click="confirmDialog">Ok</button>
+                </t>
+            </t>
+        </Dialog>
+    </div>
+
+
+
+    <div t-name="spreadsheet_edition.AutofillTooltip" owl="1">
+        <t t-foreach="props.content" t-as="line" t-key="line.value">
+            <div><t t-esc="line.value"/></div>
+        </t>
+    </div>
+
+</templates>

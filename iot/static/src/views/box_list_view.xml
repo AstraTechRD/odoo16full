@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="iot.iot_box.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Connect" aria-label="Connect" t-on-click="() => actionService.doAction('iot.action_add_iot_box')" data-bounce-button="">
+                CONNECT
+            </button>
+        </xpath>
+    </t>
+
+</templates>

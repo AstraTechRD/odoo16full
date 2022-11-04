@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_analysis_report_view_search" model="ir.ui.view">
+        <field name="name">planning.slot.report.search</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="inherit_id" ref="planning.planning_analysis_report_view_search"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="project_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_role']" position="after">
+                <filter string="My Projects" name="my_project" domain="[('project_id.user_id','=', uid)]" groups="project.group_project_user"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_role']" position="after">
+                <filter name="group_by_project" string="Project" context="{'group_by': 'project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

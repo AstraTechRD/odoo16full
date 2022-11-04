@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    
+    <record id="helpdesk.helpdesk_team3" model="helpdesk.team">
+        <field name="use_helpdesk_sale_timesheet" eval="True"/>
+    </record>
+
+    <record id="product.product_product_1" model="product.product">
+        <field name="project_id" model="product.product" eval="obj().env.ref('helpdesk.helpdesk_team3').project_id.id"/>
+    </record>
+
+    <!-- timesheet on ticket -->
+    <record id="helpdesk_sale_timesheet_1" model="account.analytic.line">
+        <field name="name">Changed the location and colour of dining area.</field>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="unit_amount">5.00</field>
+        <field name="helpdesk_ticket_id" ref="helpdesk.helpdesk_ticket_17"/>
+        <field name="account_id" ref="analytic.analytic_internal"/>
+    </record>
+    <record id="helpdesk_sale_timesheet_2" model="account.analytic.line">
+        <field name="name">Setting the location for TV, Sofa and dining room.</field>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=+1)).strftime('%Y-%m-%d')"/>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="unit_amount">15.0</field>
+        <field name="helpdesk_ticket_id" ref="helpdesk.helpdesk_ticket_17"/>
+        <field name="account_id" ref="analytic.analytic_internal"/>
+    </record>
+
+    <!-- create order and link with ticket -->
+    <record id="sale_order_helpdesk_sale_timesheet_1" model="sale.order">
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="partner_invoice_id" ref="base.partner_demo"/>
+        <field name="partner_shipping_id" ref="base.partner_demo"/>
+    </record>
+    <record id="sale_order_line_helpdesk_sale_timesheet_1" model="sale.order.line">
+        <field name="order_id" ref="sale_order_helpdesk_sale_timesheet_1"/>
+        <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_1').get_product_multiline_description_sale()"/>
+        <field name="product_id" ref="product.product_product_1"/>
+        <field name="product_uom_qty">1</field>
+        <field name="price_unit">30.75</field>
+    </record>
+    <function model="sale.order" name="action_confirm" eval="[ref('sale_order_helpdesk_sale_timesheet_1')]"/>
+
+    <!-- create sla for sale order -->
+    <record id="helpdesk_sla_4" model="helpdesk.sla">
+        <field name="name">4 hours to finish</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="stage_id" ref="helpdesk.stage_solved"/>
+        <field name="time">4</field>
+        <field name="ticket_type_ids" eval="[Command.link(ref('helpdesk.type_question'))]"/>
+        <field name="sale_line_ids" eval="[Command.link(ref('sale_order_line_helpdesk_sale_timesheet_1'))]"/>
+        <field name="exclude_stage_ids" eval="[Command.link(ref('helpdesk.stage_in_progress'))]"/>
+    </record>
+    <record id="helpdesk_ticket_24" model="helpdesk.ticket">
+        <field name="name">Where can I shop the chair cover?</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="priority">1</field>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="sale_line_id" ref="sale_order_line_helpdesk_sale_timesheet_1"/>
+    </record>
+    <!-- fail the sla status -->
+    <function model="helpdesk.sla.status" name="write">
+        <value model="helpdesk.sla.status" search="[('ticket_id', '=', ref('helpdesk_ticket_24'))]"/>
+        <value eval="{'deadline': DateTime.now() - relativedelta(hour=5)}"/>
+    </function>
+
+    <record id="helpdesk.helpdesk_ticket_17" model="helpdesk.ticket">
+        <field name="sale_line_id" ref="sale_order_line_helpdesk_sale_timesheet_1"/>
+    </record>
+    <!-- make project allow_billable True as project is already created from another module -->
+    <function model="project.project" name="write">
+        <value model="helpdesk.team" eval="obj().search([('id', '=', ref('helpdesk.helpdesk_team3'))]).project_id.id"/>
+        <value eval="{'allow_billable' : 1, 'timesheet_product_id' : ref('sale_timesheet.time_product')}"/>
+    </function>
+
+</odoo>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='time_credit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('country_code', '=', 'BE')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='work_time_rate']" position="attributes">
+                <attribute name="attrs">{'invisible': [('time_credit', '=', False)], 'readonly': [('country_code', '=', 'BE')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='standard_calendar_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('time_credit', '=', False)], 'readonly': [('country_code', '=', 'BE')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='time_credit_type_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('time_credit', '=', False)], 'required': ['&amp;', ('country_code', '!=', 'BE'), ('time_credit', '=', True)], 'readonly': [('country_code', '=', 'BE')]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='wage']" position="attributes">
+                <attribute name="attrs">{'invisible': [('wage_type', '=', 'hourly')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='wage']" position="attributes">
+                <attribute name="attrs">{'invisible': [('wage_type', '=', 'hourly')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='resource_calendar_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('country_code', '=', 'BE'), ('state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <field name="time_credit" invisible="1"/>
+                <button name="%(schedule_change_wizard_action)d" string="Working Schedule Change"
+                        type="action" groups="hr_contract.group_hr_contract_manager"
+                        attrs="{'invisible': [('country_code', '!=', 'BE')]}"/>
+            </xpath>
+            <xpath expr="//group[@name='yearly_advantages']" position="attributes">
+                <attribute name="string">Yearly Advantages</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='yearly_advantages']" position="inside">
+                <label for="commission_on_target" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}">
+                    <field name="commission_on_target" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="representation_fees" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}">
+                    <field name="representation_fees" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="ip" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}">
+                    <field name="ip" nolabel="1"
+                           attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('ip_wage_rate', '=', 0.0)]}"/>
+                    <field name="ip_wage_rate" attrs="{'invisible': [('wage_type', '=', 'hourly')]}"/>
+                    <span>%</span>
+                </div>
+                <label for="mobile" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}">
+                    <field name="mobile" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="internet" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}">
+                    <field name="internet" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <field name="has_laptop" attrs="{'invisible': ['|', ('country_code', '!=', 'BE'), ('wage_type', '=', 'hourly')]}"/>
+                <label for="meal_voucher_amount" attrs="{'invisible': [('country_code', '!=', 'BE')]}"/>
+                <div class="o_row" attrs="{'invisible': [('country_code', '!=', 'BE')]}">
+                    <field name="meal_voucher_amount" nolabel="1"/>
+                    <span>/ worked day</span>
+                </div>
+                <label for="eco_checks" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <field name="eco_checks" nolabel="1"/>
+                    <span>/ year</span>
+                </div>
+                <label for="l10n_be_canteen_cost" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <field name="l10n_be_canteen_cost"/>
+                    <span> / month</span>
+                </div>
+                <label for="l10n_be_group_insurance_rate" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <field name="l10n_be_group_insurance_rate"/>
+                    <span attrs="{'invisible': [('wage_type', '=', 'hourly')]}">%</span>
+                </div>
+                <field name="l10n_be_group_insurance_amount" invisible="1"/>
+                <field name="l10n_be_group_insurance_cost" invisible="1"/>
+            </xpath>
+            <xpath expr="//group[@name='yearly_advantages']" position="before">
+                <group string="Ambulatory Insurance" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <field name="l10n_be_has_ambulatory_insurance"/>
+                    <field name="l10n_be_ambulatory_insured_spouse" string="Insured Spouse"/>
+                    <field name="l10n_be_ambulatory_insured_adults" string="# Insured Children &gt;= 19"/>
+                    <field name="l10n_be_ambulatory_insured_children" string="# Insured Children &lt; 19"/>
+                    <label for="l10n_be_ambulatory_insurance_amount" attrs="{'invisible': [('l10n_be_has_ambulatory_insurance', '=', False)]}">Insurance Amount</label>
+                    <div class="o_row" attrs="{'invisible': [('l10n_be_has_ambulatory_insurance', '=', False)]}">
+                        <field name="l10n_be_ambulatory_insurance_amount" nolabel="1"/>
+                        <span>€ / month</span>
+                    </div>
+                    <field name="l10n_be_ambulatory_insurance_notes" string="Additional Information" attrs="{'invisible': [('l10n_be_has_ambulatory_insurance', '=', False)]}"/>
+                    <field name="l10n_be_ambulatory_amount_per_child" string="Amount per Child" invisible="1"/>
+                    <field name="l10n_be_ambulatory_amount_per_adult" string="Amount per Adult" invisible="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='yearly_advantages']" position="after">
+                <group string="Hospital Insurance" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <field name="has_hospital_insurance"/>
+                    <field name="insured_relative_spouse" attrs="{'invisible': [('has_hospital_insurance', '=', False)]}"/>
+                    <field name="insured_relative_adults" attrs="{'invisible': [('has_hospital_insurance', '=', False)]}"/>
+                    <field name="insured_relative_children" attrs="{'invisible': [('has_hospital_insurance', '=', False)]}"/>
+                    <label for="insurance_amount" attrs="{'invisible': [('has_hospital_insurance', '=', False)]}"/>
+                    <div class="o_row" attrs="{'invisible': [('has_hospital_insurance', '=', False)]}">
+                        <field name="insurance_amount" nolabel="1"/>
+                        <span>€ / month</span>
+                    </div>
+                    <field name="l10n_be_hospital_insurance_notes" string="Additional Information" attrs="{'invisible': [('has_hospital_insurance', '=', False)]}"/>
+                    <field name="hospital_insurance_amount_per_child" invisible="1"/>
+                    <field name="hospital_insurance_amount_per_adult" invisible="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='salary_info']" position="after">
+                <group name="transportation" string="Transportation" attrs="{'invisible': [('country_code', '!=', 'BE')]}">
+                    <group name="transportation_left">
+                        <field name="transport_mode_car" attrs="{'invisible': [('wage_type', '=', 'hourly')]}"/>
+                        <label for="fuel_card" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_car', '=', False)]}"/>
+                        <div class="o_row" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_car', '=', False)]}" name="fuel_card_div">
+                            <field name="fuel_card" nolabel="1"/>
+                            <span>/ month</span>
+                        </div>
+                        <field name="car_atn" widget="monetary" options="{'currency_field': 'currency_id'}"
+                               attrs="{'invisible': [('transport_mode_car', '=', False)]}"/>
+                    </group>
+                    <group name="transportation_right">
+                        <field name="transport_mode_train" attrs="{'invisible': [('wage_type', '=', 'hourly')]}"/>
+                        <label class="fw-normal"
+                            attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_train', '=', False)]}"
+                            for="train_transport_employee_amount"/>
+                        <field class="w-50" name="train_transport_employee_amount" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_train', '=', False)]}" nolabel="1"/>
+                        <label class="fw-normal"
+                            attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_train', '=', False)]}"
+                            for="train_transport_reimbursed_amount"/>
+                        <field class="w-50" name="train_transport_reimbursed_amount" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_train', '=', False)]}" nolabel="1"/>
+                        <field name="transport_mode_public" attrs="{'invisible': [('wage_type', '=', 'hourly')]}"/>
+                        <label class="fw-normal"
+                            attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_public', '=', False)]}"
+                            for="public_transport_employee_amount"/>
+                        <field class="w-50" name="public_transport_employee_amount" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_public', '=', False)]}" nolabel="1"/>
+                        <label class="fw-normal"
+                            attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_public', '=', False)]}"
+                            for="public_transport_reimbursed_amount"/>
+                        <field class="w-50" name="public_transport_reimbursed_amount" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_public', '=', False)]}" nolabel="1"/>
+                        <field name="transport_mode_private_car"/>
+                        <span class="o_form_label" groups="hr.group_hr_user"
+                              attrs="{'invisible': [('transport_mode_private_car', '=', False)]}">Distance home-work</span>
+                        <div class="o_row" groups="hr.group_hr_user"
+                             attrs="{'invisible': [('transport_mode_private_car', '=', False)]}">
+                            <field name="km_home_work"/>
+                            <span>km</span>
+                        </div>
+                        <span class="o_form_label"
+                              attrs="{'invisible': [('transport_mode_private_car', '=', False)]}">Reimboursed amount</span>
+                        <div class="o_row" attrs="{'invisible': [('transport_mode_private_car', '=', False)]}">
+                            <field name="private_car_reimbursed_amount"/>
+                            <span>/ month</span>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+            <group name="salary_info" position="inside">
+                <group string="Posted Employee" name="posted_employee" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <field name="no_onss"/>
+                    <field name="no_withholding_taxes"/>
+                </group>
+                <group string="Withholding Taxes Exemption" name="withholding_taxes_exemption" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <label for="rd_percentage"/>
+                    <div class="o_row">
+                        <field name="rd_percentage" nolabel="1"/>
+                        <span> %</span>
+                    </div>
+                </group>
+                <group string="Impulsion Plan" name="impulsion_plan" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <label for="employee_age" attrs="{'invisible': [('employee_age', '=', 0)]}"/>
+                    <div attrs="{'invisible': [('employee_age', '=', 0)]}">
+                        <field name="employee_age"/>
+                        <span> years old</span>
+                    </div>
+                    <field name="l10n_be_impulsion_plan"/>
+                </group>
+                <group string="ONSS Reduction" name="onss_retructuring" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <field name="l10n_be_onss_restructuring"/>
+                </group>
+                <group name="fiscal_voluntarism" string="Fiscal Voluntarism">
+                    <field name="fiscal_voluntarism" attrs="{'invisible': [('wage_type', '=', 'hourly')]}"/>
+                    <label for="fiscal_voluntary_rate"
+                           attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('fiscal_voluntarism', '=', False)]}"/>
+                    <div class="o_row" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('fiscal_voluntarism', '=', False)]}">
+                        <field name="fiscal_voluntary_rate" nolabel="1"/>
+                        <span>%</span>
+                    </div>
+                </group>
+            </group>
+            <xpath expr="//sheet" position="before">
+                <div role="alert" class="alert alert-danger text-center" attrs="{'invisible': ['|', ('l10n_be_is_below_scale', '=', False), ('country_code', '!=', 'BE')]}">
+                    <field name="l10n_be_is_below_scale_warning"/>
+                    <field name="l10n_be_is_below_scale" invisible="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

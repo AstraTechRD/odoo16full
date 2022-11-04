@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="Appointment.appointment_info_no_slot">
+        <div class="col-md-8 col-lg-6 mx-auto">
+            <div class="px-2 pt-3 pb-5 text-center o_appointment_no_slot_overall_helper_txt">
+                <t t-if="staffUserName">
+                    <p>
+                        Sorry, <span t-out="staffUserName"/> has no availability for an appointment.
+                    </p>
+                </t>
+                <t t-else="">
+                    <p>
+                        Sorry, we have no availability for an appointment.
+                    </p>
+                </t>
+            </div>
+            <div class="o_appointment_no_slot_overall_helper_svg mx-auto">
+                <t t-call="Appointment.appointment_svg"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="Appointment.appointment_info_no_slot_month">
+        <div class="o_appointment_no_slot_month_helper border-top pt-4 pb-2 px-2 px-md-3 mt-2 text-center">
+            <div class="mx-auto">
+                <t t-if="staffUserName">
+                    <p>
+                        Sorry, <span t-out="staffUserName"/> has no more slots available for this month.
+                    </p>
+                    <p>
+                        Their first availability is <br/>
+                        <a href="#" id="next_available_slot" t-out="firstAvailabilityDate"/>
+                    </p>
+                </t>
+                <t t-else="">
+                    <p>
+                        Sorry, we have no more slots available for this month.
+                    </p>
+                    <p>
+                        Our first availability is <br/>
+                        <a href="#" id="next_available_slot" t-out="firstAvailabilityDate"/>
+                    </p>
+                </t>
+            </div>
+            <div class="o_appointment_no_slot_month_helper_svg pt-2 mx-auto">
+                <t t-call="Appointment.appointment_svg"/>
+            </div>
+        </div>
+    </t>
+</templates>

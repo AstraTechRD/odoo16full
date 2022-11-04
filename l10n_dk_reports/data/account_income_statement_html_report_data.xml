@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_income_statement_report_l10n_dk_resultatopgørelse" model="account.report">
+        <field name="name">Resultatopgørelse</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_date_range" eval="1"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.dk"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_income_statement_report_l10n_dk_resultatopgørelse_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_income_statement_report_l10n_dk_Årets_resultat" model="account.report.line">
+                <field name="name">Årets resultat</field>
+                <field name="code">RES</field>
+                <field name="expression_ids">
+                    <record id="account_income_statement_report_l10n_dk_Årets_resultat_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">RESFS.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_income_statement_report_l10n_dk_omsaetning" model="account.report.line">
+                        <field name="name">Omsætning</field>
+                        <field name="code">OMS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_omsaetning_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-10</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_direkteomkostninger" model="account.report.line">
+                        <field name="name">Direkte omkostninger</field>
+                        <field name="code">DO</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_direkteomkostninger_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">21 + 26 + 20</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Dækningsbidrag" model="account.report.line">
+                        <field name="name">Dækningsbidrag</field>
+                        <field name="code">DKNB</field>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Dækningsbidrag_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">OMS.balance - DO.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Personaleomkostninger" model="account.report.line">
+                        <field name="name">Personaleomkostninger</field>
+                        <field name="code">PERSO</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Personaleomkostninger_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">3</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Salgsfremmende_omkostninger" model="account.report.line">
+                        <field name="name">Salgsfremmende omkostninger</field>
+                        <field name="code">SAOM</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Salgsfremmende_omkostninger_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Biler_og_driftmidler" model="account.report.line">
+                        <field name="name">Biler og driftmidler</field>
+                        <field name="code">BILDM</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Biler_og_driftmidler_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">41</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Lokaleomkostninger" model="account.report.line">
+                        <field name="name">Lokaleomkostninger</field>
+                        <field name="code">LOKOM</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Lokaleomkostninger_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">42</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Administrationsomkostninger" model="account.report.line">
+                        <field name="name">Administrationsomkostninger</field>
+                        <field name="code">ADMOM</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Administrationsomkostninger_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">43</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_Faste_omkostninger" model="account.report.line">
+                        <field name="name">Faste omkostninger ialt</field>
+                        <field name="code">FASTO</field>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_Faste_omkostninger_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PERSO.balance + SAOM.balance + BILDM.balance + LOKOM.balance + ADMOM.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Resultat_før_afskrivninger" model="account.report.line">
+                        <field name="name">Resultat før afskrivninger</field>
+                        <field name="code">RESFA</field>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Resultat_før_afskrivninger_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">DKNB.balance - FASTO.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_nedskrivninger" model="account.report.line">
+                        <field name="name">Af- og nedskrivninger</field>
+                        <field name="code">AFNED</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_nedskrivninger_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">44</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Finansielle_indtægter" model="account.report.line">
+                        <field name="name">Resultat før finansielle indt./udg.</field>
+                        <field name="code">RESFF</field>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Finansielle_indtægter_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RESFA.balance - AFNED.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Finansielle_indægter" model="account.report.line">
+                        <field name="name">Finansielle indægter</field>
+                        <field name="code">FININ</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Finansielle_indægter_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-46</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Finansielle_udgifter" model="account.report.line">
+                        <field name="name">Finansielle udgifter</field>
+                        <field name="code">FINUD</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Finansielle_udgifter_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">47</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Resultat_før_ekstraordinære_indt" model="account.report.line">
+                        <field name="name">Resultat før ekstraordinære indt./udg.</field>
+                        <field name="code">RESFE</field>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Resultat_før_ekstraordinære_indt_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RESFF.balance + FININ.balance - FINUD.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Ekstraordinære_indtægter" model="account.report.line">
+                        <field name="name">Ekstraordinære indtægter</field>
+                        <field name="code">EKSI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Ekstraordinære_indtægter_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-484 - 480 - 481</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Ekstraordinære_udgifter" model="account.report.line">
+                        <field name="name">Ekstraordinære udgifter</field>
+                        <field name="code">EKSU</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Ekstraordinære_udgifter_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">489 + 485</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_income_statement_report_l10n_dk_Årets_resultat_før_skat" model="account.report.line">
+                        <field name="name">Årets resultat før skat</field>
+                        <field name="code">RESFS</field>
+                        <field name="expression_ids">
+                            <record id="account_income_statement_report_l10n_dk_Årets_resultat_før_skat_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RESFE.balance + EKSI.balance - EKSU.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="account_financial_report_l10n_lu_dk_action" model="ir.actions.client">
+        <field name="name">Resultatopgørelse</field>
+        <field name="context" eval="{'model': 'account.financial.html.report', 'id': ref('account_income_statement_report_l10n_dk_resultatopgørelse')}"/>
+        <field name="tag">account_report</field>
+    </record>
+</odoo>

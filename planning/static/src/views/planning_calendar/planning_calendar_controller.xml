@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="planning.PlanningCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary" owl="!">
+        <xpath expr="//div[hasclass('o_calendar_sidebar')]" position="inside">
+            <t t-if="isManager" class="o_planning_legend">
+                <h5>Legend</h5>
+                <img src="/hr/static/src/img/icons/plain.svg" width="30px" class="mb-1"/><span>Published</span><br/>
+                <img src="/hr/static/src/img/icons/hatched.svg" width="30px" class="mb-1"/><span>Draft</span><br/>
+            </t>
+        </xpath>
+    </t>
+
+    <!-- TODO: when gantt view is converted it should be reused somehow there as well. -->
+    <t t-name="planning.PlanningCalendarController.controlButtons" t-inherit="web.CalendarController.controlButtons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_calendar_buttons')]" position="inside">
+            <button t-if="model.canCreate &amp;&amp; model.scale === 'week'" class="btn btn-primary me-1 o_button_copy_previous_week" title="Copy previous week"
+                t-on-click="onClickCopyPrevious">
+                Copy previous
+            </button>
+            <button t-if="model.scale !== 'year'" class="btn btn-primary me-1 o_button_send_all" title="Send schedule"
+                t-on-click.prevent="onClickPublish">
+                Publish
+            </button>
+        </xpath>
+    </t>
+</templates>

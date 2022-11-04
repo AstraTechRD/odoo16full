@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pe_ubl_2_1_void_documents">
+        <VoidedDocuments
+                xmlns="urn:sunat:names:specification:ubl:peru:schema:xsd:VoidedDocuments-1"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                xmlns:sac="urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ext:UBLExtensions>
+                <ext:UBLExtension>
+                    <ext:ExtensionContent>
+                        <ds:Signature Id="placeholder" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+                    </ext:ExtensionContent>
+                </ext:UBLExtension>
+            </ext:UBLExtensions>
+            <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+            <cbc:CustomizationID>1.0</cbc:CustomizationID>
+            <cbc:ID t-esc="void_number"/>
+            <cbc:ReferenceDate t-esc="reference_date"/>
+            <cbc:IssueDate t-esc="certificate_date"/>
+            <cac:Signature>
+                <cbc:ID>IDSignKG</cbc:ID>
+                <cac:SignatoryParty>
+                    <cac:PartyIdentification>
+                        <cbc:ID t-esc="company.vat"/>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name t-esc="company.name.upper()"/>
+                    </cac:PartyName>
+                </cac:SignatoryParty>
+                <cac:DigitalSignatureAttachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>#SignVX</cbc:URI>
+                    </cac:ExternalReference>
+                </cac:DigitalSignatureAttachment>
+            </cac:Signature>
+            <cac:AccountingSupplierParty>
+                <cbc:CustomerAssignedAccountID t-esc="company.vat"/>
+                <cbc:AdditionalAccountID t-esc="company.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"/>
+                <cac:Party>
+                    <cac:PartyLegalEntity>
+                        <cbc:RegistrationName t-esc="company.name.upper()"/>
+                    </cac:PartyLegalEntity>
+                </cac:Party>
+            </cac:AccountingSupplierParty>
+            <t t-set="id_value" t-value="0"/>
+            <sac:VoidedDocumentsLine t-foreach="records" t-as="invoice">
+                <t t-set="id_value" t-value="id_value + 1"/>
+                <t t-set="serie_folio" t-value="invoice._l10n_pe_edi_get_serie_folio()"/>
+                <cbc:LineID t-esc="id_value"/>
+                <cbc:DocumentTypeCode t-esc="invoice.l10n_latam_document_type_id.code"/>
+                <sac:DocumentSerialID t-esc="serie_folio['serie']"/>
+                <sac:DocumentNumberID t-esc="serie_folio['folio']"/>
+                <sac:VoidReasonDescription t-esc="invoice.l10n_pe_edi_cancel_reason"/>
+            </sac:VoidedDocumentsLine>
+        </VoidedDocuments>
+    </template>
+</odoo>

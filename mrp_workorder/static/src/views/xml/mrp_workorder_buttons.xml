@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_workorder.overviewButtonsKanban" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="(//div/*)[last()]" position="after">
+            <div>
+                <button t-on-click="actionBack" class="btn btn-secondary o_back_button">
+                    <i class="fa fa-arrow-left"/>
+                </button>
+            </div>
+        </xpath>
+    </t>
+    <t t-name="mrp_workorder.overviewButtonsList" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="(//div/*)[last()]" position="after">
+            <div>
+                <button t-on-click="actionBack" class="btn btn-secondary o_back_button">
+                    <i class="fa fa-arrow-left"/>
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

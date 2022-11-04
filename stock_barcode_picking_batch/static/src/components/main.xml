@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="stock_barcode.MainComponent" t-inherit-mode="extension" owl="1" t-translation="off">
+        <!-- Override header message to add the hand icon is some options need to be selected -->
+        <xpath expr="//div[hasclass('o_barcode_pic')]" position="after">
+            <div t-if="isConfiguring &amp;&amp; !info.warning" class="o_barcode_pic position-relative text-center mt-2 mb-1">
+                <i class="fa fa-4x fa-hand-pointer-o"/>
+            </div>
+        </xpath>
+        <!-- Hide the Barcode Lines part and display the Option Lines -->
+        <xpath expr="//div[hasclass('o_barcode_lines')]" position="attributes">
+            <attribute name="t-if">displayBarcodeLines &amp;&amp; !isConfiguring</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_barcode_lines')]" position="before">
+            <t t-if="displayBarcodeLines">
+                <t t-if="env.model.needPickingType">
+                    <t t-foreach="env.model.pickingTypes" t-as="line" t-key="line.id">
+                        <OptionLine line="line" additionalClass="'o_barcode_picking_type'"/>
+                    </t>
+                </t>
+                <t t-elif="env.model.needPickings">
+                    <t t-foreach="env.model.allowedPickings" t-as="line" t-key="line.id">
+                        <OptionLine line="line" responsible="line.user_id.name || '-'"/>
+                    </t>
+                </t>
+            </t>
+        </xpath>
+        <!-- Override footer to display "Confirm" button and hide other buttons if needed -->
+        <xpath expr="//div[hasclass('o_action_buttons')]" position="attributes">
+            <attribute name="t-if">!isConfiguring</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_barcode_control')]" position="after">
+            <div t-if="isConfiguring" class="o_barcode_control d-flex">
+                <button class="o_confirm btn btn-secondary text-uppercase"
+                    t-att-disabled="!env.model.canConfirmSelection"
+                    t-on-click="confirm" t-esc="'Confirm'"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

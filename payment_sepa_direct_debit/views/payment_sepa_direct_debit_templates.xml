@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="inline_form">
+        <div class="px-4 pb-4">
+            <input type="hidden" name="provider_id" t-attf-value="{{provider_id}}"/>
+            <input type="hidden" name="mandate_id"/>
+
+            <!-- === IBAN === -->
+            <label t-attf-for="o_sdd_iban_{{provider_id}}" class="form-label">
+                IBAN
+            </label>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <i class="fa fa-fw fa-bank"/>
+                </div>
+                <input t-attf-id="o_sdd_iban_{{provider_id}}"
+                       type="text"
+                       class="form-control"
+                       required=""/>
+            </div>
+            <!-- === Phone number === -->
+            <div t-attf-id="o_sdd_phone_div_{{provider_id}}" class="d-none">
+                <label t-attf-for="o_sdd_phone_{{provider_id}}" class="form-label">
+                    Phone Number
+                </label>
+                <div class="input-group">
+                    <div class="input-group-text">
+                        <i class="fa fa-fw fa-mobile"/>
+                    </div>
+                    <input t-attf-id="o_sdd_phone_{{provider_id}}"
+                           type="tel"
+                           placeholder="+32123456789"
+                           class="form-control"
+                           required=""/>
+                    <button t-attf-id="o_sdd_sms_button_{{provider_id}}"
+                            class="btn btn-primary"
+                            type="button">
+                        Send SMS
+                    </button>
+                </div>
+            </div>
+            <!-- === Verification code === -->
+            <div t-attf-id="o_sdd_verification_code_div_{{provider_id}}" class="d-none">
+                <label t-attf-for="o_sdd_verification_code_{{provider_id}}"
+                       class="form-label">
+                    Verification Code
+                </label>
+                <div class="input-group">
+                    <div class="input-group-text">
+                        <i class="fa fa-fw fa-unlock-alt"/>
+                    </div>
+                    <input t-attf-id="o_sdd_verification_code_{{provider_id}}"
+                           type="number"
+                           class="form-control"
+                           disabled=""/>
+                </div>
+            </div>
+            <!-- === Signature form === -->
+            <div t-attf-id="o_sdd_signature_form_{{provider_id}}" class="d-none">
+                <label t-attf-for="o_sdd_signature_{{provider_id}}" class="form-label">
+                    Signature
+                </label>
+                <div t-attf-id="o_sdd_signature_config_{{provider_id}}"
+                     t-att-data-call-url="undefined"
+                     t-att-data-default-name="not request.env.user._is_public() and request.env.user.name"
+                     data-mode="draw"
+                     data-signature-type="signature"/>
+                <input t-attf-id="o_sdd_signature_{{provider_id}}"
+                       t-attf-aria-describedby="o_sdd_signature_help_{{provider_id}}"
+                       type="hidden"
+                       required=""/>
+                <div t-attf-id="o_sdd_signature_help_{{provider_id}}" class="form-text">
+                    A copy of the mandate will be sent by email to
+                    <span t-attf-id="o_sdd_partner_email_{{provider_id}}"/>
+                    upon validation.
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="sdd_payment_mandate_form" inherit_id="account_sepa_direct_debit.sdd_mandate_form">
+        <div id="signature" position="replace">
+            <div id="signature" class="row">
+                <div class="col-6">
+                    <t t-if="o.verified">
+                        <div t-if="o.signature" name="signature">
+                            <div>
+                                <img t-att-src="image_data_uri(o.signature)"
+                                     style="max-height: 4cm; max-width: 8cm;"/>
+                            </div>
+                            <div class="text-start">
+                                <p t-field="o.signed_by"/>
+                            </div>
+                        </div>
+                        <div t-else="">
+                            <p>
+                                Signed online on<t t-esc="o.signed_on"
+                                                   t-options="{'widget': 'date'}"/>.
+                            </p>
+                        </div>
+                        <div t-if="o.phone_number" name="phone_number">
+                            <p>
+                                <strong>Authenticated by SMS by:</strong>
+                                <span t-field="o.phone_number"/>
+                            </p>
+                        </div>
+                    </t>
+                    <div t-else="">
+                        <p>
+                            <strong>Name of the reference party:</strong>
+                            ......................................
+                        </p>
+                        <p>
+                            <strong>Signature:</strong>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <p>
+                        <strong>Date and place of signature:</strong>
+                        <t t-if="not o.signed_on">......................................</t>
+                        <span t-else="" t-esc="o.signed_on" t-options="{'widget': 'date'}"/>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

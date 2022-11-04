@@ -1,0 +1,25 @@
+.o_kanban_renderer.o_mrp_documents_kanban_view {
+
+    .ribbon {
+        &::before, &::after {
+            display: none;
+        }
+
+        span {
+            padding: 5px;
+            font-size: small;
+            z-index: unset;
+            height: auto;
+        }
+    }
+
+    .ribbon-top-right {
+        margin-top: 0px;
+
+        span {
+            left: 10px;
+            top: 10px;
+            bottom: 110px;
+        }
+    }
+}

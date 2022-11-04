@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_legal_mexican_statements_menu" name="Mexico" parent="account.menu_finance_reports" sequence="5" groups="account.group_account_readonly"/>
+    <record id="action_account_report_diot" model="ir.actions.client">
+        <field name="name">DIOT</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_mx_reports.diot_report')}"/>
+    </record>
+    <menuitem id="menu_action_account_report_diot" name="Transactions with third parties [ DIOT ]" action="action_account_report_diot" parent="account_reports_legal_mexican_statements_menu"/>
+</odoo>

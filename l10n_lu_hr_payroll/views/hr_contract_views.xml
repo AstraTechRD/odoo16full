@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.lu.hr.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <field name="wage_type" position="after">
+                <label for="l10n_lu_atn_transport" attrs="{'invisible': ['|', ('country_code', '!=', 'LU'), ('wage_type', '=', 'hourly')]}"/>
+                <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'LU'), ('wage_type', '=', 'hourly')]}">
+                    <field name="l10n_lu_atn_transport" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_bank_rec_widget_form_inherit_sale_order" model="ir.ui.view">
+            <field name="name">bank.rec.widget.form.inherit.sale_order</field>
+            <field name="model">bank.rec.widget</field>
+            <field name="inherit_id" ref="account_accountant.view_bank_rec_widget_form"/>
+            <field name="arch" type="xml">
+                <page name="amls_tab" position="after">
+                    <page name="sale_orders_tab"
+                          string="Sale Orders"
+                          attrs="{'invisible': ['|', ('state', 'in', ('reconciled', 'to_check')), ('matched_sale_order_ids', '=', [])]}">
+                        <field name="matched_sale_order_ids" invisible="1"/>
+                        <span>There are <strong><button class="oe_link" name="button_show_sale_orders" type="object" style="padding: 0; vertical-align: baseline;">uninvoiced sales orders</button></strong> matching the communication of the bank statement line.</span>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+    </data>
+</odoo>

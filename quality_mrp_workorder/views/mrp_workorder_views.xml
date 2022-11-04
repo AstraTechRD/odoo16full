@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- MRP.WORKORDER SIMPLIFIED VIEW -->
+    <record model="ir.ui.view" id="mrp_production_workorder_tree_editable_view_inherit_quality">
+        <field name="name">mrp.production.work.order.tree.editable.inherit.quality</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_start']" position="before">
+                <field name="quality_state" invisible="1"/>
+                <field name="test_type" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='button_finish']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', '|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False), '&amp;', ('quality_state', '=', 'none'), ('test_type', 'not in', ['register_consumed_materials', 'register_byproducts', 'instructions'])]}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_finish']" position="after">
+                <button name="button_finish" type="object" string="Done" class="btn-warning"
+                  attrs="{'invisible': ['|', '|', '|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False), '|', ('quality_state', '!=', 'none'), ('test_type', 'in', ['register_consumed_materials', 'register_byproducts', 'instructions'])]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

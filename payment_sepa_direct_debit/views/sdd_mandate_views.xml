@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sdd_mandate_form" model="ir.ui.view">
+        <field name="name">SEPA Direct Debit SDD Mandate Form</field>
+        <field name="model">sdd.mandate</field>
+        <field name="inherit_id"
+               ref="account_sepa_direct_debit.account_sepa_direct_debit_mandate_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="inside">
+                <group name="signature"
+                       string="Electronic Signature"
+                       attrs="{'invisible': [('signature', '=', False), ('phone_number', '=', False)]}">
+                    <field name="signed_on"/>
+                    <field name="signed_by" attrs="{'invisible': [('signed_by', '=', False)]}"/>
+                    <field name="signature"
+                           widget="signature"
+                           attrs="{'invisible': [('signature', '=', False)]}"/>
+                    <field name="phone_number"
+                           widget="phone"
+                           attrs="{'invisible': [('phone_number', '=', False)]}"
+                           options="{'enable_sms': false}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

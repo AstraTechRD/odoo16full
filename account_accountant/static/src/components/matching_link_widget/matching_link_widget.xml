@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="account_accountant.MatchingLink" owl="1">
+        <t t-if="env.searchModel.context.is_matched_view">
+            <span t-out="props.value"/>
+        </t>
+        <t t-elif="props.value">
+            <a href='#' t-on-click.prevent="viewMatch" t-out="props.value"/>
+        </t>
+        <t t-elif="props.record.data.is_account_reconcile">
+            <button class="journal_item_matching_button" t-on-click="reconcile">Match</button>
+        </t>
+    </t>
+
+</templates>

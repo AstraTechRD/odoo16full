@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_link_journal_form_wizard" model="ir.ui.view">
+            <field name="name">account.link.journal.form.wizard</field>
+            <field name="model">account.link.journal</field>
+            <field name="arch" type="xml">
+                <form string="Link account to journal">
+                    <div style="font-size: 1.3rem;">
+                        <p attrs="{'invisible': [('number_added', '=', 0)]}">
+                            <strong>Fantastic! </strong> We've found <strong><field name="number_added"/></strong> bank account(s).<br/>
+                            Let's associate each one with an accounting journal.
+                        </p>
+                        <p attrs="{'invisible': [('number_added', '!=', 0)]}">There is no new bank account to link.</p>
+                    </div>
+                    <field name="number_added" invisible="1"/>
+                    <div>
+                        <div attrs="{'invisible': [('number_added', '=', 0)]}">
+                            <group>
+                                <group>
+                                    <field name="sync_date"/>
+                                </group>
+                            </group>
+                            <field name="account_ids" nolabel="1" widget="one2many" mode="tree">
+                                <tree create="false" editable="true">
+                                    <field name="name"/>
+                                    <field name="account_number"/>
+                                    <field name="balance"/>
+                                    <field name="journal_id" context="{'default_type':'bank', 'default_name':name}"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                    <footer>
+                        <button attrs="{'invisible': [('number_added', '=', 0)]}" name="sync_now" class="btn-primary" string="Synchronize now" type="object" data-hotkey="q"/>
+                        <button string="Cancel" name="cancel_sync" class="btn-secondary" type="object" data-hotkey="w"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,545 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_expense_extract
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Damien Bouvy <dbo@odoo.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:48+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: hr_expense_extract
+#. openerp-web
+#: code:addons/hr_expense_extract/static/src/js/tours/expense_tour.js:0
+#, python-format
+msgid "<b>Congratulations</b>, you are now an expert of Expenses."
+msgstr ""
+"<b>Félicitations</b>, vous êtes à présent un expert en Notes de frais."
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__amount
+msgid "Amount"
+msgstr "Montant"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__error_status
+#, python-format
+msgid "An error occurred"
+msgstr "Une erreur s'est produite"
+
+#. module: hr_expense_extract
+#: model:ir.model,name:hr_expense_extract.model_ir_attachment
+msgid "Attachment"
+msgstr "Pièce jointe"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__available_payment_method_line_ids
+msgid "Available Payment Method Line"
+msgstr "Méthode de paiement disponible "
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.hr_expense_extract_view_form
+msgid "Buy credits"
+msgstr "Acheter des crédits"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense__extract_can_show_resend_button
+msgid "Can show the ocr resend button"
+msgstr "Peut montrer le bouton de renvoi OCR"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense__extract_can_show_send_button
+msgid "Can show the ocr send button"
+msgstr "Peut montrer le bouton d'envoi OCR "
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.expense_sample_register_view_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: hr_expense_extract
+#. openerp-web
+#: code:addons/hr_expense_extract/static/src/js/tours/expense_tour.js:0
+#, python-format
+msgid "Choose a receipt."
+msgstr "Choisissez un reçu."
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.expense_sample_receipt_view_form
+msgid "Choose a receipt:"
+msgstr "Choisissez un reçu :"
+
+#. module: hr_expense_extract
+#: model:ir.model,name:hr_expense_extract.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__company_id
+msgid "Company"
+msgstr "Société"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__done
+msgid "Completed flow"
+msgstr "Flux complété"
+
+#. module: hr_expense_extract
+#: model:ir.model,name:hr_expense_extract.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de config"
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.expense_sample_register_view_form
+msgid "Create Payment"
+msgstr "Créer un paiement"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_receipt__create_uid
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__create_uid
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_receipt__create_date
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__create_date
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__currency_id
+msgid "Currency"
+msgstr "Devise"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__res_company__expense_extract_show_ocr_option_selection__auto_send
+msgid "Digitize automatically"
+msgstr "Numériser automatiquement"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__res_company__expense_extract_show_ocr_option_selection__manual_send
+msgid "Digitize on demand only"
+msgstr "Numériser sur demande uniquement"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_receipt__display_name
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__display_name
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__display_name
+msgid "Display Name"
+msgstr "Afficher le nom"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__res_company__expense_extract_show_ocr_option_selection__no_send
+msgid "Do not digitize"
+msgstr "Ne pas numériser"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense__extract_error_message
+msgid "Error message"
+msgstr "Message d'erreur"
+
+#. module: hr_expense_extract
+#: model:ir.model,name:hr_expense_extract.model_hr_expense
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__sheet_id
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__expense_id
+msgid "Expense"
+msgstr "Note de frais"
+
+#. module: hr_expense_extract
+#: model:ir.actions.server,name:hr_expense_extract.ir_cron_ocr_parse_ir_actions_server
+#: model:ir.cron,cron_name:hr_expense_extract.ir_cron_ocr_parse
+#: model:ir.cron,name:hr_expense_extract.ir_cron_ocr_parse
+msgid "Expense OCR: Parse Expenses"
+msgstr "OCR en notes de frais : Analyser les notes de frais"
+
+#. module: hr_expense_extract
+#: model:ir.actions.server,name:hr_expense_extract.ir_cron_update_ocr_status_ir_actions_server
+#: model:ir.cron,cron_name:hr_expense_extract.ir_cron_update_ocr_status
+#: model:ir.cron,name:hr_expense_extract.ir_cron_update_ocr_status
+msgid "Expense OCR: Update All Status"
+msgstr "OCR des notes de frais: mise à jour de tous les états"
+
+#. module: hr_expense_extract
+#: model:ir.actions.server,name:hr_expense_extract.ir_cron_ocr_validate_ir_actions_server
+#: model:ir.cron,cron_name:hr_expense_extract.ir_cron_ocr_validate
+#: model:ir.cron,name:hr_expense_extract.ir_cron_ocr_validate
+msgid "Expense OCR: Validate Expenses"
+msgstr "OCR en Notes de frais : Valider des notes de frais"
+
+#. module: hr_expense_extract
+#: model:ir.model,name:hr_expense_extract.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Note de frais"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "Expense is being Digitized"
+msgstr "La note de frais est en cours de numérisation"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_res_config_settings__expense_extract_show_ocr_option_selection
+msgid "Expense processing option"
+msgstr "Option de traitement des notes de frais"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "Expenses sent"
+msgstr "Notes de frais envoyées"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense__extract_word_ids
+msgid "Extract Word"
+msgstr "Extraire mot"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense__extract_state
+msgid "Extract state"
+msgstr "Extraire état"
+
+#. module: hr_expense_extract
+#: model:ir.model,name:hr_expense_extract.model_hr_expense_extract_words
+msgid "Extracted words from expense scan"
+msgstr "Mots extraits du scan de la note de frais"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "Generated Expense"
+msgstr "Note de frais générée"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__hide_partial
+msgid "Hide Partial"
+msgstr "Masquer partiellement"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__hide_payment_method_line
+msgid "Hide Payment Method Line"
+msgstr "Masquer la méthode de paiement"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_receipt__id
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__id
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense__extract_remote_id
+msgid "Id of the request to IAP-OCR"
+msgstr "Identifiant de la requête à IAP-OCR"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__journal_id
+msgid "Journal"
+msgstr "Journal"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__expense_sample_register__partial_mode__open
+msgid "Keep open"
+msgstr "Laisser ouvert"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_receipt____last_update
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register____last_update
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_receipt__write_uid
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__write_uid
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_receipt__write_date
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__write_date
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.expense_sample_receipt_view_form
+msgid ""
+"Let's try a sample receipt to test the automated processing of expenses with"
+" Artificial Intelligence."
+msgstr ""
+"Essayons un exemple de reçu pour tester le traitement automatisé des notes "
+"de frais avec l'Intelligence Artificielle."
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,help:hr_expense_extract.field_expense_sample_register__payment_method_line_id
+msgid ""
+"Manual: Pay or Get paid by any method outside of Odoo.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Check: Pay bills by check and print it from Odoo.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+msgstr ""
+"Manuel : Payez ou soyez payé par n'importe quelle méthode en dehors d'Odoo.\n"
+"Acquéreurs de paiement : Chaque acquéreur de paiement a sa propre méthode de paiement. Demandez une transaction sur/vers une carte grâce à un jeton de paiement enregistré par le partenaire lors d'un achat ou d'un abonnement en ligne.\n"
+"Chèque : Payez vos factures par chèque et imprimez-le depuis Odoo.\n"
+"Dépôt par lot : Collectez plusieurs chèques clients en une seule fois en générant et en soumettant un dépôt par lot à votre banque. Le module account_batch_payment est nécessaire.\n"
+"Virement SEPA : Payez dans la zone SEPA en soumettant un fichier de virement SEPA à votre banque. Le module account_sepa est nécessaire.\n"
+"Prélèvement SEPA : Soyez payé dans la zone SEPA grâce à un mandat que votre partenaire vous aura accordé. Le module account_sepa est nécessaire.\n"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__expense_sample_register__partial_mode__paid
+msgid "Mark as fully paid"
+msgstr "Marquer comme entièrement payé."
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__memo
+msgid "Memo"
+msgstr "Mémo"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "No document name provided"
+msgstr "Aucun nom de document fourni"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__no_extract_requested
+msgid "No extract requested"
+msgstr "Aucun extrait demandé"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__not_enough_credit
+msgid "Not enough credit"
+msgstr "Crédit insuffisant"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__date
+msgid "Payment Date"
+msgstr "Date de règlement"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__partial_mode
+msgid "Payment Difference"
+msgstr "Différence de paiement"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_expense_sample_register__payment_method_line_id
+msgid "Payment Method"
+msgstr "Moyen de paiement"
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.expense_sample_register_view_form
+msgid "Register Payment"
+msgstr "Enregistrer un paiement"
+
+#. module: hr_expense_extract
+#: model:ir.actions.act_window,name:hr_expense_extract.action_expense_sample_register
+msgid "Register Sample Payment"
+msgstr "Enregistrer un paiement test"
+
+#. module: hr_expense_extract
+#: model:ir.model,name:hr_expense_extract.model_expense_sample_register
+msgid "Register Sample Payments"
+msgstr "Enregistrer des paiements tests"
+
+#. module: hr_expense_extract
+#. openerp-web
+#: code:addons/hr_expense_extract/static/src/js/tours/expense_tour.js:0
+#, python-format
+msgid "Report this expense to your manager for validation."
+msgstr "Signalez cette note de frais à votre responsable pour validation."
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.hr_expense_extract_view_form
+msgid "Resend For Digitization"
+msgstr "Renvoyer pour numérisation"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/wizard/expense_sample_receipt.py:0
+#, python-format
+msgid "Sample Employee"
+msgstr "Employé test"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/wizard/expense_sample_receipt.py:0
+#, python-format
+msgid "Sample Receipt: %s"
+msgstr "Reçu test : %s"
+
+#. module: hr_expense_extract
+#: model:ir.actions.server,name:hr_expense_extract.hr_expense_parse_action_server
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.hr_expense_extract_view_form
+msgid "Send For Digitization"
+msgstr "Envoi pour numérisation"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_res_company__expense_extract_show_ocr_option_selection
+msgid "Send mode on expense attachments"
+msgstr "Mode d'envoi sur les pièces jointes de la note de frais"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "Server is currently under maintenance. Please retry later"
+msgstr ""
+"Le serveur est actuellement en maintenance. Veuillez réessayer "
+"ultérieurement"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "Server not available. Please retry later"
+msgstr "Serveur non disponible. Veuillez réessayer ultérieurement"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense__extract_status_code
+msgid "Status code"
+msgstr "Code du statut"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense__state_processed
+msgid "Status regarding OCR status"
+msgstr "Statut sur la plateforme OCR"
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.hr_expense_extract_view_form
+msgid ""
+"The data extraction is not finished yet. The extraction usually takes "
+"between 5 and 10 seconds."
+msgstr ""
+"L'extraction de données n'est pas encore terminée. L'extraction prend "
+"généralement entre 5 et 10 secondes."
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "The document could not be found"
+msgstr "Le document n'a pas pu être trouvé"
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.hr_expense_extract_view_form
+msgid ""
+"The file has been sent and is being processed. It usually takes between 5 "
+"and 10 seconds."
+msgstr ""
+"Le fichier a été envoyé et est en cours de traitement. Cela prend "
+"habituellement entre 5 et 10 secondes."
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__to_validate
+msgid "To validate"
+msgstr "A valider"
+
+#. module: hr_expense_extract
+#: model:ir.actions.act_window,name:hr_expense_extract.action_expense_sample_receipt
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.expense_sample_receipt_view_form
+msgid "Try Sample Receipt"
+msgstr "Essayez un exemple de reçu"
+
+#. module: hr_expense_extract
+#: model:ir.model,name:hr_expense_extract.model_expense_sample_receipt
+msgid "Try Sample Receipts"
+msgstr "Essayez des exemples de reçus"
+
+#. module: hr_expense_extract
+#. openerp-web
+#: code:addons/hr_expense_extract/static/src/js/tours/expense_tour.js:0
+#, python-format
+msgid "Try the AI with a sample receipt."
+msgstr "Essayez l'IA avec un exemple de reçu."
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "Unsupported image format"
+msgstr "Format d'image non supporté"
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.hr_expense_extract_view_form
+msgid "Update status"
+msgstr "Mettre à jour le statut"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__waiting_extraction
+msgid "Waiting extraction"
+msgstr "Extraction en attente"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__waiting_upload
+msgid "Waiting upload"
+msgstr "Téléchargement en attente"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__waiting_validation
+msgid "Waiting validation"
+msgstr "En attente de validation"
+
+#. module: hr_expense_extract
+#. openerp-web
+#: code:addons/hr_expense_extract/static/src/js/tours/expense_tour.js:0
+#, python-format
+msgid "Wasting time recording your receipts? Let’s try a better way."
+msgstr "Vous perdez du temps à enregistrer vos reçus ? Changeons de méthode."
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__word_page
+msgid "Word Page"
+msgstr "Page du Mot"
+
+#. module: hr_expense_extract
+#: model:ir.model.fields,field_description:hr_expense_extract.field_hr_expense_extract_words__word_text
+msgid "Word Text"
+msgstr "Texte du Mot"
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "You cannot send a expense that is not in draft state!"
+msgstr ""
+"Vous ne pouvez pas envoyer une note de frais qui n'est pas à l'état de "
+"brouillon!"
+
+#. module: hr_expense_extract
+#: model_terms:ir.ui.view,arch_db:hr_expense_extract.hr_expense_extract_view_form
+msgid "You don't have enough credit to extract data from your expense."
+msgstr ""
+"Vous n'avez pas assez de crédits pour extraire les données de votre note de "
+"frais."
+
+#. module: hr_expense_extract
+#: code:addons/hr_expense_extract/models/hr_expense.py:0
+#, python-format
+msgid "You must send the same quantity of documents and file names"
+msgstr ""
+"Vous devez envoyer la même quantité de documents et de noms de fichiers"
+
+#. module: hr_expense_extract
+#. openerp-web
+#: code:addons/hr_expense_extract/static/src/js/tours/expense_tour.js:0
+#: code:addons/hr_expense_extract/static/src/js/tours/expense_tour.js:0
+#, python-format
+msgid "Your manager will have to approve (or refuse) your expense reports."
+msgstr "Votre responsable doit approuver (ou refuser) le rapport des frais."
+
+#. module: hr_expense_extract
+#: model:ir.model.fields.selection,name:hr_expense_extract.selection__hr_expense__extract_state__extract_not_ready
+msgid "waiting extraction, but it is not ready"
+msgstr "en attente d'extraction, mais il n'est pas prêt"

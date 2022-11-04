@@ -1,0 +1,30 @@
+.o_appendix_content .o_column_sortable {
+    text-align: center !important;
+    white-space: normal !important;
+    max-width: 60% !important;
+}
+
+.lu-notebook .o_cell {
+    width: 100% !important;
+    align-items: baseline;
+}
+
+.lu-notebook .o_inner_group {
+    grid-column-gap: 0px !important;
+    .o_form_label {
+        margin-right: $spacer*1.5 !important;
+    }
+    .o_wrap_field:nth-of-type(even) .o_cell {
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+}
+
+.lu-notebook .appendix_a {
+    grid-template-columns: auto !important;
+}
+
+.lu-notebook .nav {
+    flex-wrap: wrap !important;
+}
+
+$grid-row-columns: 12 !default;

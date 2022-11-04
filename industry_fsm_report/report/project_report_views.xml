@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="report_project_task_user_fsm_view_search" model="ir.ui.view">
+        <field name="name">report.project.task.user.fsm.search</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="inherit_id" ref="industry_fsm.report_project_task_user_fsm_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/filter[@name='groupby_project']" position="after">
+                <filter string="Worksheet Template" name="groupby_worksheet_template" context="{'group_by':'worksheet_template_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="worksheet_template_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

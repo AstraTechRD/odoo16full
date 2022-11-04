@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_workorder.DocumentViewer" owl="1">
+        <t t-if="type === 'pdf'">
+            <div class="o_tablet_document" t-ref="pdf_viewer">
+                <PdfViewerField t-props="viewerProps"/>
+            </div>
+        </t>
+        <t t-elif="type === 'google_slide'">
+            <div class="o_tablet_document">
+                <SlidesViewer t-props="viewerProps"/>
+            </div>
+        </t>
+        <t t-elif="type !== false">
+            <div class="o_tablet_document">
+                <ImageField t-props="viewerProps"/>
+            </div>
+        </t>
+    </t>
+</templates>

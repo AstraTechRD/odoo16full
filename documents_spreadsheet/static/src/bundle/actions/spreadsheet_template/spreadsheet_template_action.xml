@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<div t-name="documents_spreadsheet.SpreadsheetTemplateAction" class="o_spreadsheet_action" style="height: 100%;" owl="1">
+    <DocumentsSpreadsheetControlPanel
+        spreadsheetName="state.spreadsheetName"
+        isReadonly="isReadonly"
+        onSpreadsheetNameChanged.bind="_onSpreadSheetNameChanged"
+    />
+    <SpreadsheetComponent
+        name="state.spreadsheetName"
+        data="spreadsheetData"
+        isReadonly="isReadonly"
+        showFormulas="showFormulas"
+        thumbnailSize="750"
+        onMakeCopy.bind="_onMakeCopy"
+        onNewSpreadsheet.bind="_onNewSpreadsheet"
+        onSpreadsheetSaved.bind="_onSpreadsheetSaved"
+        exposeSpreadsheet.bind="exposeSpreadsheet"
+    />
+</div>
+
+</templates>

@@ -1,0 +1,121 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_3way_match
+# 
+# Translators:
+# Martin Trigaux, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Arash Sardari <arashss77@gmail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.3+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-25 08:34+0000\n"
+"PO-Revision-Date: 2018-06-25 08:34+0000\n"
+"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
+"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_invoice__release_to_pay_manual
+msgid ""
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities."
+msgstr ""
+"*بله: جهت ارسال کالا، شما باید صورتحساب را پرداخت کنید.\n"
+"*خیر، درصورت عدم پرداخت، کالا ارسال نمی شود.\n"
+"*استثنا، بین مبلغ پرداخت شده و صورت حساب اختلاف وجود دارد."
+
+#. module: account_3way_match
+#: model:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills in Exception"
+msgstr "استثناء"
+
+#. module: account_3way_match
+#: model:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Pay"
+msgstr "پرداخت صورتحساب"
+
+#. module: account_3way_match
+#: selection:account.invoice,release_to_pay:0
+#: selection:account.invoice,release_to_pay_manual:0
+#: selection:account.invoice.line,can_be_paid:0
+msgid "Exception"
+msgstr "استثناء"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_invoice__force_release_to_pay
+msgid "Force status"
+msgstr "شرایط اضطراری"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_invoice__force_release_to_pay
+msgid ""
+"Indicates whether the 'Can be paid' status is defined automatically or "
+"manually."
+msgstr "نشان می دهد که وضعیت 'آماده پرداخت' دستی یا اتوماتیک تنظیم شده."
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_invoice
+msgid "Invoice"
+msgstr "فاکتور"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "سطر فاکتور"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_journal
+msgid "Journal"
+msgstr "روزنامه"
+
+#. module: account_3way_match
+#: selection:account.invoice,release_to_pay:0
+#: selection:account.invoice,release_to_pay_manual:0
+#: selection:account.invoice.line,can_be_paid:0
+msgid "No"
+msgstr "خیر"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_invoice_line__can_be_paid
+msgid "Release to Pay"
+msgstr "آماده پرداخت"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_invoice__release_to_pay
+#: model:ir.ui.view,arch_db:account_3way_match.account_invoice_form_inherit
+msgid "Should be paid"
+msgstr "باید پرداخت شود"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_invoice__release_to_pay_manual
+msgid "Should be paid Manual"
+msgstr ""
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_invoice__release_to_pay
+msgid ""
+"This field can take the following values :\n"
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the 'Force Status' checkbox."
+msgstr ""
+"این فیلد می‌تواند مقادیر زیر داشته باشد :\n"
+"  * بله، شما باید صورت محصولات را پرداخت کنید، شما محصولات را دریافت کرده‌اید\n"
+"  * نه، شما نباید صورت محصولات را پرداخت کنید، شما محصولات را دریافت نکرده‌اید\n"
+"  * استثنا، اختلافی بین تعدادمحصولات صورت شده و دریافت شده وجود دارد \n"
+"این وضعیت به صورت خودکار تعریف شده، اما شما می‌توانید با تیک زدن «وضعیت اجباری» اجبارا آن را تغییر دهید."
+
+#. module: account_3way_match
+#: selection:account.invoice,release_to_pay:0
+#: selection:account.invoice,release_to_pay_manual:0
+#: selection:account.invoice.line,can_be_paid:0
+msgid "Yes"
+msgstr "بله"

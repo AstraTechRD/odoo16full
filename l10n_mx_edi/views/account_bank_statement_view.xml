@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="action_report_payment_receipt" model="ir.actions.report">
+            <field name="name">Payment Receipt</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_mx_edi.report_payment_receipt</field>
+            <field name="report_file">l10n_mx_edi.report_payment_receipt</field>
+            <field name="binding_model_id" ref="model_account_bank_statement_line"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="view_bank_statement_line_tree_bank_rec_widget_inh_l10n_mx" model="ir.ui.view">
+            <field name="name">view.bank.statement.line.tree.bank.rec.widget.inherit.l10n_mx_edi</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="inherit_id" ref="account_accountant.view_bank_statement_line_tree_bank_rec_widget"/>
+            <field name="arch" type="xml">
+                <field name="statement_id" position="after">
+                    <field name="l10n_mx_edi_force_generate_cfdi" invisible="1"/>
+
+                    <field name="l10n_mx_edi_payment_method_id"
+                           optional="hide"
+                           attrs="{'readonly': [('statement_complete', '=', True)], 'invisible': [('country_code', '!=', 'MX')]}"/>
+
+                    <button name="action_l10n_mx_edi_force_generate_cfdi" type="object"
+                           string="Force CFDI" class="oe_link"
+                           groups="account.group_account_invoice"
+                           attrs="{'invisible': ['|','|', ('l10n_mx_edi_force_generate_cfdi', '=', True), ('is_reconciled', '=', False), ('country_code', '!=', 'MX')]}"/>
+                     <button name="l10n_mx_edi.action_report_payment_receipt" type="action"
+                           string="Print Payment Receipt" class="oe_link"
+                           groups="account.group_account_invoice"
+                           attrs="{'invisible': ['|', '|', ('is_reconciled', '=', False), ('statement_complete', '=', False), ('country_code', '!=', 'MX')]}"/>
+                </field>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

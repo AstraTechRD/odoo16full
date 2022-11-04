@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_analysis_report_view_search_inherit_sale_project_forecast" model="ir.ui.view">
+        <field name="name">planning.slot.report.search</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="inherit_id" ref="project_forecast.planning_analysis_report_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_product_ids']" position="before">
+                <field name="sale_order_id" position="move"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_project']" position="after">
+                <xpath expr="//filter[@name='my_sale_orders']" position="move"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

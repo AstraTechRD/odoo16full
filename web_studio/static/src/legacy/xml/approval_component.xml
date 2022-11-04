@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="Studio.ApprovalComponent.Legacy" owl="1">
+    <t t-set="num_rules" t-value="state.rules.length"/>
+    <!-- should display if it's still loading or if there are rules -->
+    <t t-set="should_display" t-value="state.init || state.rules.length"/>
+    <!-- Desktop: display a popover with approval info -->
+    <Popover
+        t-if="!env.device.isMobile and should_display"
+        class="'o_web_studio_approval'"
+        onOpened.bind="_toggleInfo"
+        onClosed.bind="_toggleInfo"
+        propagateClick="this.props.inStudio"
+        title="'Approval'">
+        <t t-set-slot="opened">
+            <t t-call="Studio.ApprovalComponentInfo.Legacy"/>
+        </t>
+        <t t-call="Studio.ApprovalIcons.Legacy"/>
+    </Popover>
+
+    <t t-if="env.device.isMobile and should_display">
+        <!-- Mobile: display a dialog fullscreen -->
+        <div class="o_web_studio_approval" t-on-click.stop="_toggleInfo">
+            <t t-call="Studio.ApprovalIcons.Legacy"/>
+        </div>
+        <Dialog t-if="state.showInfo"
+                onClosed.bind="_toggleInfo"
+                fullscreen="true"
+                title="'Approval'">
+            <t t-call="Studio.ApprovalComponentInfo.Legacy"/>
+            <t t-set-slot="buttons">
+                <button class="btn btn-secondary" t-on-click.stop="_toggleInfo">Close</button>
+            </t>
+        </Dialog>
+    </t>
+    <t t-if="!should_display">
+        <!-- nothing to display -->
+        <span class="d-none o_web_studio_approval"/>
+    </t>
+</t>
+
+<t t-name="Studio.ApprovalIcons.Legacy" owl="1">
+    <!-- no rules list: first fetch not done, display spinner -->
+    <t t-if="state.rules === null">
+        <i class="fa fa-circle-o-notch fa-spin"/>
+    </t>
+    <!-- data fetched; display avatar for rules and entries -->
+    <t t-if="state.rules.length">
+        <t t-foreach="state.rules" t-as="rule" t-key="rule.id">
+            <t t-if="num_rules lte 3 || (num_rules gt 3 and rule_index lt 2)">
+                <img
+                    t-if="getEntry(rule.id)"
+                    t-key="rule.id"
+                    t-attf-src="/web/image/res.users/{{getEntry(rule.id).user_id[0]}}/avatar_128"
+                    t-att-title="getEntry(rule.id).user_id[1]"
+                    t-att-alt="getEntry(rule.id).user_id[1]"
+                    t-attf-class="o_web_studio_approval_avatar rounded-circle border border-{{getEntry(rule.id).approved?'info':'danger'}}"
+                />
+                <img
+                    t-else=""
+                    t-key="rule.id"
+                    src="/web/static/img/user_menu_avatar.png"
+                    title="Waiting for approval"
+                    alt="User avatar placeholder"
+                    class="o_web_studio_approval_avatar rounded-circle border border-muted"
+                />
+            </t>
+            <t t-if="rule_last and num_rules gt 3">
+                <t t-set="extra_rules" t-value="num_rules - 2"/>
+                <span
+                    t-key="'extra_rules'"
+                    class="o_web_studio_approval_more rounded-circle bg-secondary"
+                    title="Click to see all approval rules.">
+                    +<t t-esc="extra_rules"/>
+                </span>
+            </t>
+        </t>
+        <t t-if="env.device.isMobile">
+            <span class="o_web_studio_approval_more rounded-circle bg-primary">
+                <i class="fa fa-info"/>
+            </span>
+        </t>
+    </t>
+    <!-- no rules in db: nothing to display -->
+</t>
+
+<t t-name="Studio.ApprovalComponentInfo.Legacy" owl="1">
+    <h3 t-if="env.device.isMobile and props.actionName">
+        <strong>Action to approve:</strong> <t t-esc="props.actionName"/>
+    </h3>
+    <div class="o_web_studio_approval_info" t-att-data-mobile="env.device.isMobile">
+        <div t-foreach="state.rules" t-as="rule" t-key="rule.id" class="o_web_studio_approval_rule">
+            <t t-set="entry" t-value="getEntry(rule.id)"/>
+            <div t-if="!getEntry(rule.id)" class="o_web_studio_approval_no_entry">
+                <div class="o_web_studio_approval_avatar">
+                    <img
+                        src="/web/static/img/user_menu_avatar.png"
+                        class="o_web_studio_approval_avatar rounded-circle border border-muted"/>
+                </div>
+                <div class="o_web_studio_approval_description">
+                    <t t-if="rule.message" t-esc="rule.message"/>
+                    <t t-else="">Awaiting approval</t>
+                    <p class="small" t-esc="rule.group_id[1]"/>
+                </div>
+                <t t-if="rule.can_validate">
+                    <div class="o_web_studio_approval_button">
+                        <button
+                            class="btn btn-primary btn-sm btn-block o_web_approval_approve"
+                            title="Approve"
+                            t-on-click="() => this._setApproval(rule.id, true)"
+                            t-att-disabled="state.syncing || !props.resId || props.inStudio"
+                            >
+                            <i class="fa fa-fw fa-check"/>
+                        </button>
+                    </div>
+                    <div class="o_web_studio_approval_button">
+                        <button
+                            class="btn btn-danger btn-sm btn-block o_web_approval_reject"
+                            title="Reject"
+                            t-on-click="() => this._setApproval(rule.id, false)"
+                            t-att-disabled="state.syncing || !props.resId || props.inStudio"
+                            >
+                            <i class="fa fa-fw fa-times"/>
+                        </button>
+                    </div>
+                </t>
+            </div>
+            <div t-else="" t-attf-class="o_web_studio_approval_has_entry o_approval_{{getEntry(rule.id).approved?'success':'danger'}}">
+                <div class="o_web_studio_approval_avatar">
+                    <img
+                        t-attf-src="/web/image/res.users/{{getEntry(rule.id).user_id[0]}}/avatar_128"
+                        t-attf-class="o_web_studio_approval_avatar rounded-circle border border-{{getEntry(rule.id).approved?'info':'danger'}}"
+                        t-att-title="getEntry(rule.id).user_id[1]"/>
+                </div>
+                <div class="o_web_studio_approval_description" t-att-title="getEntry(rule.id).long_date">
+                    <p>
+                        <strong t-esc="getEntry(rule.id).user_id[1]"/> <i t-if="rule.exclusive_user" class="fa fa-shield" title="This rule limits this user to a single approval for this action."/>
+                        <br/>
+                        <span class="small">
+                            <t t-if="getEntry(rule.id).approved">Approved on </t>
+                            <t t-else="">Rejected on </t>
+                            <span t-esc="getEntry(rule.id).short_date"/>
+                        </span>
+                    </p>
+                </div>
+                <t t-if="rule.can_validate and getEntry(rule.id).user_id[0] === env.session.uid">
+                    <div class="o_web_studio_approval_button">
+                        <button
+                            class="btn btn-secondary btn-sm btn-block o_web_approval_cancel"
+                            title="Revoke"
+                            t-on-click="(ev) => this._cancelApproval(rule.id)"
+                            t-att-disabled="state.syncing || props.inStudio"
+                            >
+                            <i class="fa fa-fw fa-undo"/>
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>

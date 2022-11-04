@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mail.ActivityListViewItem" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_ActivityListViewItem_markAsDone')]" position="after">
+            <t t-if="activityListViewItem.approvalView">
+                <Approval record="activityListViewItem.approvalView"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

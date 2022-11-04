@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="connector_stroke_head" owl="1">
+        <path d="M2,2 L10,6 L2,10 L6,6 L2,2"
+              class="o_connector_stroke_head"
+              t-att="{
+                        'fill': color,
+                        'stroke': color,
+                     }"
+              t-if="width"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"/>
+    </t>
+    <t t-name="connector_stroke" owl="1">
+        <path fill="none"
+              pointer-events="stroke"
+              t-att="{
+                        'd': path,
+                        'stroke': color,
+                        'stroke-width': width,
+                        'class': 'o_connector_stroke' + (classNameModifier ? classNameModifier : ''),
+                        'marker-end': markerEnd ? 'url(#' + markerEnd + ')' : false,
+                        'pointer-events': props.inCreation ? 'none' : 'stroke',
+                     }"
+              t-if="width"/>
+    </t>
+    <t t-name="connector" owl="1">
+        <svg class="o_connector"
+             pointer-events="none"
+             version="1.1"
+             xmlns="http://www.w3.org/2000/svg"
+             t-att-class="props.hovered ? 'o_connector_hovered' : ''"
+             t-att-data-id="props.id">
+            <t t-set="strokeColor"
+               t-value="props.hovered and !!style.stroke.hoveredColor ? style.stroke.hoveredColor : style.stroke.color"/>
+            <t t-set="outlineStrokeColor"
+               t-value="props.hovered and !!style.outlineStroke.hoveredColor ? style.outlineStroke.hoveredColor : style.outlineStroke.color"/>
+            <defs t-if="style.drawHead">
+                <marker markerHeight="6"
+                        markerWidth="6"
+                        markerUnits="strokeWidth"
+                        orient="auto"
+                        refX="9"
+                        refY="6"
+                        stroke-linejoin="round"
+                        t-attf-id="o_connector_arrow_head_{{props.id}}"
+                        viewBox="0 0 12 12">
+                    <t t-call="connector_stroke_head">
+                        <t t-set="color" t-value="strokeColor"/>
+                        <t t-set="width" t-value="style.stroke.width"/>
+                    </t>
+                </marker>
+            </defs>
+            <t t-if="hoverEaseWidth > 0" t-call="connector_stroke">
+                <t t-set="color" t-value="transparent"/>
+                <t t-set="classNameModifier" t-value="'_hover_ease'"/>
+                <t t-set="width"
+                   t-value="style.stroke.width + hoverEaseWidth + style.outlineStroke.width"/>
+            </t>
+            <t t-if="style.outlineStroke.width > 0" t-call="connector_stroke">
+                <t t-set="color" t-value="outlineStrokeColor"/>
+                <t t-set="classNameModifier" t-value="'_outline'"/>
+                <t t-set="width" t-value="style.stroke.width + style.outlineStroke.width"/>
+            </t>
+            <t t-call="connector_stroke">
+                <t t-set="color" t-value="strokeColor"/>
+                <t t-set="markerEnd" t-value="'o_connector_arrow_head_' + props.id"/>
+                <t t-set="width" t-value="style.stroke.width"/>
+            </t>
+            <svg class="o_connector_stroke_buttons"
+                 pointer-events="all"
+                 t-att="{
+                            'height': 16,
+                            'width': 48,
+                            'x': removeButtonPosition.left -  24,
+                            'y': removeButtonPosition.top - 8
+                        }"
+                 t-if="props.canBeRemoved and props.hovered"
+                 version="1.1"
+                 viewBox="0 0 1536 512"
+                 xmlns="http://www.w3.org/2000/svg">
+                <rect fill="transparent" x="0" y="0" width="1536" height="512"/>
+                <g t-on-click.stop="_onRescheduleSoonerClick" class="o_connector_stroke_button o_connector_stroke_reschedule_button">
+                    <rect fill="white" x="20" y="20" width="472" height="472" rx="236" ry="236"/>
+                    <g pointer-events="none">
+                        <line x1="192" y1="256" x2="320" y2="128" stroke-width="56"/>
+                        <line x1="192" y1="256" x2="320" y2="384" stroke-width="56"/>
+                    </g>
+                </g>
+                <g t-on-click.stop="_onRemoveButtonClick" class="o_connector_stroke_button o_connector_stroke_remove_button">
+                    <rect fill="white" x="532" y="20" width="472" height="472" class="o_connector_stroke_button" rx="236" ry="236"/>
+                    <g transform="rotate(45,768,256)" pointer-events="none">
+                        <rect x="740" y="100" fill="rgb(221, 60, 79)" width="56" height="312"/>
+                        <rect x="612" y="228" fill="rgb(221, 60, 79)" width="312" height="56"/>
+                    </g>
+                </g>
+                <g t-on-click.stop="_onRescheduleLaterClick" class="o_connector_stroke_button o_connector_stroke_reschedule_button">
+                    <rect fill="white" x="1044" y="20" width="472" height="472" rx="236" ry="236"/>
+                    <g pointer-events="none">
+                        <line x1="1216" y1="128" x2="1344" y2="256" stroke-width="56"/>
+                        <line x1="1216" y1="384" x2="1344" y2="256" stroke-width="56"/>
+                    </g>
+                </g>
+            </svg>
+        </svg>
+    </t>
+</templates>

@@ -1,0 +1,80 @@
+.o_knowledge_behavior_type_embedded_view {
+    position: relative;
+    background-color: $o-webclient-background-color;
+
+    .o_knowledge_toolbar {
+        position: absolute;
+        height: 30px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .o_knowledge_embedded_view {
+        .o_content:not(.o_view_sample_data) .o_view_nocontent {
+            display: none !important;
+        }
+    }
+    .o_view_nocontent_empty_folder:before {
+        @extend %o-nocontent-empty-document;
+    }
+
+    // View adjustments:
+
+    .o_pivot_add_spreadsheet,
+    .o_graph_insert_spreadsheet {
+        display: none;
+    }
+    .o_control_panel {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .o_list_renderer {
+        margin-bottom: 0 !important;
+    }
+    .o_kanban_renderer {
+        min-height: 6rem;
+    }
+    .o_kanban_view {
+        .o_project_updates_breadcrumb {
+            display: none !important;
+        }
+    }
+    .o_graph_renderer {
+        .o_graph_canvas_container {
+            min-height: clamp(300px, 50vh, 800px);
+        }
+    }
+    .o-map-renderer {
+        .o-map-renderer--container,
+        .o-map-renderer--pin-list-container {
+            height: auto;
+        }
+        .o-map-renderer--container {
+            min-height: clamp(300px, 50vh, 800px);
+        }
+        .leaflet-map-pane {
+            @include o-position-absolute(0, 0, 0, 0);
+        }
+    }
+    .o_calendar_renderer {
+        .o_calendar_widget {
+            height: auto !important;
+            max-height: 800px;
+        }
+    }
+    .o_calendar_filter .ui-menu-item a {
+        color: $o-gray-700 !important;
+    }
+}
+
+@include media-breakpoint-up(md) {
+    .o_knowledge_toolbar {
+        top: 5px;
+        right: 50%;
+    }
+}
+@include media-breakpoint-down(md) {
+    .o_knowledge_toolbar {
+        top: 5px;
+        right: 0;
+    }
+}

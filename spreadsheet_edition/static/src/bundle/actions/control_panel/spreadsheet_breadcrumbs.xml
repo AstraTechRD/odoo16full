@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<div t-name="spreadsheet_edition.Breadcrumbs" t-inherit="web.Breadcrumbs" t-inherit-mode="primary" owl="1">
+    <xpath expr="//ol[hasclass('breadcrumb')]//li[hasclass('active')]" position="replace">
+        <li t-else="" class="breadcrumb-item active"> <!-- copying the condition present on web.Breadcrumbs -->
+            <SpreadsheetName name="props.spreadsheetName" isReadonly="props.isReadonly" onSpreadsheetNameChanged="props.onSpreadsheetNameChanged" />
+        </li>
+    </xpath>
+</div>
+
+</templates>

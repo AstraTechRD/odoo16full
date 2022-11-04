@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="journal_dashboard_view_inherit" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr='//div[@name="bank_journal_cta"]' position='inside'>
+                <div name="bank_statement_create_button" groups="account.group_account_invoice">
+                    <t t-call="AccountKanbanUploaderButton">
+                        <a href="#">Import Statement</a>
+                    </t>
+                </div>
+            </xpath>
+            <xpath expr='//div[@name="bank_customer_payment"]' position="before">
+                <div t-if="journal_type == 'bank'">
+                    <t t-call="AccountKanbanUploaderButton">
+                        <div class="file_upload_kanban_action_a mb-0">
+                            <a href="#">Import Statement</a>
+                        </div>
+                    </t>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_bank_statement_tree" model="ir.ui.view">
+        <field name="name">account.bank.statement.tree</field>
+        <field name="model">account.bank.statement</field>
+        <field name="inherit_id" ref="account.view_bank_statement_tree"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="js_class">account_tree</attribute>
+            </tree>
+        </field>
+    </record>
+</odoo>

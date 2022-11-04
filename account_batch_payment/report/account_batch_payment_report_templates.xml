@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="print_batch_payment">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <div t-foreach="pages(o)" t-as="page" class="page page_batch_payment">
+                <div class="row batch_details">
+                    <div class="col-6"><t t-esc="page['company_name']"/></div>
+                    <div class="col-6 text-end"><t t-esc="page['journal_name']"/> : <t t-esc="page['batch_name']"/></div>
+                </div>
+                <div class="row batch_details">
+                    <div class="col-6"><t t-esc="page['date']"/></div>
+                </div>
+                <div class="row batch_details">
+                    <div t-if="page['bank_account_number']" class="col-6" style="font-size:18px;">Issuing bank account : <t t-esc="page['bank_account_number']"/></div>
+                </div>
+                <table class="table table-bordered table-sm">
+                    <thead><tr>
+                        <th class="text-start">Customer</th>
+                        <th class="text-start">Date</th>
+                        <th class="text-start">Memo</th>
+                        <th class="text-start">Recipient Bank Account</th>
+                        <th class="text-end">Amount</th>
+                    </tr></thead>
+                    <tr t-foreach="page['payments']" t-as="payment">
+                        <td class="text-start"><t t-esc="payment.partner_id.name"/></td>
+                        <td class="text-start"><t t-esc="payment.date" t-options='{"widget": "date"}'/></td>
+                        <td class="text-start"><t t-esc="payment.ref"/></td>
+                        <td class="text-start"><t t-esc="payment.partner_bank_id.acc_number"/></td>
+                        <td class="text-end"><t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/></td>
+                    </tr>
+                    <tfoot t-if="page['total_amount']">
+                        <tr>
+                            <td style="font-weight: bold;">TOTAL</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-end" style="font-weight: bold;"><t t-esc="page['total_amount']" t-options="{'widget': 'monetary', 'display_currency': page['currency']}"/></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_partner_view_form" model="ir.ui.view">
+            <field name="name">res.partner.view.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='street']" position="attributes">
+                    <attribute name="required">'street' in context.get('required_fields', [])</attribute>
+                </xpath>
+                <xpath expr="//field[@name='city']" position="attributes">
+                    <attribute name="required">'city' in context.get('required_fields', [])</attribute>
+                </xpath>
+                <xpath expr="//field[@name='zip']" position="attributes">
+                    <attribute name="required">'zip' in context.get('required_fields', [])</attribute>
+                </xpath>
+                <xpath expr="//field[@name='country_id']" position="attributes">
+                    <attribute name="required">'country_code' in context.get('required_fields', [])</attribute>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="required">'vat' in context.get('required_fields', [])</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_view_form_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit.mail</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="mail.res_partner_view_form_inherit_mail" />
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email']" position="attributes">
+                    <attribute name="required">'email' in context.get('required_fields', [])</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_281_50_required_fields" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Partner with missing information" multi_edit="1">
+                    <field name="name" required="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="street" required="1"/>
+                    <field name="zip" required="1"/>
+                    <field name="country_id" required="1"/>
+                    <field name="phone" invisible="'phone' not in context.get('required_fields', [])" required="'phone' in context.get('required_fields', [])"/>
+                    <field name="vat" attrs="{'required': [('is_company', '=', True)], }"/>
+                    <field name="citizen_identification" attrs="{'required': [('is_company', '!=', True)], 'invisible': [('is_company', '=', True)], }"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="res_partner_view_form_281_50_required_field" model="ir.ui.view">
+            <field name="name">res.partner.view.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="1"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='street']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='zip']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='country_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="attrs">{'required': [('is_company', '=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='citizen_identification']" position="attributes">
+                    <attribute name="attrs">{'required': [('is_company', '!=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='phone']" position="attributes">
+                    <attribute name="required">'phone' in context.get('required_fields', [])</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

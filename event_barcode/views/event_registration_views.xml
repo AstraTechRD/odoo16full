@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="event_registration_view_form_inherit_barcode">
+        <field name="name">event.registration.view.form.inherit.barcode</field>
+        <field name="inherit_id" ref="event.view_event_registration_form"/>
+        <field name="model">event.registration</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='event_id']" position="after">
+                <field name="barcode" groups="base.group_no_one" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

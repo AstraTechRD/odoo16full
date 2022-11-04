@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Search template used in trial balance report for consolidation : add journals and comparisons-->
+    <template id="search_template_consolidation_report" inherit_id="account_reports.search_template" primary="True">
+        <xpath expr="//div[hasclass('o_account_reports_filter_account_type')]" position="after">
+            <div class="btn-group dropdown o_account_reports_filter_consolidation_period_comparisons">
+                <t t-call="account_consolidation.search_template_consolidation_report_period_comparisons"/>
+            </div>
+            <div class="btn-group dropdown o_account_reports_filter_consolidation_journals"
+                 t-if="options.get('consolidation_journals') != None">
+                <t t-call="account_consolidation.search_template_consolidation_report_journals"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Template for comparison filter -->
+    <template id="search_template_consolidation_report_period_comparisons">
+        <t t-if="len(options.get('periods', [])) > 0">
+            <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                <span class="fa fa-bar-chart"/>
+                Comparison
+                <t t-set="selected_periods"
+                   t-value="', '.join(period.get('name') for period in options['periods'] if period.get('selected'))"/>
+                <t t-if="selected_periods">
+                    :
+                    <t t-out="selected_periods"/>
+                </t>
+            </button>
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <t t-foreach="options['periods']" t-as="p">
+                    <a role="menuitem" t-att-title="p.get('name')"
+                       data-filter="periods" t-att-data-id="p.get('id')"
+                       class="dropdown-item js_account_report_choice_filter">
+                        <t t-out="p.get('name')"/>
+                    </a>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- Template for journals filter -->
+    <template id="search_template_consolidation_report_journals">
+        <t t-set="has_a_selected_period"
+           t-value="options.get('periods', False) and any(period.get('selected') for period in options['periods'])"/>
+        <t t-if="not has_a_selected_period">
+            <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                <span class="fa fa-book"/>
+                Journals:
+                <t t-set="selected_journals"
+                   t-value="', '.join(journal.get('name') for journal in options['consolidation_journals'] if journal.get('selected'))"/>
+                <t t-if="selected_journals">
+                    <t t-out="selected_journals"/>
+                </t>
+                <t t-else="">
+                    All
+                </t>
+            </button>
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <t t-foreach="options['consolidation_journals']" t-as="j">
+                    <a role="menuitem" t-att-title="j.get('name')"
+                       data-filter="consolidation_journals" t-att-data-id="j.get('id')"
+                       class="dropdown-item js_account_report_choice_filter">
+                        <t t-out="j.get('name')"/>
+                    </a>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- Extra options template to add "show zero balance accounts" option -->
+    <template id="search_template_consolidation_report_extra_options" inherit_id="account_reports.search_template_extra_options">
+        <xpath expr="//div[hasclass('o_filter_menu')]" position="inside">
+            <a role="menuitem" class="dropdown-item js_account_report_bool_filter"
+               t-if="options.get('consolidation_show_zero_balance_accounts') != None"
+               title="Show Zero Balance Accounts" data-filter="consolidation_show_zero_balance_accounts">
+                Show Zero Balance Accounts
+            </a>
+        </xpath>
+    </template>
+
+    <template id="main_template_consolidation_report" inherit_id="account_reports.main_template" primary="True">
+        <xpath expr="//div[hasclass('o_account_reports_page')]" position="attributes">
+            <attribute name="class">o_account_reports_page o_account_reports_no_print o_account_consolidation_trial_balance_report</attribute>
+        </xpath>
+    </template>
+
+    <template id="main_table_header_template_consolidation_report">
+        <thead class="o_account_reports_header_hierarchy">
+            <tr>
+                <th t-att-class="o_account_report_column_header"
+                    style="width:40%;"/>
+
+                <t t-foreach="options.get('column_headers')" t-as="column_headers">
+                    <t t-foreach="column_headers" t-as="cell">
+                        <th t-att-class="'o_account_report_column_header ' + (cell.get('class', ''))"
+                            t-att-colspan="cell.get('colspan')"
+                            t-att-style="cell.get('style', '')"
+                            t-att-title="cell.get('title')"
+                            t-att-data-bs-toggle="cell.get('data-bs-toggle')">
+
+                            <t t-call="{{cell.get('template', 'account_reports.cell_template')}}"/>
+                        </th>
+                    </t>
+                </t>
+            </tr>
+        </thead>
+    </template>
+
+    <template id="cell_template_consolidation_report">
+        <t t-out="cell.get('name')"/>
+        <br/>
+        <t t-if="cell.get('consolidation_rate')">
+            <span class="subtitle">
+                Conso Rate: <t t-out="cell.get('consolidation_rate')"/>%<br/>
+                <t t-if="cell.get('from_currency')">
+                    Avg Rate: 1<t t-out="cell.get('from_currency')"/> = <t t-out="cell.get('currency_rate_avg')"/><t t-out="cell.get('to_currency')"/>
+                    / End Rate: 1<t t-out="cell.get('from_currency')"/> = <t t-out="cell.get('currency_rate_end')"/><t t-out="cell.get('to_currency')"/>
+                </t>
+            </span>
+        </t>
+        <br/>
+        <br/>
+    </template>
+
+    <template id="line_template_consolidation_report">
+        <t t-foreach="lines" t-as="line">
+            <t t-if="line.get('level') != None">
+                <t t-set="trclass" t-value="'o_account_reports_level' + str(line['level'])"/>
+                <t t-set="domainClass" t-value="'o_account_reports_domain_line_' + str(line['level'])"/>
+            </t>
+            <t t-else="" >
+                <t t-set="trclass" t-value="'o_account_reports_default_style'"/>
+                <t t-set="domainClass" t-value="'o_account_reports_domain_line_2'"/>
+            </t>
+
+            <t t-if="line.get('page_break') and context.get('print_mode')">
+                <t t-out="table_end"/>
+                <t t-call="{{model._get_templates()['main_table_header_template']}}"/>
+                <t t-out="table_start"/>
+            </t>
+
+            <tr t-attf-class="#{trclass} #{line.get('class', '')} #{'o_js_account_report_parent_row_unfolded' if line.get('unfolded', False) else ''}"
+                t-att-data-parent-id="line.get('parent_id', False)"
+                t-att-style="line.get('style', '')">
+                <td t-att-data-id="line['id']"
+                    t-att-class="'o_account_report_line o_account_report_line_indent ' + (line.get('unfoldable') and 'js_account_report_foldable o_foldable_total' or '')"
+                    t-att-data-unfolded="line.get('unfolded', False)"
+                    t-att-colspan="line.get('colspan', '1')"
+                    t-att-data-offset="line.get('offset', False)"
+                    t-att-data-progress="line.get('progress', False)"
+                    t-att-data-remaining="line.get('remaining', False)"
+                >
+                    <t t-if="line.get('unfoldable')">
+                        <span t-att-data-id="line['id']" class="o_account_reports_caret_icon">
+                            <t t-if="line.get('unfolded')">
+                                <i class="fa fa-caret-down" role="img" aria-label="Unfolded" title="Unfolded"/>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-caret-right" role="img" aria-label="Folded" title="Folded"/>
+                            </t>
+                        </span>
+                    </t>
+
+                    <span class="account_report_line_name" t-att-title="line.get('title_hover')">
+                        <t t-out="line.get('name')"/>
+                    </span>
+                </td>
+
+                <t t-set="column_index" t-value="0"/>
+                <t t-foreach="line.get('columns')" t-as="column">
+                    <t t-set="hierarchies_enabled" t-value="len(options.get('column_headers', [[]])[0]) > 1"/>
+                    <td t-att-class="'o_account_report_line ' + (column.get('class', options.get('column_headers')[0][column_index].get('class', '')) + (line.get('unfoldable') and ' o_foldable_total' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')"
+                        t-att-style="column.get('style', options.get('column_headers')[0][column_index].get('style', ''))">
+                        <t t-if="column.get('journal_id')">
+                            <div class="dropdown no_print">
+                                <a class="dropdown-toggle" data-bs-toggle="dropdown" href='#'>
+                                    <span t-att-data-line-id="line['id']"
+                                          t-att-data-id="column['journal_id']"
+                                          t-att-class="domainClass"
+                                          t-att-title="line.get('title_hover')"
+                                    >
+                                        <t t-out="column.get('name')"/>
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu o_account_reports_domain_dropdown" role="menu">
+                                    <a t-att-data-line-id="line['id']"
+                                       t-att-data-id="column['journal_id']"
+                                       role="menuitem"
+                                       tabindex="-1"
+                                       action="action_open_audit"
+                                       class="dropdown-item"
+                                    >
+                                        Audit
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="print_only">
+                                <t t-out="column.get('name')"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <span class="o_account_report_column_value" t-att-title="column.get('title')">
+                                <t t-out="column.get('name')"/>
+                            </span>
+                        </t>
+                    </td>
+                    <t t-set="column_index" t-value="column_index + 1"/>
+                </t>
+            </tr>
+        </t>
+    </template>
+
+    <record id="consolidated_balance_report" model="account.report">
+        <field name="name">Consolidated Balance</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="main_template">account_consolidation.main_template_consolidation_report</field>
+        <field name="main_table_header_template">account_consolidation.main_table_header_template_consolidation_report</field>
+        <field name="search_template">account_consolidation.search_template_consolidation_report</field>
+        <field name="line_template">account_consolidation.line_template_consolidation_report</field>
+        <field name="custom_handler_model_id" ref="model_consolidation_trial_balance_report_handler"/>
+    </record>
+</odoo>

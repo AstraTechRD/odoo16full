@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web_grid.GridRenderer" owl="1">
+        <div class="o_grid_view" t-ref="root">
+            <div t-if="showNoContentHelp" class="o_view_nocontent">
+                <div class="o_nocontent_help">
+                    <t t-out="props.noContentHelp"/>
+                </div>
+            </div>
+            <div t-else="">
+                <t t-call="web_grid.Table"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_grid.AddLineRow" owl="1">
+        <tr class="o_grid_add_line_row">
+            <th t-if="showTimerButton" class="o_grid_timer_header">
+                \u00A0
+            </th>
+            <th>
+                <div class="ms-3">
+                    <div>
+                        <a href="javascript:void(0)" role="button" t-on-click="_onClickCreateInline" data-hotkey="i">Add a line</a>
+                    </div>
+                </div>
+            </th>
+            <t t-foreach="columns" t-as="column" t-key="column_index">
+                <td t-att-class="{o_grid_current: column.is_current, o_grid_unavailable: column.is_unavailable}"></td>
+            </t>
+            <t t-if="!props.hideLineTotal and props.range !== 'day'" >
+                <td class="o_grid_total"/>
+            </t>
+        </tr>
+    </t>
+
+    <t t-name="web_grid.Table" owl="1">
+        <div class="o_view_grid table-responsive cursor-default">
+            <table class="table table-hover table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th class="o_grid_title_header"></th>
+                        <t t-foreach="columns" t-as="column" t-key="column_index">
+                            <th t-att-class="{o_grid_current: column.is_current, o_grid_unavailable: column.is_unavailable}">
+                                <t t-esc="column.values[props.colField][1]"/>
+                            </th>
+                        </t>
+                        <t t-if="!props.hideLineTotal and props.range !== 'day'" >
+                            <th class="o_grid_total">
+                                <t t-esc="measureLabel"/>
+                            </th>
+                        </t>
+                    </tr>
+                </thead>
+                <t t-if="props.isGrouped" t-call="web_grid.GroupedGridBody"/>
+                <t t-else="" t-call="web_grid.UnGroupedGridBody"/>
+                <tfoot t-if="!props.hideColumnTotal">
+                    <tr t-att-class="{o_total_barchart: props.hasBarChartTotal}">
+                        <td/>
+                        <t t-foreach="columns" t-as="column" t-key="column_index">
+                            <t t-set="total_cells" t-value="_formatCellContentTotals(column_index)"/>
+                            <t t-if="props.hasBarChartTotal" t-set="totalHeight" t-value="_totalHeight(column_index)"/>
+                            <td t-att-class="{
+                                'o_grid_current': column.is_current,
+                                'o_grid_unavailable': column.is_unavailable,
+                                'o_grid_cell_null' : total_cells.muted,
+                                'text-danger': total_cells.smallerThanZero,
+                                }">
+                                <t t-if="hasComponent">
+                                    <t t-component="component"
+                                        onCellFocused.bind="_onFocusComponent"
+                                        onCellUpdated.bind="_onUpdateValue"
+                                        hasBarChartTotal="props.hasBarChartTotal"
+                                        cellHeight="props.hasBarChartTotal ? totalHeight : 0"
+                                        cellValue="total_cells.value"
+                                        readonly="cellReadOnly"
+                                        isInput="state.editMode and state.currentPath===cellPath"
+                                        fieldInfo="props.fields[props.cellField]"
+                                        nodeOptions="props.cellComponentOptions"
+                                        path="cellPath"
+                                        isTotal="true"/>
+                                    </t>
+                                <t t-else="">
+                                    <div t-if="props.hasBarChartTotal"
+                                        class="o_grid_total_bar"
+                                        t-att-style="'height:' + totalHeight + '%;'">
+                                        <span t-if="totalHeight"
+                                            class="o_grid_total_title position-absolute bg-white px-1"
+                                            t-esc="_format(total_cells.value)"/>
+                                    </div>
+                                    <div t-else="" t-esc="_format(total_cells.value)"/>
+                                </t>
+                            </td>
+                        </t>
+                        <t t-if="props.range !== 'day' and !props.hideLineTotal">
+                            <td t-att-class="{
+                                ...gridTotal.classMap,
+                                'o_grid_cell_null': gridTotal.value === 0,
+                                }">
+                                <t t-if="hasComponent">
+                                    <t t-component="component"
+                                        onCellFocused.bind="_onFocusComponent"
+                                        onCellUpdated.bind="_onUpdateValue"
+                                        cellValue="gridTotal.value"
+                                        readonly="cellReadOnly"
+                                        isInput="state.editMode and state.currentPath===cellPath"
+                                        fieldInfo="props.fields[props.cellField]"
+                                        nodeOptions="props.cellComponentOptions"
+                                        path="cellPath"
+                                        isTotal="true"/>
+                                </t>
+                                <div t-else="">
+                                    <t t-esc="_format(gridTotal.value)"/>
+                                </div>
+                            </td>
+                        </t>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="web_grid.GroupedGridBody" owl="1">
+        <t t-foreach="props.data" t-as="grid" t-key="grid_index">
+            <tbody class="o_grid_section">
+                <tr t-if="grid.__label">
+                    <th>
+                        <t t-out="grid.__label[1]"/>
+                    </th>
+                    <t t-foreach="columns" t-as="column" t-key="column_index">
+                        <td t-att-class="{
+                                 o_grid_current: column.is_current,
+                                 o_grid_unavailable: column.is_unavailable,
+                                'text-danger': grid.totals.columns[column_index] lt 0,
+                                'o_grid_cell_null': grid.totals.columns[column_index] == 0,
+                            }">
+                            <t t-if="hasComponent">
+                                <t t-component="component"
+                                    onCellFocused.bind="_onFocusComponent"
+                                    onCellUpdated.bind="_onUpdateValue"
+                                    cellValue="grid.totals.columns[column_index]"
+                                    readonly="true"
+                                    isInput="false"
+                                    fieldInfo="props.fields[props.cellField]"
+                                    nodeOptions="props.cellComponentOptions"
+                                    isTotal="true"/>
+                            </t>
+                            <div t-else="" t-esc="_format(grid.totals.columns[column_index])"/>
+                        </td>
+                    </t>
+                    <t t-if="props.range !== 'day' and !props.hideLineTotal" >
+                        <td class="o_grid_total"
+                            t-att-class="{
+                                'text-danger': grid.totals.super lt 0,
+                                'o_grid_cell_null': grid.totals.super == 0,
+                                }">
+                            <t t-if="hasComponent">
+                                <t t-component="component"
+                                    onCellFocused.bind="_onFocusComponent"
+                                    onCellUpdated.bind="_onUpdateValue"
+                                    cellValue="grid.totals.super"
+                                    readonly="true"
+                                    isInput="false"
+                                    fieldInfo="props.fields[props.cellField]"
+                                    nodeOptions="props.cellComponentOptions"
+                                    isTotal="true"/>
+                            </t>
+                            <div t-else="" t-esc="_format(grid.totals.super)"/>
+                        </td>
+                    </t>
+                </tr>
+                <t t-call="web_grid.GridRows">
+                    <t t-set="groupTotals" t-value="grid.totals" />
+                    <t t-set="rows" t-value="grid.rows"/>
+                    <t t-set="path" t-value="[grid_index, 'grid']"/>
+                </t>
+            </tbody>
+        </t>
+        <tbody>
+            <t t-call="web_grid.GridEmptyRows"/>
+        </tbody>
+        <tbody t-if="props.canCreate and props.createInline" class="o_grid_section">
+            <t t-call="web_grid.AddLineRow"></t>
+        </tbody>
+    </t>
+
+    <t t-name="web_grid.UnGroupedGridBody" owl="1">
+        <tbody>
+            <t t-call="web_grid.GridRows">
+                <t t-set="groupTotals" t-value="props.totals" />
+                <t t-set="rows" t-value="props.data[0].rows"/>
+                <t t-set="grid" t-value="props.data[0]"/>
+                <t t-set="path" t-value="[0,'grid']"/>
+            </t>
+            <t t-call="web_grid.GridEmptyRows"/>
+            <t t-if="props.canCreate and props.createInline" t-call="web_grid.AddLineRow"/>
+        </tbody>
+    </t>
+
+    <t t-name="web_grid.GridEmptyRows" owl="1">
+        <t t-foreach="emptyRows" t-as="row" t-key="row_index">
+            <tr class="o_grid_padding">
+                <th><div>\u00A0</div></th>
+                <t t-foreach="props.data[0].cols" t-as="col" t-key="col_index">
+                    <td t-att-class="{o_grid_current: col.is_current, o_grid_unavailable: col.is_unavailable}"></td>
+                </t>
+                <t t-if="props.range !== 'day' and !props.hideLineTotal">
+                    <td class="o_grid_total"/>
+                </t>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="web_grid.GridRows" owl="1">
+        <t t-foreach="grid.rows" t-as="rowlabel" t-key="grid.rows[rowlabel_index].id">
+            <t t-set="row" t-value="grid.grid[rowlabel_index]"/>
+            <tr>
+                <th>
+                    <div class="ms-3">
+                        <t t-foreach="grid.rows[rowlabel_index].label" t-as="label" t-key="label_index">
+                            <div t-if="label or (grid.rows[rowlabel_index].label.every(element => !element) and !label_index)"  t-att-title="label"
+                                class="o_grid_row_header_part"
+                                t-att-class="{o_grid_text_muted: !label }">
+                                <t t-if="label" t-esc="label"/>
+                                <t t-else="">None</t>
+                            </div>
+                        </t>
+                    </div>
+                </th>
+                <t t-foreach="row" t-as="cell" t-key="cell_index">
+                    <t t-set="rowIndex" t-value="rowlabel_index"/>
+                    <t t-call="web_grid.Cell" />
+                </t>
+                <t t-if="props.range !== 'day' and !props.hideLineTotal" >
+                    <td class="o_grid_total"
+                        t-att-class="{
+                            'text-danger': groupTotals.rows[rowlabel_index] lt 0,
+                            'o_grid_cell_empty': groupTotals.rows[rowlabel_index] == 0,
+                        }">
+                        <t t-if="hasComponent">
+                            <t t-component="component"
+                                onCellFocused.bind="_onFocusComponent"
+                                onCellUpdated.bind="_onUpdateValue"
+                                cellValue="groupTotals.rows[rowlabel_index]"
+                                readonly="true"
+                                isInput="false"
+                                fieldInfo="props.fields[props.cellField]"
+                                nodeOptions="props.cellComponentOptions"
+                                isTotal="true"/>
+                            </t>
+                        <div t-else="" t-esc="_format(groupTotals.rows[rowlabel_index])"/>
+                    </td>
+                </t>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="web_grid.Cell" owl="1">
+        <td t-att-class="{o_grid_current: cell.is_current, o_grid_unavailable: cell.is_unavailable}">
+            <t t-set="cellPath" t-value="path.concat([rowIndex, cell_index]).join('.')"/>
+            <t t-set="cellReadOnly" t-value="!props.editableCells || cell.readonly"/>
+            <div t-att-class="_getCellClassMap(cell)">
+                <t t-if="cell.size or !cellReadOnly">
+                    <i class="fa fa-search-plus o_grid_cell_information" t-on-click="() => this._onClickCellInformation(cellPath)"
+                        title="See all the records aggregated in this cell">
+                    </i >
+                </t>
+                <t t-call="web_grid.CellValue"/>
+            </div>
+        </td>
+    </t>
+
+    <t t-name="web_grid.CellValue" owl="1">
+        <t t-if="hasComponent">
+            <t t-component="component"
+                onCellFocused.bind="_onFocusComponent"
+                onCellUpdated.bind="_onUpdateValue"
+                cellValue="cell.value"
+                readonly="cellReadOnly"
+                isInput="state.editMode and state.currentPath===cellPath"
+                fieldInfo="props.fields[props.cellField]"
+                nodeOptions="props.cellComponentOptions"
+                path="cellPath"
+                date="gridAnchorNext"/>
+        </t>
+        <t t-elif="cellReadOnly">
+            <div class="o_grid_show" t-att-class="{'text-danger': cell.value lt 0}">
+                <t t-esc="_format(cell.value)"/>
+            </div>
+        </t>
+        <t t-else="">
+            <t t-if="state.editMode and state.currentPath===cellPath">
+                <input class="o_grid_input"
+                    t-ref="currentInput"
+                    t-att-class="{'text-danger': cell.value lt 0}"
+                    tabindex="1" t-att-value="_format(cell.value)"
+                    t-on-blur="_onGridInputBlur"/>
+            </t>
+            <t t-else="">
+                <t t-if="state.errors[cellPath]">
+                    <div class="o_grid_input text-danger o_has_error" tabindex="1"
+                        t-on-focus="() => this._onFocusGridCell(cellPath)">
+                        <t t-esc="state.errors[cellPath]"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o_grid_input" tabindex="1"
+                        t-on-focus="() => this._onFocusGridCell(cellPath)"
+                        t-att-class="{'text-danger': cell.value lt 0}">
+                        <t t-esc="_format(cell.value)"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web_grid.BaseGridComponent" owl="1">
+        <t t-if="props.isTotal">
+            <div t-if="props.hasBarChartTotal"
+                class="o_grid_total_bar"
+                t-att-style="'height:' + props.cellHeight + '%;'">
+                <span t-if="props.cellHeight"
+                    class="o_grid_total_title position-absolute bg-white px-1"
+                    t-esc="_format(props.cellValue)"/>
+            </div>
+            <div t-else="" t-esc="_format(props.cellValue)"/>
+        </t>
+        <t t-elif="!props.readonly">
+            <t t-if="props.isInput">
+                <input class="o_grid_input" tabindex="1"
+                    t-ref="currentInput"
+                    t-att-value="_format(props.cellValue)"
+                    t-on-blur="_onBlurCell"/>
+            </t>
+            <t t-else="">
+                <t t-if="state.error">
+                    <div class="o_grid_input o_has_error" tabindex="1"
+                        t-on-focus="_onFocusCell">
+                        <t t-esc="state.error"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o_grid_input" tabindex="1"
+                        t-att-class="{'text-danger': props.cellValue lt 0}"
+                        t-on-focus="_onFocusCell">
+                       <t t-esc="_format(props.cellValue)"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+        <t t-else="">
+            <div class="o_grid_show"
+                t-att-class="{'text-danger': props.cellValue lt 0}"
+                t-att-contentEditable="!props.readonly">
+                <t t-esc="_format(props.cellValue)"/>
+            </div>
+        </t>
+	</t>
+
+    <t t-name="web_grid.FloatToggleComponent" class="btn-block" owl="1">
+        <t t-if="props.isTotal">
+            <div t-if="props.hasBarChartTotal"
+                class="o_grid_total_bar"
+                t-att-style="'height:' + props.cellHeight + '%;'">
+                <span t-if="props.cellHeight"
+                    class="o_grid_total_title position-absolute bg-white px-1"
+                    t-esc="_format(props.cellValue)"/>
+            </div>
+            <div t-else="" t-esc="_format(props.cellValue)"/>
+        </t>
+        <t t-else="">
+            <button
+                class="o_grid_float_toggle btn btn-default d-inline-block w-100 text-end pe-0"
+                t-att-class="{'text-danger': state.value lt 0}"
+                t-att-disabled="props.readonly or state.disabled"
+                t-on-click="_onClickButton">
+                <t t-esc="_format(state.value)"/>
+            </button>
+        </t>
+	</t>
+
+    <t t-name="grid.GridArrows">
+        <div>
+            <button t-if="widget.allowCreate" class="btn btn-primary o_grid_button_add" type="button">
+                Add a Line
+            </button>
+            <div t-if="widget._buttons.length" class="btn-group">
+                <button t-foreach="widget._buttons" t-as="btn" t-key="btn_index"
+                        t-attf-class="grid_arrow_button btn {{ btn['class'] || 'btn-secondary' }}"
+                        type="button" t-att-data-index="btn_index" t-att-data-hotkey="btn['data-hotkey']">
+                    <t t-esc="btn.string"/>
+                </button>
+            </div>
+            <button class="grid_arrow_previous  o_grid_button_change_range btn btn-primary d-none"
+                    type="button">
+                <span class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"/>
+            </button>
+            <button class="btn btn-primary grid_button_initial o_grid_button_change_range d-none" type="button" data-hotkey="t">
+                Today
+            </button>
+            <button class="grid_arrow_next o_grid_button_change_range btn btn-primary d-none"
+                    type="button">
+                <span class="fa fa-arrow-right" role="img" aria-label="Next" title="Next"/>
+            </button>
+
+            <div t-if="widget._ranges.length > 1" class="btn-group o_grid_range">
+                <t t-if="isMobile">
+                    <t t-call="grid.RangeButtons.Mobile"/>
+                </t>
+                <t t-else="">
+                    <t t-foreach="widget._ranges" t-as="range" t-key="range_index">
+                        <t t-call="grid.RangeButton"/>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="grid.RangeButtons.Mobile">
+        <button class="btn btn-link btn-sm fa fa-calendar" data-bs-toggle="dropdown" aria-expanded="false">
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end list-inline">
+            <li t-foreach="widget._ranges" t-as="range" t-key="range_index">
+                <t t-call="grid.RangeButton"/>
+            </li>
+        </ul>
+    </t>
+
+    <t t-name="grid.RangeButton">
+        <button class="grid_arrow_range btn btn-secondary" type="button" t-att-data-name="range.name" t-att-data-hotkey="range.hotkey">
+            <t t-esc="range.string"/>
+        </button>
+    </t>
+</templates>

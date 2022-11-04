@@ -1,0 +1,1011 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_view_list_fsm" model="ir.ui.view">
+        <field name="name">project.task.tree.fsm</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <tree string="Tasks" multi_edit="1" sample="1" default_order="planned_date_begin">
+                <field name="progress" invisible="1"/>
+                <field name="child_text" invisible="1"/>
+                <field name="priority" widget="priority" optional="hide" nolabel="1"/>
+                <field name="name" widget="name_with_subtask_count"/>
+                <field name="project_id" readonly="1" optional="show" options="{'no_open': 1}"/>
+                <field name="partner_id" optional="show" required="True"/>
+                <field name="user_ids" widget="many2many_avatar_user" optional="show" invisible="context.get('user_invisible', False)" domain="[('share', '=', False), ('active', '=', True)]"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company" readonly="1"/>
+                <field name="planned_date_begin" widget="daterange" options="{'related_end_date': 'planned_date_end'}" optional="show" attrs="{'required': [('planned_date_end', '!=', False)]}"/>
+                <field name="planned_date_end" widget="daterange" options="{'related_end_date': 'planned_date_begin'}" optional="show" attrs="{'required': [('planned_date_begin', '!=', False)]}"/>
+                <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
+                <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide"/>
+                <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
+                <field name="subtask_effective_hours" widget="timesheet_uom" optional="hide"/>
+                <field name="total_hours_spent" widget="timesheet_uom" optional="hide"/>
+                <field name="progress" widget="progressbar" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                <field name="activity_ids" widget="list_activity" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
+                <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}" context="{'project_id': project_id}"/>
+                <field name="kanban_state" widget="state_selection" optional="hide" readonly="1"/>
+                <field name="stage_id" optional="hide"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_task_view_search_fsm" model="ir.ui.view">
+        <field name="name">project.task.search.fsm</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <search string="Search planning">
+                <field name="name" string="Tasks"/>
+                <field name="tag_ids"/>
+                <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
+                <field name="stage_id"/>
+                <field name="project_id"/>
+                <field name="ancestor_id" groups="project.group_subtask_project"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="active"/>
+                <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_ids.employee_parent_id.user_id', '=', uid)]" />
+                <filter string="My Department's Tasks" name="my_department_tasks" domain="[('user_ids.employee_id.member_of_department', '=', True)]"/>
+                <filter string="Followed Tasks" name="my_followed_tasks" domain="[('message_is_follower', '=', True)]" />
+                <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
+                <separator/>
+                <filter string="My Projects" name="my_projects" domain="[('manager_id', '=', uid)]"/>
+                <filter string="My Favorite Projects" name="my_favorite_project" domain="[('project_id.favorite_user_ids', 'in', uid)]"/>
+                <filter string="My Team's Projects" name="my_team_projects" domain="[('manager_id.employee_id.parent_id.user_id', '=', uid)]"/>
+                <filter string="My Department's Projects" name="my_department_projects" domain="[('manager_id.employee_id.member_of_department', '=', True)]"/>
+                <separator />
+                <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
+                <separator />
+                <filter string="To Schedule" name="schedule" domain="[
+                    '|',
+                    ('user_ids', '=', False),
+                    '&amp;',
+                        ('planned_date_begin', '=', False),
+                        ('planned_date_end', '=', False)
+                ]" groups="industry_fsm.group_fsm_manager"/>
+                <filter string="To Do" name="todo" domain="[('fsm_done', '=', False), ('user_ids', '!=', False), ('planned_date_begin', '!=', False), ('planned_date_end', '!=', False)]"/>
+                <filter name="in_progress" string="In Progress" domain="[('timer_start', '!=', False), ('timer_pause', '=', False)]"/>
+                <filter string="Closed" name="closed" domain="[('is_closed', '=', True)]"/>
+                <filter string="Closed Last 7 Days" name="closed_last_7_days" domain="[('is_closed', '=', True), ('date_last_stage_update', '&gt;', datetime.datetime.now() - relativedelta(days=7))]"/>
+                <filter string="Closed Last 30 Days" name="closed_last_30_days" domain="[('is_closed', '=', True), ('date_last_stage_update', '&gt;', datetime.datetime.now() - relativedelta(days=30))]"/>
+                <separator />
+                <filter name="planned_today" string="Today" domain="[
+                    ('planned_date_begin','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))),
+                    ('planned_date_end','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter name="planned_future" string="Future" domain="[('planned_date_begin', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter name="planned_past" string="Past" domain="[('planned_date_end', '&lt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <separator />
+                <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
+                <filter name="not_starred" string="Not Starred" domain="[('priority', '=', '0')]"/>
+                <separator />
+                <filter name="conflict_task" string="Tasks in Conflict" domain="[('planning_overlap', '&gt;', 0)]"/>
+                <filter string="Late Tasks" name="late" domain="[('planned_date_end', '&lt;', context_today().strftime('%Y-%m-%d')), ('fsm_done', '=', False)]"/>
+                <filter string="Tasks Soon in Overtime" name="remaining_hours_percentage" domain="[('remaining_hours_percentage', '&lt;=', 0.2)]"/>
+                <separator/>
+                <filter name="rating_satisfied" string="Satisfied" domain="[('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
+                <filter name="rating_okay" string="Okay" domain="[('rating_avg', '&lt;', 3.66), ('rating_avg', '&gt;=', 2.33)]" groups="project.group_project_rating"/>
+                <filter name="dissatisfied" string="Dissatisfied" domain="[('rating_avg', '&lt;', 2.33), ('rating_last_value', '!=', 0)]" groups="project.group_project_rating"/>
+                <filter name="no_rating" string="No Rating" domain="[('rating_last_value', '=', 0)]" groups="project.group_project_rating"/>
+                <separator/>
+                <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Assignees" name="groupby_user" context="{'group_by':'user_ids'}"/>
+                    <filter string="Stage" name="groupby_stage" context="{'group_by':'stage_id'}"/>
+                    <filter string="Project" name="groupby_project" context="{'group_by':'project_id'}"/>
+                    <filter string="Ancestor Task" name="groupby_ancestor_task" context="{'group_by': 'ancestor_id'}" groups="project.group_subtask_project"/>
+                    <filter string="Customer" name="groupby_customer" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Start Date" name="groupby_planned_date_begin" context="{'group_by': 'planned_date_begin:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_task_view_calendar_fsm" model="ir.ui.view">
+        <field name="name">project.task.calendar.fsm</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <calendar date_start="planned_date_begin" date_stop="planned_date_end" string="Tasks" mode="month" color="user_ids" event_open_popup="1" form_view_id="%(project.view_task_form2)d" quick_add="0" show_unusual_days="True">
+                <field name="name"/>
+                <field name="project_id" filters="1"/>
+                <field name="user_ids" widget="many2many_avatar_user" attrs="{'invisible': [('user_ids', '=', [])]}"/>
+                <field name="partner_id" widget="res_partner_many2one" context="{'show_address': 1}"/>
+                <field name="partner_phone" widget="phone" attrs="{'invisible': [('partner_phone', '=', False)]}"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Non primary kanban inherit (fsm tasks must display start date instead of deadline in all application) -->
+    <record id="project_task_view_kanban" model="ir.ui.view">
+        <field name="name">project.task.kanban.fsm.nonprimary</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.view_task_kanban_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="is_fsm"/>
+                <field name="fsm_done" />
+            </xpath>
+            <xpath expr="//templates/descendant::field[@name='partner_id']" position="after">
+                <t t-if="record.is_fsm.raw_value and record.partner_city.value"> • <field name="partner_city" /></t>
+            </xpath>
+            <div name="date_deadline" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_fsm', '=', True), ('is_closed', '=', True)]}</attribute>
+            </div>
+        </field>
+    </record>
+
+    <!-- Primary kanban inherit all tasks in fsm must display their date in hours format -->
+    <record id="quick_create_task_form_fsm_inherited" model="ir.ui.view">
+        <field name="name">project.task.form.quick_create_inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.quick_create_task_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="placeholder">e.g. Boiler replacement</attribute>
+            </field>
+            <field name="project_id" position="replace"/>
+        </field>
+    </record>
+
+    <record id="project_task_view_kanban_fsm" model="ir.ui.view">
+        <field name="name">project.task.kanban.fsm</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="group_create">0</attribute>
+                <attribute name="default_order">planned_date_begin</attribute>
+                <attribute name="class">o_fsm_kanban o_kanban_project_tasks</attribute>
+                <attribute name="quick_create_view">industry_fsm.quick_create_task_form_fsm_inherited</attribute>
+                <attribute name="on_create">quick_create</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_action_fsm_no_quick_create" model="ir.ui.view">
+        <field name="name">project.task.kanban.fsm.no.quick.create</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_kanban_fsm"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="quick_create">0</attribute>
+                <attribute name="default_group_by">planned_date_begin:day</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_graph_group_by_planned_date_begin_fsm" model="ir.ui.view">
+        <field name="name">project.task.view.graph.fsm.group.by.planned_date_begin</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_project_task_graph"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position='replace'>
+                <field name="planned_date_begin" interval="day"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_pivot_fsm" model="ir.ui.view">
+        <field name="name">project.task.view.pivot.fsm</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_project_task_pivot"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position='replace'/>
+        </field>
+    </record>
+
+    <record id="project_task_view_pivot_group_by_planned_date_begin_fsm" model="ir.ui.view">
+        <field name="name">project.task.view.pivot.fsm.group.by.planned_date_begin</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_pivot_fsm"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position='replace'>
+                <field name="planned_date_begin" interval="day" type="row"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_pivot_group_by_users_fsm" model="ir.ui.view">
+        <field name="name">project.task.view.pivot.fsm.group.by.users</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_project_task_pivot"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="user_ids" type="row"/>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="replace"></xpath>
+        </field>
+    </record>
+
+    <record id="project_task_gantt_view_grouped_by_project_and_users" model="ir.ui.view">
+        <field name="name">project.task.gantt.fsm</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="default_group_by">project_id,user_ids</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_pivot_view_grouped_by_project_and_users" model="ir.ui.view">
+        <field name="name">project.task.pivot.fsm</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_project_task_pivot"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="user_ids" type="row"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+        FSM Actions
+    -->
+
+    <!-- My Tasks: kanban action -->
+    <record id="project_task_action_fsm" model="ir.actions.act_window">
+        <field name="name">My Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,map,calendar,gantt,form,graph,pivot,activity</field>
+        <field name="search_view_id" ref="project_task_view_search_fsm"/>
+        <field name="domain">[('is_fsm', '=', True), ('display_project_id', '!=', False)]</field>
+        <field name="context">{
+            'fsm_mode': True,
+            'search_default_my_tasks': True,
+            'search_default_planned_future': True,
+            'search_default_planned_today': True,
+            'default_user_ids': [(4, uid)],
+            'default_scale': 'day',
+        }</field>
+        <field name="help" type="html">
+            <p class='o_view_nocontent_smiling_face'>No tasks found. Let's create one!</p>
+            <p>Find here your upcoming tasks for the next few days.</p>
+        </field>
+    </record>
+
+    <record id="project_task_action_fsm_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_task_action_fsm_no_quick_create"/>
+        <field name="act_window_id" ref="project_task_action_fsm"/>
+    </record>
+
+    <record id="project_task_action_fsm_view_map" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">map</field>
+        <field name="view_id" ref="project_enterprise.project_task_map_view"/>
+        <field name="act_window_id" ref="project_task_action_fsm"/>
+    </record>
+
+    <record id="project_task_action_fsm_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="industry_fsm.project_task_view_calendar_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm"/>
+    </record>
+
+    <record id="project_task_action_fsm_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="act_window_id" ref="project_task_action_fsm"/>
+    </record>
+
+     <record id="project_task_action_fsm_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="7"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_task_view_list_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm"/>
+    </record>
+
+    <record id="project_task_action_fsm_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.view_task_form2"/>
+        <field name="act_window_id" ref="project_task_action_fsm"/>
+    </record>
+
+    <record id="project_task_action_fsm_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="33"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="project_task_view_pivot_group_by_planned_date_begin_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm"/>
+    </record>
+
+    <record id="project_task_action_fsm_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="34"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="project_task_view_graph_group_by_planned_date_begin_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm"/>
+    </record>
+
+    <!-- My Tasks: map action -->
+    <record id="project_task_action_fsm_map" model="ir.actions.act_window">
+        <field name="name">Map</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">map,calendar,gantt,kanban,tree,pivot,graph,activity,form</field>
+        <field name="search_view_id" ref="project_task_view_search_fsm"/>
+        <field name="domain">[('is_fsm', '=', True), ('display_project_id', '!=', False)]</field>
+        <field name="context">{
+            'fsm_mode': True,
+            'search_default_my_tasks': True,
+            'search_default_planned_today': True,
+            'default_user_ids': [(4, uid)],
+            'default_scale': 'day',
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p><p>
+                Find here your itinerary for today's tasks.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_task_action_fsm_map_view_map" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">map</field>
+        <field name="view_id" ref="project_enterprise.project_task_map_view"/>
+        <field name="act_window_id" ref="project_task_action_fsm_map"/>
+    </record>
+
+    <record id="project_task_action_fsm_map_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_task_view_kanban_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_map"/>
+    </record>
+
+    <record id="project_task_action_fsm_map_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="industry_fsm.project_task_view_calendar_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_map"/>
+    </record>
+
+    <record id="project_task_action_fsm_map_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="15"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="act_window_id" ref="project_task_action_fsm_map"/>
+    </record>
+
+    <record id="project_task_action_fsm_map_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_task_view_list_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_map"/>
+    </record>
+
+    <record id="project_task_action_fsm_map_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.view_task_form2"/>
+        <field name="act_window_id" ref="project_task_action_fsm_map"/>
+    </record>
+
+    <record id="project_task_action_fsm_map_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="project_task_view_pivot_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_map"/>
+    </record>
+
+    <record id="project_task_action_fsm_map_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="50"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="project.view_project_task_graph"/>
+        <field name="act_window_id" ref="project_task_action_fsm_map"/>
+    </record>
+
+    <!-- All Tasks default group by stage -->
+    <record id="project_task_view_kanban_fsm_all" model="ir.ui.view">
+        <field name="name">project.task.kanban.fsm.all</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="industry_fsm.project_task_view_kanban_fsm"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes" t-translation="off">
+                <attribute name="default_group_by">stage_id</attribute>
+            </xpath>
+        </field>
+    </record>
+    <!-- Tasks with Add stage column -->
+    <record id="project_tasks_view_kanban_action_fsm" model="ir.ui.view">
+        <field name="name">project.tasks.kanban.fsm</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="industry_fsm.project_task_view_kanban_fsm_all"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes" t-translation="off">
+                <attribute name="group_create">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <!-- All Tasks: main action -->
+    <record id="project_task_action_all_fsm" model="ir.actions.act_window">
+        <field name="name">All Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,kanban,map,calendar,gantt,pivot,graph,form,activity</field>
+        <field name="search_view_id" ref="project_task_view_search_fsm"/>
+        <field name="domain">[('is_fsm', '=', True), ('display_project_id', '!=', False)]</field>
+        <field name="context">{
+            'fsm_mode': True,
+            'default_scale': 'week',
+            'default_user_ids': False,
+            'graph_measure': '__count__',
+            'graph_groupbys': ['project_id'],
+            'pivot_measures': ['__count__'],
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p><p>
+                To get things done, plan activities and use the task status.<br/>
+                Collaborate efficiently by chatting in real-time or via email.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_task_action_all_fsm_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_task_view_kanban_fsm_all"/>
+        <field name="act_window_id" ref="project_task_action_all_fsm"/>
+    </record>
+
+    <record id="project_task_action_all_fsm_view_map" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">map</field>
+        <field name="view_id" ref="project_enterprise.project_task_map_view"/>
+        <field name="act_window_id" ref="project_task_action_all_fsm"/>
+    </record>
+
+    <record id="project_task_action_all_fsm_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="11"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="project_task_view_calendar_fsm"/>
+        <field name="act_window_id" ref="project_task_action_all_fsm"/>
+    </record>
+
+    <record id="project_task_action_all_fsm_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_task_view_list_fsm"/>
+        <field name="act_window_id" ref="project_task_action_all_fsm"/>
+    </record>
+
+    <record id="project_task_action_all_fsm_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.view_task_form2"/>
+        <field name="act_window_id" ref="project_task_action_all_fsm"/>
+    </record>
+
+    <!-- All Tasks: to schedule action -->
+    <record id="project_task_action_to_schedule_fsm" model="ir.actions.act_window">
+        <field name="name">To Schedule</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,kanban,map,calendar,gantt,pivot,graph,form,activity</field>
+        <field name="search_view_id" ref="project_task_view_search_fsm"/>
+        <field name="domain">[('is_fsm', '=', True), ('display_project_id', '!=', False)]</field>
+        <field name="context">{
+            'fsm_mode': True,
+            'search_default_schedule': True,
+            'default_user_ids': False,
+            'default_scale': 'week',
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p><p>Schedule your tasks and assign them to your workers.</p>
+        </field>
+    </record>
+
+    <record id="project_task_action_to_schedule_fsm_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_task_view_list_fsm"/>
+        <field name="act_window_id" ref="project_task_action_to_schedule_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_schedule_fsm_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_task_view_kanban_fsm"/>
+        <field name="act_window_id" ref="project_task_action_to_schedule_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_schedule_fsm_view_map" model="ir.actions.act_window.view">
+        <field name="sequence" eval="15"/>
+        <field name="view_mode">map</field>
+        <field name="view_id" ref="project_enterprise.project_task_map_view"/>
+        <field name="act_window_id" ref="project_task_action_to_schedule_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_schedule_fsm_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="project_task_view_calendar_fsm"/>
+        <field name="act_window_id" ref="project_task_action_to_schedule_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_schedule_fsm_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="45"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.view_task_form2"/>
+        <field name="act_window_id" ref="project_task_action_to_schedule_fsm"/>
+    </record>
+
+     <!-- Tasks: main action -->
+    <record id="project_tasks_action_fsm" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,gantt,calendar,map,pivot,graph,form,activity</field>
+        <field name="search_view_id" ref="project_task_view_search_fsm"/>
+        <field name="domain">[('is_fsm', '=', True), ('display_project_id', '=', active_id)]</field>
+        <field name="context">{
+            'pivot_row_groupby': ['user_ids'],
+            'default_project_id': active_id,
+            'show_project_update': True,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p><p>
+                To get things done, use activities and status on tasks.<br/>
+                Chat in real-time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_tasks_action_fsm_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_tasks_view_kanban_action_fsm"/>
+        <field name="act_window_id" ref="project_tasks_action_fsm"/>
+    </record>
+
+    <record id="project_tasks_action_fsm_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_task_view_list_fsm"/>
+        <field name="act_window_id" ref="project_tasks_action_fsm"/>
+    </record>
+
+    <record id="project_tasks_action_fsm_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="project_task_view_calendar_fsm"/>
+        <field name="act_window_id" ref="project_tasks_action_fsm"/>
+    </record>
+
+    <record id="project_tasks_action_fsm_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.view_task_form2"/>
+        <field name="act_window_id" ref="project_tasks_action_fsm"/>
+    </record>
+
+    <!-- Planning : by users -->
+    <record id="project_task_action_fsm_planning_groupby_user" model="ir.actions.act_window">
+        <field name="name">Planning by User</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">gantt,calendar,map,tree,kanban,pivot,graph,form,activity</field>
+        <field name="search_view_id" ref="project_task_view_search_fsm"/>
+        <field name="domain">[('is_fsm', '=', True), ('display_project_id', '!=', False)]</field>
+        <field name="context" eval="{'fsm_mode': 1, 'task_nameget_with_hours': 1, 'default_scale': 'week'}"/>
+        <field name="help" type="html">
+            <p class='o_view_nocontent_smiling_face'>
+                No tasks found. Let's create one!
+            </p><p>
+                Schedule your tasks and assign them to your workers.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_task_action_planning_groupby_user_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_user"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_user_fsm_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_task_view_kanban_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_user"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_user_fsm_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_task_view_list_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_user"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_user_fsm_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="project_task_view_calendar_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_user"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_user_fsm_view_map" model="ir.actions.act_window.view">
+        <field name="sequence" eval="15"/>
+        <field name="view_mode">map</field>
+        <field name="view_id" ref="project_enterprise.project_task_map_view"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_user"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_user_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="35"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.view_task_form2"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_user"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_user_fsm_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="industry_fsm.project_task_view_pivot_group_by_users_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_user"/>
+    </record>
+
+    <!-- Planning : by project -->
+    <record id="project_task_action_fsm_planning_groupby_project" model="ir.actions.act_window">
+        <field name="name">Planning by Project</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">gantt,calendar,map,tree,kanban,pivot,graph,activity</field>
+        <field name="search_view_id" ref="project_task_view_search_fsm"/>
+        <field name="domain">[('is_fsm', '=', True), ('display_project_id', '!=', False)]</field>
+        <field name="context" eval="{'fsm_mode': 1, 'task_nameget_with_hours': 1, 'default_scale': 'week'}"/>
+        <field name="help" type="html">
+            <p class='o_view_nocontent_smiling_face'>
+                No tasks found. Let's create one!
+            </p><p>
+                Schedule your tasks and assign them to your workers.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_task_action_planning_groupby_project_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="project_task_gantt_view_grouped_by_project_and_users"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_project"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_project_fsm_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_task_view_kanban_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_project"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_project_fsm_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_task_view_list_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_project"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_project_fsm_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="project_task_view_calendar_fsm"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_project"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_project_fsm_view_map" model="ir.actions.act_window.view">
+        <field name="sequence" eval="15"/>
+        <field name="view_mode">map</field>
+        <field name="view_id" ref="project_enterprise.project_task_map_view"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_project"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_project_fsm_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="35"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.view_task_form2"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_project"/>
+    </record>
+
+    <record id="project_task_action_planning_groupby_project_fsm_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="project_task_pivot_view_grouped_by_project_and_users"/>
+        <field name="act_window_id" ref="project_task_action_fsm_planning_groupby_project"/>
+    </record>
+
+    <!-- Settings actions -->
+    <record id="res_config_settings_action_fsm" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'industry_fsm', 'bin_size': False}</field>
+    </record>
+
+    <record id="project_view_tree_primary" model="ir.ui.view">
+        <field name="name">project.view.tree.primary</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_project_project_filter_inherit_industry_fsm" model="ir.ui.view">
+        <field name="name">view.project.project.filter.inherit.industry.fsm</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="analytic_account_id" position="after">
+                <field name="company_id"/>
+            </field>
+            <filter name="status" position="after">
+                <filter string="Company" name="groupby_company" context="{'group_by':'company_id'}" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="project_project_view_form_simplified_footer_fsm" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='alias_def']" position="after">
+                <footer>
+                    <button string="Create" name="%(industry_fsm.project_tasks_action_fsm)d" type="action" class="btn-primary o_open_tasks" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="open_create_project_fsm" model="ir.actions.act_window">
+        <field name="name">Create a Project</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="industry_fsm.project_project_view_form_simplified_footer_fsm"/>
+        <field name="target">new</field>
+        <field name="context">{"default_allow_billable": 1}</field>
+    </record>
+
+    <record id="view_project_kanban_fsm" model="ir.ui.view">
+        <field name="name">project.project.kanban</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="on_create">industry_fsm.open_create_project_fsm</attribute>
+            </xpath>
+            <xpath expr='//a[@name="action_view_tasks"]' position='attributes'>
+                <attribute name="name">%(industry_fsm.project_tasks_action_fsm)d</attribute>
+                <attribute name="type">action</attribute>
+            </xpath>
+            <xpath expr="//a[@name='action_view_tasks'][hasclass('o_project_kanban_box')]" position='attributes'>
+                <attribute name="name">%(industry_fsm.project_tasks_action_fsm)d</attribute>
+                <attribute name="type">action</attribute>
+            </xpath>
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="action"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_action_only_fsm" model="ir.actions.act_window" >
+        <field name="name">Projects</field>
+        <field name="res_model">project.project</field>
+        <field name="domain">[('is_fsm', '=', True)]</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="industry_fsm.view_project_project_filter_inherit_industry_fsm"/>
+        <field name="target">main</field>
+        <field name="context">{
+            'fsm_mode': True,
+            'default_is_fsm': True,
+            'default_allow_timesheets': True,
+        }</field>
+        <field name="help" type="html">
+            <p class='o_view_nocontent_smiling_face'>No projects found. Let's create one!</p>
+            <p>Create projects to organize your tasks and define a different workflow for each project.</p>
+        </field>
+    </record>
+    <record id="project_project_action_only_fsm_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="15"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="industry_fsm.project_view_tree_primary"/>
+        <field name="act_window_id" ref="project_project_action_only_fsm"/>
+    </record>
+    <record id="project_project_action_only_fsm_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="industry_fsm.view_project_kanban_fsm"/>
+        <field name="act_window_id" ref="project_project_action_only_fsm"/>
+    </record>
+
+
+    <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="is_fsm" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_task_type_action_fsm" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">project.task.type</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('project_ids.is_fsm', '=', True)]</field>
+        <field name="view_id" ref="project.task_type_tree"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No stages found. Let's create one!
+          </p><p>
+            Track the progress of your tasks from their creation to their closing.
+          </p>
+        </field>
+    </record>
+
+    <record id="fsm_customer_ratings_server_action" model="ir.actions.server">
+        <field name="name">project.project.fsm</field>
+        <field name="model_id" ref="industry_fsm.model_project_project"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_view_fsm_projects_rating()</field>
+    </record>
+
+    <!--
+        FSM Menus
+    -->
+
+    <menuitem id="fsm_menu_root"
+        name="Field Service"
+        sequence="80"
+        web_icon="industry_fsm,static/description/icon.svg"
+        groups="industry_fsm.group_fsm_user"/>
+
+    <menuitem id="fsm_tasks_menu"
+        name="My Tasks"
+        sequence="10"
+        parent="fsm_menu_root"
+        groups="industry_fsm.group_fsm_user"/>
+
+        <menuitem id="fsm_menu_tasks_kanban"
+            name="Tasks"
+            action="project_task_action_fsm"
+            sequence="10"
+            parent="fsm_tasks_menu"
+            groups="industry_fsm.group_fsm_user"/>
+
+        <menuitem id="fsm_menu_tasks_map"
+            name="Map"
+            action="project_task_action_fsm_map"
+            sequence="20"
+            parent="fsm_tasks_menu"
+            groups="industry_fsm.group_fsm_user"/>
+
+    <menuitem id="fsm_menu_all_tasks_root"
+        name="All Tasks"
+        sequence="15"
+        parent="fsm_menu_root"
+        groups="industry_fsm.group_fsm_manager" />
+
+        <menuitem id="fsm_menu_all_tasks_todo"
+            name="All Tasks"
+            action="project_task_action_all_fsm"
+            sequence="10"
+            parent="industry_fsm.fsm_menu_all_tasks_root"
+            groups="industry_fsm.group_fsm_manager" />
+
+        <menuitem id="fsm_menu_all_tasks_schedule"
+            name="To Schedule"
+            action="project_task_action_to_schedule_fsm"
+            sequence="20"
+            parent="industry_fsm.fsm_menu_all_tasks_root"
+            groups="industry_fsm.group_fsm_manager" />
+
+    <menuitem id="fsm_menu_planning"
+        name="Planning"
+        sequence="20"
+        parent="fsm_menu_root"
+        groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="project_task_menu_planning_by_user_fsm"
+            name="By User"
+            sequence="10"
+            action="industry_fsm.project_task_action_fsm_planning_groupby_user"
+            parent="fsm_menu_planning"
+            groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="project_task_menu_planning_by_project_fsm"
+            name="By Project"
+            sequence="15"
+            action="industry_fsm.project_task_action_fsm_planning_groupby_project"
+            parent="fsm_menu_planning"
+            groups="industry_fsm.group_fsm_manager"/>
+
+    <menuitem id="fsm_menu_reporting"
+        name="Reporting"
+        sequence="40"
+        parent="fsm_menu_root"/>
+
+        <menuitem id="fsm_menu_reporting_task_analysis"
+            name="Tasks Analysis"
+            sequence="10"
+            action="project_task_user_action_report_fsm"
+            parent="industry_fsm.fsm_menu_reporting"/>
+
+        <menuitem id="fsm_menu_reporting_customer_ratings"
+            name="Customer Ratings"
+            action="fsm_customer_ratings_server_action"
+            parent="industry_fsm.fsm_menu_reporting"
+            groups="project.group_project_rating"
+            sequence="20"/>
+
+    <menuitem id="fsm_menu_settings"
+              name="Configuration"
+              sequence="50"
+              parent="industry_fsm.fsm_menu_root"
+              groups="industry_fsm.group_fsm_manager">
+
+        <menuitem id="fsm_menu_settings_res_config"
+            name="Settings"
+            sequence="0"
+            action="industry_fsm.res_config_settings_action_fsm"
+            groups="base.group_system"/>
+
+        <menuitem id="fsm_menu_settings_project"
+            name="Projects"
+            sequence="10"
+            action="project_project_action_only_fsm"
+            groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="fsm_menu_settings_stage"
+            name="Stages"
+            sequence="15"
+            action="industry_fsm.project_task_type_action_fsm"
+            groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="menu_project_tags_act"
+            name="Tags"
+            sequence="40"
+            action="project.project_tags_action"
+            groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="fsm_menu_config_activity_type"
+            name="Activity Types"
+            sequence="45"
+            action="project.mail_activity_type_action_config_project_types"
+            groups="industry_fsm.group_fsm_manager"/>
+
+    </menuitem>
+
+</odoo>

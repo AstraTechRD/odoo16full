@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cfdi_cartaporte">
+        <cfdi:Comprobante
+            t-att-Fecha="cfdi_date"
+            t-att-Folio="folio_number"
+            t-att-Serie="serie"
+            t-att-LugarExpedicion="lugar_expedicion"
+            Moneda="XXX"
+            Serie="CartaPorte"
+            SubTotal="0"
+            TipoDeComprobante="T"
+            Total="0"
+            Version="3.3"
+            xmlns:cartaporte20="http://www.sat.gob.mx/CartaPorte20"
+            xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/CartaPorte20 http://www.sat.gob.mx/sitio_internet/cfd/CartaPorte/CartaPorte20.xsd http://www.sat.gob.mx/sitio_internet/cfd/CartaPorte20/CartaPorte20.xsd">
+            <cfdi:CfdiRelacionados t-if="origin_uuids" t-att-TipoRelacion="origin_type">
+                <t t-foreach="origin_uuids" t-as="uuid">
+                    <cfdi:CfdiRelacionado t-att-UUID="uuid"/>
+                </t>
+            </cfdi:CfdiRelacionados>
+            <cfdi:Emisor
+                t-att-Nombre="supplier.name[:254]"
+                t-att-RegimenFiscal="supplier.l10n_mx_edi_fiscal_regime"
+                t-att-Rfc="supplier.vat"/>
+            <cfdi:Receptor
+                t-att-Nombre="customer.name[:254]"
+                t-att-Rfc="supplier.vat"
+                UsoCFDI="P01"/>
+            <cfdi:Conceptos>
+                <t t-foreach="moves" t-as="move">
+                    <cfdi:Concepto
+                        t-att-Cantidad="format_float(move.quantity_done, 6)"
+                        t-att-ClaveProdServ="move.product_id.unspsc_code_id.code"
+                        t-att-ClaveUnidad="move.product_uom.unspsc_code_id.code"
+                        t-att-Descripcion="move.description_picking or move.product_id.name"
+                        Importe="0.00"
+                        ValorUnitario="0.00"
+                        t-att-Unidad="move.product_uom.name"
+                        NoIdentificacion="01"/>
+                </t>
+            </cfdi:Conceptos>
+            <cfdi:Complemento t-if="record.l10n_mx_edi_transport_type == '01'">
+                <cartaporte20:CartaPorte
+                    t-att-TranspInternac="'Sí' if record.l10n_mx_edi_is_export else 'No'"
+                    t-att-TotalDistRec="record.l10n_mx_edi_distance"
+                    t-att-EntradaSalidaMerc="'Salida' if record.l10n_mx_edi_is_export else None"
+                    t-att-ViaEntradaSalida="record.l10n_mx_edi_transport_type if record.l10n_mx_edi_is_export else None"
+                    t-att-PaisOrigenDestino="record.partner_id.country_id.l10n_mx_edi_code if record.l10n_mx_edi_is_export else None"
+                    Version="2.0">
+                    <cartaporte20:Ubicaciones>
+                        <cartaporte20:Ubicacion
+                            TipoUbicacion="Origen"
+                            t-att-IDUbicacion="'OR' + str(record.location_id.id).rjust(6,'0')"
+                            t-att-FechaHoraSalidaLlegada="cfdi_date"
+                            t-att-RFCRemitenteDestinatario="supplier.vat">
+                            <cartaporte20:Domicilio
+                                t-att-Calle="supplier.street"
+                                t-att-CodigoPostal="supplier.zip"
+                                t-att-Estado="supplier.state_id.code"
+                                t-att-Pais="supplier.country_id.l10n_mx_edi_code"/>
+                        </cartaporte20:Ubicacion>
+                        <cartaporte20:Ubicacion
+                            TipoUbicacion="Destino"
+                            t-att-IDUbicacion="'DE' + str(record.location_dest_id.id).rjust(6,'0')"
+                            t-att-DistanciaRecorrida="record.l10n_mx_edi_distance"
+                            t-att-FechaHoraSalidaLlegada="scheduled_date"
+                            t-att-RFCRemitenteDestinatario="customer.vat if not record.l10n_mx_edi_is_export else 'XEXX010101000'"
+                            t-att-NumRegIdTrib="customer.vat if record.l10n_mx_edi_is_export else None"
+                            t-att-ResidenciaFiscal="record.partner_id.country_id.l10n_mx_edi_code if record.l10n_mx_edi_is_export else None">
+                            <cartaporte20:Domicilio
+                                t-att-Calle="record.partner_id.street"
+                                t-att-CodigoPostal="record.partner_id.zip"
+                                t-att-Estado="record.partner_id.state_id.code"
+                                t-att-Pais="record.partner_id.country_id.l10n_mx_edi_code"/>
+                        </cartaporte20:Ubicacion>
+                    </cartaporte20:Ubicaciones>
+                    <cartaporte20:Mercancias
+                        t-att-NumTotalMercancias="len(moves)"
+                        t-att-PesoBrutoTotal="format_float(sum(moves.mapped('weight')), 3)"
+                        t-att-UnidadPeso="weight_uom.unspsc_code_id.code">
+                        <t t-foreach="moves" t-as="move">
+                            <cartaporte20:Mercancia
+                                t-att-BienesTransp="move.product_id.unspsc_code_id.code"
+                                t-att-Cantidad="format_float(move.quantity_done, 6)"
+                                t-att-ClaveUnidad="move.product_uom.unspsc_code_id.code"
+                                t-att-Descripcion="move.description_picking or move.product_id.name"
+                                t-att-PesoEnKg="format_float(move.weight, 3)">
+                                <cartaporte20:CantidadTransporta
+                                    t-att-Cantidad="format_float(move.quantity_done, 6)"
+                                    t-att-IDOrigen="'OR' + str(record.location_id.id).rjust(6,'0')"
+                                    t-att-IDDestino="'DE' + str(record.location_dest_id.id).rjust(6,'0')" />
+                            </cartaporte20:Mercancia>
+                        </t>
+                        <cartaporte20:Autotransporte t-if="record.l10n_mx_edi_transport_type == '01'"
+                            t-att-NumPermisoSCT="record.l10n_mx_edi_vehicle_id.name"
+                            t-att-PermSCT="record.l10n_mx_edi_vehicle_id.transport_perm_sct">
+                            <cartaporte20:IdentificacionVehicular
+                                t-att-AnioModeloVM="record.l10n_mx_edi_vehicle_id.vehicle_model"
+                                t-att-ConfigVehicular="record.l10n_mx_edi_vehicle_id.vehicle_config"
+                                t-att-PlacaVM="record.l10n_mx_edi_vehicle_id.vehicle_licence"/>
+                            <cartaporte20:Seguros
+                                t-att-AseguraRespCivil="record.l10n_mx_edi_vehicle_id.transport_insurer"
+                                t-att-PolizaRespCivil="record.l10n_mx_edi_vehicle_id.transport_insurance_policy"/>
+                            <cartaporte20:Remolques t-if="record.l10n_mx_edi_vehicle_id.trailer_ids">
+                                <t t-foreach="record.l10n_mx_edi_vehicle_id.trailer_ids" t-as="trailer">
+                                    <cartaporte20:Remolque
+                                        t-att-SubTipoRem="trailer.sub_type"
+                                        t-att-Placa="trailer.name"/>
+                                </t>
+                            </cartaporte20:Remolques>
+                        </cartaporte20:Autotransporte>
+                    </cartaporte20:Mercancias>
+                    <cartaporte20:FiguraTransporte>
+                        <t t-foreach="record.l10n_mx_edi_vehicle_id.figure_ids.sorted(lambda f: f.type)" t-as="figure">
+                            <cartaporte20:TiposFigura
+                                t-att-TipoFigura="figure.type"
+                                t-att-RFCFigura="figure.operator_id.vat"
+                                t-att-NumLicencia="figure.type == '01' and figure.operator_id.l10n_mx_edi_operator_licence">
+                                <t t-foreach="figure.part_ids" t-as="part">
+                                    <cartaporte20:PartesTransporte t-if="figure.type in ('02', '03')"
+                                        t-att-ParteTransporte="part.code"/>
+                                </t>
+                            </cartaporte20:TiposFigura>
+                        </t>
+                    </cartaporte20:FiguraTransporte>
+                </cartaporte20:CartaPorte>
+            </cfdi:Complemento>
+        </cfdi:Comprobante>
+    </template>
+</odoo>

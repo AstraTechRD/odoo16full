@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="quality_control_menu_product"
+        name="Products"
+        parent="quality_control.menu_quality_root"
+        sequence="18"/>
+
+    <menuitem
+        id="quality_product_menu_product_template"
+        name="Products"
+        action="stock.product_template_action_product"
+        parent="quality_control_menu_product"
+        sequence="5"/>
+
+    <menuitem
+        id="quality_control_menu_product_variant"
+        name="Product Variants"
+        action="product.product_normal_action"
+        parent="quality_control_menu_product"
+        groups="product.group_product_variant"
+        sequence="10"/>
+
+    <menuitem 
+        id="quality_control_menu_traceability"
+        name="Lots/Serial Numbers"
+        action="stock.action_production_lot_form"
+        parent="quality_control_menu_product"
+        groups="stock.group_production_lot"
+        sequence="15"/>
+</odoo>

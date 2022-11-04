@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_timesheet_report_search_helpdesk" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.search</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_report_search"/>
+        <field name="arch" type="xml">
+            <field name="task_id" position="after">
+                <field name="helpdesk_ticket_id" string="Ticket"/>
+            </field>
+            <filter name="groupby_task" position="after">
+                <filter string="Ticket" name="groupby_ticket" context="{'group_by': 'helpdesk_ticket_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

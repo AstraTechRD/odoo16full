@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appointment_validated" name="Website Appointment: Appointment Confirmed" inherit_id="appointment.appointment_validated">
+        <xpath expr="//t[@t-call='portal.portal_layout']" position="attributes">
+            <attribute name="t-call">website.layout</attribute>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="after">
+            <input t-if='state == "new" and website.plausible_shared_key' type='hidden' class='js_plausible_push'
+                data-event-name='Lead Generation' data-event-params='{"CTA": "Appointment"}' />
+        </xpath>
+        <xpath expr="//div[hasclass('o_appointment')]/*[1]" position="before">
+            <nav t-if="appointment_type and appointment_type.category == 'website'" class="o_wappointment_navbar navbar navbar-light border-top shadow-sm d-print-none py-0">
+                <div class="container">
+                    <t t-set="all_appointments_url" t-value="'/appointment?' + keep_query('filter_appointment_type_ids', 'filter_staff_user_ids')"/>
+                    <t t-set="invite_redirect_url" t-value="event.appointment_invite_id.redirect_url if event.appointment_invite_id else None"/>
+                    <a t-att-href="invite_redirect_url or all_appointments_url" class="o_wappointment_navbar_link navbar-brand btn px-0 h4 my-0 me-auto">
+                        <i class="fa fa-long-arrow-left me-2"/>
+                        <t t-if="invite_redirect_url">Schedule Another Appointment</t>
+                        <t t-else="">All Appointments</t>
+                    </a>
+                </div>
+            </nav>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class" >o_appointment o_wappointment_wrap</attribute>
+        </xpath>
+    </template>
+</odoo>

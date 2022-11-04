@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
+            <t t-if="receipt.useBlackBoxSweden">
+                <br/>
+                <div>
+                    <span style="font-size: 200%">
+                        <t t-if="props.order.isReprint">Copy</t>
+                        <t t-elif="props.order.isProfo">PRO FORMA</t>
+                        <t t-else="">
+                            <t t-if="props.order.get_total_with_tax() lt 0">Return</t>
+                            Receipt
+                        </t>
+                    </span>
+                </div>
+                <t t-if="props.order.isReprint">
+                    Original date:
+                    <t t-esc="receipt.originalOrderDate"/>
+                </t>
+                <div>
+                    <span>Sequence: </span>
+                    <t t-esc="receipt.orderSequence"/>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
+            <t t-if="receipt.useBlackBoxSweden">
+                <br/>
+                <div>
+                    <span>POS id: </span>
+                    <t t-esc="receipt.posID"/>
+                </div>
+                <div>
+                    <span>Blackbox unit id: </span>
+                    <t t-esc="receipt.unitID"/>
+                </div>
+                <div style="word-wrap:break-word;">
+                    <span>Blackbox Signature: </span>
+                    <t t-esc="receipt.blackboxSignature"/>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('orderlines')]" position="attributes">
+            <attribute name="t-if">!receipt.useBlackBoxSweden</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('orderlines')]" position="after">
+            <div class="orderlines" t-if="receipt.useBlackBoxSweden">
+                <t t-set="all_lines" t-value="receipt.orderlines"/>
+                <span class="pos-receipt-left-padding">Products:</span><br/>
+                <t t-set="receipt.orderlines" t-value="getProductlines()"/>
+                <t t-call="OrderLinesReceipt"/>
+
+                <br/><span class="pos-receipt-left-padding">Services:</span><br/>
+                <t t-set="receipt.orderlines" t-value="all_lines"/>
+                <t t-set="receipt.orderlines" t-value="getServicelines()"/>
+                <t t-call="OrderLinesReceipt"/>
+                <t t-set="receipt.orderlines" t-value="all_lines"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

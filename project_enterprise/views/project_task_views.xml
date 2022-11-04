@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_view_form" model="ir.ui.view">
+        <field name="name">project.task.view.form.inherit.project.enterprise</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div role="alert" class="alert alert-warning p-3 text-center alert-overflow"
+                    attrs="{'invisible': [('overlap_warning', '=', False)]}">
+                    <button name="action_fsm_view_overlapping_tasks" type="object" class="btn-link pe-1" attrs="{'invisible': [('overlap_warning', '=', False)]}">
+                        <field name="overlap_warning"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="before">
+                <label for="planned_date_begin" string="Planned Date" attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}"/>
+                <div class="w-100" attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}">
+                    <div class="o_row">
+                        <field name="planned_date_begin" widget="daterange" options="{'related_end_date': 'planned_date_end'}" attrs="{'required': [('planned_date_end', '!=', False)]}"/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}"/>
+                        <field name="planned_date_end" widget="daterange" options="{'related_start_date': 'planned_date_begin'}" attrs="{'required': [('planned_date_begin', '!=', False)]}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_form_in_gantt" model="ir.ui.view">
+        <field name="name">project.task.view.form.gantt</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_task_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <footer>
+                    <button string="Save" special="save" data-hotkey="v" class="btn btn-primary" close="1"/>
+                    <button name="action_unschedule_task" string="Unschedule" type="object" data-hotkey="u" class="btn btn-secondary" close="1" attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button string="Discard" special="cancel" data-hotkey="z" class="btn btn-secondary" close="1"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Adding manager gantt view to Project -->
+    <record id="project_task_view_gantt" model="ir.ui.view">
+        <field name="name">project.task.view.gantt</field>
+        <field name="model">project.task</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <gantt date_start="planned_date_begin"
+                form_view_id="%(project_task_view_form_in_gantt)d"
+                date_stop="planned_date_end"
+                default_scale="month"
+                scales="day,week,month,year"
+                color="project_color"
+                string="Planning"
+                js_class="task_gantt"
+                display_unavailability="1"
+                precision="{'day': 'hour:quarter', 'week': 'day:half', 'month': 'day:half'}"
+                decoration-danger="overlap_warning"
+                default_group_by="user_ids"
+                progress_bar="user_ids"
+                pill_label="True">
+                <templates>
+                    <div t-name="gantt-popover">
+                        <div name="project_id">
+                            <strong>Project — </strong>
+                            <t t-if="project_id" t-esc="project_id[1]"/>
+                            <t t-else=""><span class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span></t>
+                        </div>
+                        <div t-if="allow_milestones and milestone_id" groups="project.group_project_milestone">
+                            <strong>Milestone — </strong> <t t-out="milestone_id[1]"/>
+                        </div>
+                        <div t-if="user_names"><strong>Assignees — </strong> <t t-out="user_names"/></div>
+                        <div t-if="partner_id"><strong>Customer — </strong> <t t-esc="partner_id[1]"/></div>
+                        <div>
+                            <t t-esc="userTimezoneStartDate.format('l LT ')"/>
+                            <i class="fa fa-long-arrow-right" title="Arrow"/>
+                            <t t-esc="userTimezoneStopDate.format(' l LT')"/>
+                            (<t t-out="allocatedHoursFormatted"/>)
+                        </div>
+                        <div class="text-danger mt-2" t-if="overlap_warning">
+                            <t t-esc="overlap_warning"/>
+                        </div>
+                    </div>
+                </templates>
+                <field name="project_id"/>
+                <field name="allow_milestones"/>
+                <field name="milestone_id"/>
+                <field name="user_ids"/>
+                <field name="user_names"/>
+                <field name="partner_id"/>
+                <field name="project_color"/>
+                <field name="overlap_warning"/>
+                <field name="allocated_hours"/>
+            </gantt>
+        </field>
+    </record>
+
+    <!-- Adding dependency gantt view to Project -->
+    <record id="project_task_dependency_view_gantt" model="ir.ui.view">
+        <field name="name">project.task.dependency.view.gantt</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="dependency_field">depend_on_ids</attribute>
+                <attribute name="dependency_inverted_field">dependent_ids</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_task_search_form_inherit_enterprise" model="ir.ui.view">
+        <field name="name">project.task.search.inherit.enterprise</field>
+        <field name="model">project.task</field>
+        <field name="priority">10</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='tasks_due_today']" position="after">
+                <filter name="conflict_task" string="Tasks in Conflict" domain="[('planning_overlap', '&gt;', 0)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Adding map view to project-->
+    <record id="project_task_map_view" model="ir.ui.view">
+        <field name="name">project.task.view.map</field>
+        <field name="model">project.task</field>
+        <field name="priority">12</field>
+        <field name="arch" type="xml">
+            <map res_partner="partner_id" default_order="planned_date_begin" routing="1" js_class="project_map">
+                <field name="partner_id" string="Customer"/>
+                <field name="partner_phone" string="Phone"/>
+                <field name="project_id" string="Project"/>
+                <field name="milestone_id" string="Milestone"/>
+                <field name="user_names" string="Assignees"/>
+                <field name="planned_date_begin" string="Date"/>
+            </map>
+        </field>
+    </record>
+
+    <record id="project_task_map_view_no_title" model="ir.ui.view">
+        <field name="name">project.task.view.map</field>
+        <field name="model">project.task</field>
+        <field name="priority">12</field>
+        <field name="arch" type="xml">
+            <map res_partner="partner_id" routing="1" js_class="project_map">
+                <field name="partner_id" string="Customer"/>
+                <field name="partner_phone" string="Phone"/>
+                <field name="milestone_id" string="Milestone"/>
+                <field name="user_names" string="Assignees"/>
+            </map>
+        </field>
+    </record>
+
+    <!-- All Task action with map view -->
+    <record id="project.action_view_task" model="ir.actions.act_window">
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,gantt,activity,map</field>
+    </record>
+
+    <record id="project.action_view_all_task" model="ir.actions.act_window">
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,gantt,calendar,map,pivot,graph,activity</field>
+    </record>
+
+    <record id="open_view_all_task_list_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="project.action_view_all_task"/>
+    </record>
+
+    <!-- Set map view and gantt view -->
+    <record id="project_all_task_gantt_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="view_id" ref="project_enterprise.project_task_dependency_view_gantt"/>
+    </record>
+
+    <record id="project_all_task_map_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="60"/>
+        <field name="view_mode">map</field>
+        <field name="act_window_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="view_id" ref="project_task_map_view_no_title"/>
+    </record>
+
+    <record id="project_task_map_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="60"/>
+        <field name="view_mode">map</field>
+        <field name="act_window_id" ref="project.action_view_task"/>
+        <field name="view_id" ref="project_task_map_view_no_title"/>
+    </record>
+
+    <record id="project.action_view_task_from_milestone" model="ir.actions.act_window">
+        <field name="view_mode">kanban,tree,gantt,calendar,map,pivot,graph,activity,form</field>
+    </record>
+
+    <record id="action_view_task_from_milestone_kanban_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+    </record>
+    <record id="action_view_task_from_milestone_tree_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+    </record>
+
+    <record id="action_view_task_from_milestone_gantt_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+    </record>
+
+    <record id="action_view_task_from_milestone_calendar_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">calendar</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+    </record>
+
+
+    <record id="project_task_from_milestone_action_map_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">map</field>
+        <field name="act_window_id" ref="project.action_view_task_from_milestone"/>
+        <field name="view_id" ref="project_task_map_view_no_title"/>
+    </record>
+</odoo>

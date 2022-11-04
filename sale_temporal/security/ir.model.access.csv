@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_pricing_sale_user,sale_temporal_.sale.user,model_product_pricing,sales_team.group_sale_salesman,1,0,0,0
+access_product_pricing_sale_manager,sale_temporal_.sale.manager,model_product_pricing,sales_team.group_sale_manager,1,1,1,1
+access_sale_temporal_recurrence_public,sale_temporal_recurrence.public,model_sale_temporal_recurrence,base.group_public,1,0,0,0
+access_sale_temporal_recurrence_sale_user,sale_temporal_recurrence.sale.manager,model_sale_temporal_recurrence,base.group_user,1,0,0,0
+access_sale_temporal_recurrence_sale_manager,sale_temporal_recurrence.sale.user,model_sale_temporal_recurrence,sales_team.group_sale_manager,1,1,1,1

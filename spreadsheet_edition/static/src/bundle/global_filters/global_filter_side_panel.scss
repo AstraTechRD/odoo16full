@@ -1,0 +1,107 @@
+.o-spreadsheet-topbar {
+    .o_topbar_filter_icon {
+        padding: 3px;
+        font-size: 18px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #ebebeb;
+        }
+    }
+}
+
+.o_spreadsheet_filter_editor_side_panel {
+    .o_global_filter_delete {
+        float: left;
+    }
+}
+
+.o_spreadsheet_global_filters_side_panel,
+.o_spreadsheet_filter_editor_side_panel {
+    .fw-medium {
+        font-weight: 500;
+    }
+
+    input[type="text"] {
+        outline: none;
+        width: 100%;
+    }
+
+    .o_missing_field {
+        @include print-variable(o-input-border-color, map-get($theme-colors, "warning"));
+    }
+
+    .o_pivot_field_matching {
+        margin: 10px 0px;
+        padding-left: 5px;
+        border-left: solid #ccc 2px;
+    }
+
+    .pivot_filter_section {
+        display: flex;
+        flex-direction: row;
+
+        .o_pivot_model_technical_name {
+            font-size: 0.9rem;
+            white-space: pre;
+        }
+
+        .pivot_filter {
+            flex-grow: 1;
+
+            .pivot_filter_input {
+                display: flex;
+                flex-direction: row;
+                flex-grow: 1;
+
+                .o-filter-value {
+                    .o_field_widget,
+                    .o_field_tags {
+                        width: 100%;
+                    }
+                }
+
+                .o_side_panel_filter_icon {
+                    width: 15px;
+                    margin-left: 0.5rem;
+                    padding: 0;
+                    cursor: pointer;
+                    &:hover {
+                        color: #666666 !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_add_filter {
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    .o-sidePanelButtons {
+        display: flex;
+        flex-direction: row;
+
+        .o-sidePanelButton {
+            flex-grow: 1;
+        }
+    }
+
+    .date_filter_values {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+
+        .o_datepicker {
+            width: 100%;
+            &:not(:first-child) {
+                margin-left: 10px;
+            }
+
+            .o_datepicker_button {
+                right: 0px;
+            }
+        }
+    }
+}

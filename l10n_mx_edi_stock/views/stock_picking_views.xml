@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_edi_form" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.form</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_mx_edi_is_export" invisible="1"/>
+                <field
+                    name="l10n_mx_edi_status"
+                    readonly="1"
+                    attrs="{'invisible': ['|', '|', ('state', '!=', 'done'),
+                                         ('l10n_mx_edi_transport_type', '=', False),
+                                         ('l10n_mx_edi_status', '=', False)]}"/>
+                 <field
+                     name="l10n_mx_edi_transport_type"
+                     attrs="{'invisible': ['|', ('country_code', '!=', 'MX'), ('picking_type_code', '!=', 'outgoing')],
+                             'readonly': [('l10n_mx_edi_status', 'not in', [False, 'to_send'])]}"/>
+                <field
+                    name="l10n_mx_edi_cfdi_uuid"
+                    readonly="1"
+                    groups="base.group_no_one"
+                    attrs="{'invisible': [('l10n_mx_edi_status', '!=', 'sent')]}"/>
+                <field
+                    name="l10n_mx_edi_origin"
+                    groups="base.group_no_one"
+                    attrs="{'invisible': [('l10n_mx_edi_transport_type', '=', False)]}"/>
+                <field name="l10n_mx_edi_cancel_picking_id"
+                       attrs="{'invisible': [('l10n_mx_edi_cancel_picking_id', '=', False)]}"/>
+                <field
+                    name="l10n_mx_edi_sat_status"
+                    readonly="1"
+                    attrs="{'invisible': ['|', ('l10n_mx_edi_status', '!=', 'sent'),
+                                         ('l10n_mx_edi_sat_status', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-warning"
+                     role="alert"
+                     style="margin-bottom:0px;"
+                     attrs="{'invisible': [('l10n_mx_edi_error', '=', False)]}">
+                    <field name="l10n_mx_edi_error" readonly="1"/>
+                    <button
+                        name="l10n_mx_edi_action_send_delivery_guide"
+                        type="object"
+                        class="oe_link"
+                        string="Retry"
+                        attrs="{'invisible': [('l10n_mx_edi_status', 'not in', [False, 'to_send', 'cancelled'])]}"/>
+                    <button
+                        name="l10n_mx_edi_action_clear_error"
+                        type="object"
+                        class="oe_link"
+                        string="Ignore"
+                        attrs="{'invisible': [('l10n_mx_edi_status', 'not in', [False, 'to_send', 'cancelled'])]}"/>
+                    <button
+                        name="l10n_mx_edi_action_download"
+                        type="object"
+                        class="oe_link"
+                        string="Download"
+                        groups="base.group_no_one"
+                        attrs="{'invisible': [('l10n_mx_edi_status', 'not in', [False, 'to_send', 'cancelled'])]}"/>
+                </div>
+            </xpath>
+            <xpath expr="//header//button[@name='action_cancel']" position="after">
+                <button
+                    name="l10n_mx_edi_action_send_delivery_guide"
+                    type="object"
+                    string="Generate Delivery Guide"
+                    attrs="{'invisible':['|', '|', '|',
+                                        ('state', '!=', 'done'),
+                                        ('country_code', '!=', 'MX'),
+                                        ('picking_type_code', '!=', 'outgoing'),
+                                        ('l10n_mx_edi_status', 'not in', [False, 'cancelled'])]}"/>
+                <button
+                    name="l10n_mx_edi_action_update_sat_status"
+                    type="object"
+                    string="Check SAT"
+                    attrs="{'invisible': [('l10n_mx_edi_status', '!=', 'sent')]}"/>
+                 <button
+                    name="l10n_mx_edi_action_cancel_delivery_guide"
+                    type="object"
+                    string="Cancel Delivery Guide"
+                    attrs="{'invisible': [('l10n_mx_edi_status', '!=', 'sent')]}"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                 <page string="MX EDI" name="mx_edi" attrs="{'invisible': [('l10n_mx_edi_transport_type', '!=', '01')]}">
+                    <group>
+                        <group string="Distance " name="mx_edi_group_distance">
+                            <button name="l10n_mx_edi_action_set_partner_coordinates" type="object" string="Get Coordinates"/>
+                            <button
+                                name="l10n_mx_edi_action_calculate_distance"
+                                type="object"
+                                string="Compute Distance"
+                                attrs="{'invisible': ['|', '|', '|',
+                                                     ('l10n_mx_edi_src_lat', '=', 0),
+                                                     ('l10n_mx_edi_src_lon', '=', 0),
+                                                     ('l10n_mx_edi_des_lat', '=', 0),
+                                                     ('l10n_mx_edi_des_lon', '=', 0)]}"/>
+                            <field name="l10n_mx_edi_src_lat"/>
+                            <field name="l10n_mx_edi_src_lon"/>
+                            <field name="l10n_mx_edi_des_lat"/>
+                            <field name="l10n_mx_edi_des_lon"/>
+                            <field name="l10n_mx_edi_distance" attrs="{'readonly': [('l10n_mx_edi_status', '=', 'sent')]}"/>
+                        </group>
+                        <group string="Transport" name="mx_edi_group_transport">
+                            <field
+                                name="l10n_mx_edi_vehicle_id"
+                                attrs="{'invisible': [('l10n_mx_edi_transport_type', '!=', '01')],
+                                        'required': [('l10n_mx_edi_transport_type', '=', '01')],
+                                        'readonly': [('l10n_mx_edi_status', '=', 'sent')]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="helpdesk_ticket_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form.inherit</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="priority">80</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="header" position="inside">
+                    <field name="use_fsm" invisible="1" />
+                    <button class="btn btn-secondary" name="action_generate_fsm_task" type="object" string="Create Task" groups="industry_fsm.group_fsm_user" attrs="{'invisible': [('use_fsm', '=', False)]}" data-hotkey="w" />
+                </xpath>
+                <xpath expr="//button[@name='action_open_helpdesk_ticket']" position="before">
+                    <button class="oe_stat_button" name="action_view_fsm_tasks"  type="object" icon="fa-tasks" attrs="{'invisible': [('fsm_task_count', '=', 0)]}" groups="industry_fsm.group_fsm_user">
+                        <field string="Tasks" name="fsm_task_count" widget="statinfo" />
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="helpdesk_team_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.team.form</field>
+            <field name="model">helpdesk.team</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='field_service']" position="replace">
+                    <div attrs="{'invisible': [('use_fsm', '=', False)]}" class="mt-2">
+                        <label for="fsm_project_id" string="Project" />
+                        <field name="fsm_project_id" attrs="{'required': [('use_fsm', '=', True)]}" context="{'default_is_fsm': True}" />
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

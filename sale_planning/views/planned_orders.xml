@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="planning_action_orders_planned" model="ir.actions.act_window">
+        <field name="name">Orders Planned</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">gantt,calendar,tree,form,kanban,pivot,graph</field>
+        <field name="domain">[('id', 'in', active_ids)]</field>
+        <field name="context">{'create': 0}</field>
+    </record>
+
+    <record id="planning_view_gantt_orders_planned" model="ir.ui.view">
+        <field name="name">planning.slot.gantt</field>
+        <field name="inherit_id" ref="planning_slot_view_gantt_inherit_sale_planning"/>
+        <field name="model">planning.slot</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <gantt position="attributes">
+                <attribute name="plan">0</attribute>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="planning_action_orders_planned_gantt" model="ir.actions.act_window.view">
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="planning_view_gantt_orders_planned"/>
+        <field name="act_window_id" ref="planning_action_orders_planned"/>
+    </record>
+</odoo>

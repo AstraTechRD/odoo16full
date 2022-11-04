@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_be_hr_payroll_273S_274_account</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='l10n_be_hr_payroll']" position="inside">
+                <div class="col-lg-6 col-12 o_setting_box" id="withholding_tax_exemption_accounts">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Withholding Taxes Exemption</span>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                        <div class="text-muted">
+                            Journal Entries Accounts
+                        </div>
+                        <div class="mt16 content-group">
+                            <div class="row">
+                                <label for="exemption_journal_id" class="col-md-7 m-0"/>
+                                <field name="exemption_journal_id" class="col-md-5 p-0"/>
+                            </div>
+                            <div class="row">
+                                <label for="exemption_doctor_master_account_id" class="col-md-7 m-0"/>
+                                <field name="exemption_doctor_master_account_id" class="col-md-5 p-0"/>
+                            </div>
+                            <div class="row">
+                                <label for="exemption_bachelor_account_id" class="col-md-7 m-0"/>
+                                <field name="exemption_bachelor_account_id" class="col-md-5 p-0"/>
+                            </div>
+                            <div class="row">
+                                <label for="exemption_bachelor_capping_account_id" class="col-md-7 m-0"/>
+                                <field name="exemption_bachelor_capping_account_id" class="col-md-5 p-0"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

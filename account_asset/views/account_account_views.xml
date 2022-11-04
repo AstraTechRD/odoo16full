@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_accountant.view_move_line_tree"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="turn_as_asset" type="object" string="Create Asset" groups="account.group_account_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_form_asset_inherit" model="ir.ui.view">
+        <field name="name">account.account.form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="after">
+                <page string="Automation" attrs="{'invisible': ['|', ('can_create_asset', '=', False), ('asset_type', 'not in', ('purchase', 'sale', 'expense'))]}">
+                    <group>
+                        <group>
+                            <separator string="Asset Options" attrs="{'invisible': ['|', ('can_create_asset', '=', False), ('asset_type', '!=', 'purchase')]}"/>
+                            <separator string="Deferred Revenue Options" attrs="{'invisible': ['|', ('can_create_asset', '=', False), ('asset_type', '!=', 'sale')]}"/>
+                            <separator string="Deferred Expense Options" attrs="{'invisible': ['|', ('can_create_asset', '=', False), ('asset_type', '!=', 'expense')]}"/>
+                            <field name="can_create_asset" invisible="1"/>
+                            <field name="form_view_ref" invisible="1"/>
+                            <field name="asset_type" invisible="1"/>
+                            <td class="o_td_label" attrs="{'invisible': [('can_create_asset', '=', False)]}">
+                                <label for="create_asset" string="Automate Asset" attrs="{'invisible': ['|', ('can_create_asset', '=', False), ('asset_type', '!=', 'purchase')]}"/>
+                                <label for="create_asset" string="Automate Deferred Revenue" attrs="{'invisible': ['|', ('can_create_asset', '=', False), ('asset_type', '!=', 'sale')]}"/>
+                                <label for="create_asset" string="Automate Deferred Expense" attrs="{'invisible': ['|', ('can_create_asset', '=', False), ('asset_type', '!=', 'expense')]}"/>
+                            </td>
+                            <field name="create_asset" attrs="{'invisible': [('can_create_asset', '=', False)]}" nolabel="1" widget="radio"/>
+                            <field name="multiple_assets_per_line" string="Manage Items" attrs="{'invisible': ['|', ('can_create_asset', '=', False),'|', ('create_asset', '=', 'no'), ('asset_type', '!=', 'purchase')]}"/>
+                            <td class="o_td_label" attrs="{'invisible': ['|', ('create_asset', '=', 'no'), ('can_create_asset', '=', False)]}">
+                                <label for="asset_model" string="Asset Model" attrs="{'invisible': ['|', ('create_asset', '=', 'no'), '|', ('can_create_asset', '=', False), ('asset_type', '!=', 'purchase')]}"/>
+                                <label for="asset_model" string="Deferred Revenue Model" attrs="{'invisible': ['|', ('create_asset', '=', 'no'), '|', ('can_create_asset', '=', False), ('asset_type', '!=', 'sale')]}"/>
+                                <label for="asset_model" string="Deferred Expense Model" attrs="{'invisible': ['|', ('create_asset', '=', 'no'), '|', ('can_create_asset', '=', False), ('asset_type', '!=', 'expense')]}"/>
+                            </td>
+                            <field name="asset_model"
+                                   domain="[('state', '=', 'model'), ('asset_type', '=', asset_type)]"
+                                   attrs="{'invisible': ['|', ('create_asset', '=', 'no'), ('can_create_asset', '=', False)], 'required': ['&amp;', ('create_asset', '=', 'validate'), ('can_create_asset', '=', True)]}"
+                                   nolabel="1"
+                                   context="{
+                                        'default_state': 'model',
+                                        'form_view_ref': form_view_ref,
+                                        'default_asset_type': asset_type,
+                                        'default_account_asset_id': id,
+                                   }"
+                                   options="{'no_quick_create': True}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

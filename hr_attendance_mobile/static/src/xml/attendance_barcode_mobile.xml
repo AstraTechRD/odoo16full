@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-extend="HrAttendanceKioskMode">
+    <t t-jquery=".o_hr_attendance_kiosk_welcome_row > .col-md-5:first-child > img" t-operation="replace">
+        <t t-if="widget.barcode_source != 'scanner'">
+            <t t-call="mobile_barcode_template"/>
+        </t>
+        <t t-else="">
+            <div class="o_barcode_mobile_container">
+                <img src="/barcodes/static/img/barcode.png" alt="Barcode"/>
+                <span class="o_barcode_laser"/>
+            </div>
+        </t>
+     </t>
+</t>
+
+</templates>

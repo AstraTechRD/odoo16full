@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        @param {voip.PhoneCallDetails} widget
+        @param {integer} widget.activityId
+        @param {string} widget.activityModelName
+        @param {integer} widget.activityResId
+        @param {string} widget.date
+        @param {string} widget.imageSmall
+        @param {integer} widget.minutes
+        @param {boolean} widget.mobileNumber
+        @param {string} widget.name
+        @param {string} widget.partnerName
+        @param {string} widget.phoneNumber
+        @param {integer} widget.seconds
+        @param {string} widget.state
+    -->
+    <div t-name="voip.PhoneCallDetails">
+        <div>
+            <i aria-label="Phonecall details" class="o_phonecall_details_close my-2 px-3 fa fa-2x fa-angle-left text-primary cursor-pointer" role="img" title="Phonecall details"/>
+        </div>
+        <div class="o_phonecall_details text-center">
+            <div class="o_phonecall_top fs-5 mb-2"/>
+            <span t-if="widget.imageSmall" class="o_dial_phonecall_clip d-inline-block">
+                <img alt="Avatar" class="o_dial_phonecall_avatar mb-2 bg-white border rounded-circle" width="80" t-attf-src="data:image/jpg;base64,{{ widget.imageSmall }}"/>
+            </span>
+            <span t-else="" class="o_dial_phonecall_clip d-inline-block">
+                <img alt="Avatar" class="o_dial_phonecall_avatar mb-2 bg-white border rounded-circle" width="80" src="/base/static/img/avatar.png"/>
+            </span>
+            <div>
+                <div class="o_dial_phonecall_partner_name">
+                    <strong t-out="widget.partnerName"/>
+                </div>
+                <div class="o_phonecall_status mb-2"></div>
+            </div>
+            <div class="o_phonecall_info o_phonecall_info_name">
+                <div t-if="widget.partnerName !== widget.name and widget.name"><t t-out="widget.name"/></div>
+            </div>
+            <div>
+                <div t-if="widget.state === 'open'">
+                    <div t-if="widget.phoneNumber" t-out="widget.phoneNumber"/>
+                    <div t-if="widget.mobileNumber" t-out="widget.mobileNumber"/>
+                </div>
+                <div t-else="">
+                    <div t-if="widget.phoneNumber"><a href="#" class="o_dial_call_number btn btn-link"><i class="fa fa-phone"/> <t t-out="widget.phoneNumber"/></a><br/></div>
+                    <div t-if="widget.mobileNumber"><a href="#" class="o_dial_call_number btn btn-link"><i class="fa fa-mobile"/> <t t-out="widget.mobileNumber"/></a><br/></div>
+                </div>
+            </div>
+            <div class="o_phonecall_info o_call_date">
+                <small><span t-if="widget.date" t-out="widget.date"></span><span t-if="widget.state === 'done'"> • <t t-out="widget.minutes"/>min <t t-out="widget.seconds"/>sec</span></small>
+            </div>
+            <div class="o_dial_incoming_buttons mt-5">
+                <button aria-label="Reject call" class="o_dial_reject_button btn col-6 text-danger" title="Reject">
+                    <i class="fa fa-3x fa-phone"/>
+                </button>
+                <button aria-label="Take call" class="o_dial_accept_button btn col-6 text-primary" title="Accept">
+                    <i class="fa fa-3x fa-phone"/>
+                </button>
+            </div>
+        </div>
+        <div class="o_dial_keypad_button_container mx-3 my-4">
+            <div class="o_voip_row_header o_horizontal_separator">Document</div>
+            <div class="d-flex justify-content-around my-3">
+                <div class="o_dial_keypad_button_small text-center" title="Send mail" t-if="widget.partnerName">
+                    <a class="o_dial_email btn btn-light p-3 border rounded-circle" href="#">
+                        <i aria-label="Send mail" class="fa fa-fw fa-lg fa-envelope-o"/>
+                    </a>
+                </div>
+                <div class="o_dial_keypad_button_small text-center" title="Customer">
+                    <a class="o_dial_to_partner btn btn-light p-3 border rounded-circle" href="#">
+                        <i aria-label="Customer" class="fa fa-fw fa-lg fa-user"/>
+                    </a>
+                </div>
+                <div class="o_dial_keypad_button_small text-center"
+                    t-att-title="widget.activityModelName"
+                    t-if="widget.activityResId and widget.activityResId !== widget.partnerId">
+                    <a class="o_dial_to_record btn btn-light p-3 border rounded-circle" href="#">
+                        <i aria-label="Activity" class="fa fa-fw fa-lg fa-wpforms" role="img"/>
+                    </a>
+                </div>
+                <div class="o_dial_keypad_button_small text-center" title="Schedule Activity"
+                    t-if="widget.activityResId or widget.partnerId">
+                    <a class="o_dial_reschedule_activity btn btn-light p-3 border rounded-circle" href="#">
+                        <i aria-label="Schedule Next" class="fa fa-fw fa-lg fa-clock-o"/>
+                    </a>
+                </div>
+            </div>
+            <div class="o_phonecall_activity_button o_voip_row_header o_horizontal_separator" t-if="widget.activityId">Activity</div>
+            <div class="d-flex justify-content-around my-3" t-if="widget.activityId">
+                <div class="o_dial_keypad_button_small text-center" title="Mark as done">
+                    <a class="o_dial_activity_done o_phonecall_activity_button btn btn-light p-3 border rounded-circle" href="#">
+                        <i aria-label="Mark as done" class="fa fa-fw fa-lg fa-check"/>
+                    </a>
+                </div>
+                <div class="o_dial_keypad_button_small text-center">
+                    <a class="o_dial_log o_phonecall_activity_button btn btn-light p-3 border rounded-circle" href="#">
+                        <i aria-label="Edit" class="fa fa-fw fa-lg fa-pencil" title="Edit"/>
+                    </a>
+                </div>
+                <div class="o_dial_keypad_button_small text-center" title="Cancel">
+                    <a href="#" class="o_dial_activity_cancel o_phonecall_activity_button btn btn-light p-3 border rounded-circle">
+                        <i aria-label="Cancel" class="fa fa-fw fa-lg fa-close"/>
+                    </a>
+                </div>
+            </div>
+            <div class="o_phonecall_in_call">
+                <div class="o_voip_row_header o_horizontal_separator">Call</div>
+                <div class="d-flex justify-content-around my-3">
+                    <div class="o_dial_keypad_button_small text-center">
+                        <button aria-label="Transfer" class="o_dial_keypad_button o_dial_transfer_button btn btn-light p-3 border rounded-circle">
+                            <i class="fa fa-fw fa-lg fa-arrows-h"/>
+                        </button>
+                    </div>
+                    <div class="_dial_keypad_button_small text-center">
+                        <button aria-label="Mute" class="o_dial_keypad_button o_dial_mute_button btn btn-light p-3 border rounded-circle" title="Mute">
+                            <i class="fa fa-fw fa-lg fa-microphone"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+        @param {string} [duration] mandatory with status 'in_call'
+        @param {string} status ['ringing', 'connecting', 'in_call']
+    -->
+    <t t-name="voip.PhoneCallStatus">
+        <t t-if="status === 'ringing'">
+            <small class="text-muted">Ringing...</small>
+        </t>
+        <t t-elif="status === 'connecting'">
+            <small class="text-muted">Incoming call from...</small>
+        </t>
+        <t t-elif="status === 'in_call'">
+            <small class="text-success">In call for: <t t-out="duration"/> </small>
+        </t>
+    </t>
+
+    <t t-name="voip.PhoneCallTransfer">
+        <table class="table table-sm table-hover">
+            <tbody id="table_contact">
+            </tbody>
+        </table>
+        <form class="d-flex flex-nowrap">
+            <input class="form-control" id="input_transfer" t-att-value="external_device_number" placeholder="Enter number or name" autocomplete="off"/>
+            <button id="transfer_call" class="btn btn-primary">Transfer</button>
+        </form>
+    </t>
+
+</templates>

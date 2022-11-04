@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mod_303" model="account.report">
+        <field name="name">Tax Report(Mod 303)</field>
+        <field name="filter_analytic" eval="False"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="filter_multi_company">disabled</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="custom_handler_model_id" ref="model_l10n_es_mod303_tax_report_handler"/>
+        <field name="column_ids">
+            <record id="mod_303_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="mod_303_title_1" model="account.report.line">
+                <field name="name">Régimen General</field>
+                <field name="code">aeat_mod_303_title_1</field>
+                <field name="children_ids">
+                    <record id="mod_303_title_2" model="account.report.line">
+                        <field name="name">IVA devengado</field>
+                        <field name="code">aeat_mod_303_title_2</field>
+                        <field name="children_ids">
+                            <record id="mod_303_casilla_01" model="account.report.line">
+                                <field name="name">[01] Base imponible 4%</field>
+                                <field name="code">aeat_mod_303_01</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_01'))])</field>
+                            </record>
+                            <record id="mod_303_casilla_03" model="account.report.line">
+                                <field name="name">[03] Cuota 4%</field>
+                                <field name="code">aeat_mod_303_03</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_03'))])</field>
+                            </record>
+                            <record id="mod_303_casilla_04" model="account.report.line">
+                                <field name="name">[04] Base imponible 10%</field>
+                                <field name="code">aeat_mod_303_04</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_04'))])</field>
+                            </record>
+                            <record id="mod_303_casilla_06" model="account.report.line">
+                                <field name="name">[06] Cuota 10%</field>
+                                <field name="code">aeat_mod_303_06</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_06'))])</field>
+                            </record>
+                            <record id="mod_303_casilla_07" model="account.report.line">
+                                <field name="name">[07] Base imponible 21%</field>
+                                <field name="code">aeat_mod_303_07</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_07'))])</field>
+                            </record>
+                            <record id="mod_303_casilla_09" model="account.report.line">
+                                <field name="name">[09] Cuota 21%</field>
+                                <field name="code">aeat_mod_303_09</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_09'))])</field>
+                            </record>
+                            <record id="mod_303_title_3" model="account.report.line">
+                                <field name="name">Adquisiciones intracomunitarias de bienes y servicios</field>
+                                <field name="code">aeat_mod_303_title_3</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_10" model="account.report.line">
+                                        <field name="name">[10] Base imponible</field>
+                                        <field name="code">aeat_mod_303_10</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_10'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_casilla_11" model="account.report.line">
+                                <field name="name">[11] Cuota</field>
+                                <field name="code">aeat_mod_303_11</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_11'))])</field>
+                            </record>
+                            <record id="mod_303_title_4" model="account.report.line">
+                                <field name="name">Otras operac. con inversión del suj. pasivo (excepto adq. intracom.)</field>
+                                <field name="code">aeat_mod_303_title_4</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_12" model="account.report.line">
+                                        <field name="name">[12] Base imponible</field>
+                                        <field name="code">aeat_mod_303_12</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_12'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_13" model="account.report.line">
+                                        <field name="name">[13] Cuota</field>
+                                        <field name="code">aeat_mod_303_13</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_13'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_5" model="account.report.line">
+                                <field name="name">Modificación bases y cuotas</field>
+                                <field name="code">aeat_mod_303_title_5</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_14" model="account.report.line">
+                                        <field name="name">[14] Base imponible</field>
+                                        <field name="code">aeat_mod_303_14</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_303_casilla_14_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">aeat_mod_303_14.aeat_mod_303_14_sale_balance - aeat_mod_303_14.aeat_mod_303_14_purchase_balance</field>
+                                                <field name="date_scope">normal</field>
+                                            </record>
+                                            <record id="mod_303_casilla_14_aeat_mod_303_14_sale_balance" model="account.report.expression">
+                                                <field name="label">aeat_mod_303_14_sale_balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('tax_tag_ids','=',ref('l10n_es.mod_303_14_sale'))]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="mod_303_casilla_14_aeat_mod_303_14_purchase_balance" model="account.report.expression">
+                                                <field name="label">aeat_mod_303_14_purchase_balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('tax_tag_ids','=',ref('l10n_es.mod_303_14_purchase'))]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_303_casilla_15" model="account.report.line">
+                                        <field name="name">[15] Cuota</field>
+                                        <field name="code">aeat_mod_303_15</field>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_15'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_6" model="account.report.line">
+                                <field name="name">Recargo equivalencia</field>
+                                <field name="code">aeat_mod_303_title_6</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_16" model="account.report.line">
+                                        <field name="name">[16] Base imponible 0.5%</field>
+                                        <field name="code">aeat_mod_303_16</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_16'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_18" model="account.report.line">
+                                        <field name="name">[18] Cuota 0.5%</field>
+                                        <field name="code">aeat_mod_303_18</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_18'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_19" model="account.report.line">
+                                        <field name="name">[19] Base imponible 1.4%</field>
+                                        <field name="code">aeat_mod_303_19</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_19'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_21" model="account.report.line">
+                                        <field name="name">[21] Cuota 1.4%</field>
+                                        <field name="code">aeat_mod_303_21</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_21'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_22" model="account.report.line">
+                                        <field name="name">[22] Base imponible 5.2%</field>
+                                        <field name="code">aeat_mod_303_22</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_22'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_24" model="account.report.line">
+                                        <field name="name">[24] Cuota 5.2%</field>
+                                        <field name="code">aeat_mod_303_24</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_24'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_7" model="account.report.line">
+                                <field name="name">Modificación bases y cuotas del recargo de equivalencia</field>
+                                <field name="code">aeat_mod_303_title_7</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_25" model="account.report.line">
+                                        <field name="name">[25] Base imponible</field>
+                                        <field name="code">aeat_mod_303_25</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_25'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_26" model="account.report.line">
+                                        <field name="name">[26] Cuota</field>
+                                        <field name="code">aeat_mod_303_26</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_26'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_casilla_27" model="account.report.line">
+                                <field name="name">[27] Total cuota devengada</field>
+                                <field name="code">aeat_mod_303_27</field>
+                                <field name="aggregation_formula">aeat_mod_303_03.balance + aeat_mod_303_06.balance + aeat_mod_303_09.balance + aeat_mod_303_11.balance + aeat_mod_303_13.balance + aeat_mod_303_15.balance + aeat_mod_303_18.balance + aeat_mod_303_21.balance + aeat_mod_303_24.balance + aeat_mod_303_26.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_title_8" model="account.report.line">
+                        <field name="name">IVA deducible</field>
+                        <field name="code">aeat_mod_303_title_8</field>
+                        <field name="children_ids">
+                            <record id="mod_303_title_9" model="account.report.line">
+                                <field name="name">Por cuotas soportadas en operaciones interiores corrientes</field>
+                                <field name="code">aeat_mod_303_title_9</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_28" model="account.report.line">
+                                        <field name="name">[28] Base</field>
+                                        <field name="code">aeat_mod_303_28</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_28'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_29" model="account.report.line">
+                                        <field name="name">[29] Cuota</field>
+                                        <field name="code">aeat_mod_303_29</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_29'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_10" model="account.report.line">
+                                <field name="name">Por cuotas soportadas en operaciones interiores con bienes de inversión</field>
+                                <field name="code">aeat_mod_303_title_10</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_30" model="account.report.line">
+                                        <field name="name">[30] Base</field>
+                                        <field name="code">aeat_mod_303_30</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_30'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_31" model="account.report.line">
+                                        <field name="name">[31] Cuota</field>
+                                        <field name="code">aeat_mod_303_31</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_31'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_11" model="account.report.line">
+                                <field name="name">Por cuotas soportadas en las importaciones de bienes corrientes</field>
+                                <field name="code">aeat_mod_303_title_11</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_32" model="account.report.line">
+                                        <field name="name">[32] Base</field>
+                                        <field name="code">aeat_mod_303_32</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_32'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_33" model="account.report.line">
+                                        <field name="name">[33] Cuota</field>
+                                        <field name="code">aeat_mod_303_33</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('debit', '&gt;', 0.0), ('tax_tag_ids','=',ref('l10n_es.mod_303_33'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_12" model="account.report.line">
+                                <field name="name">Por cuotas soportadas en las importaciones de bienes de inversión</field>
+                                <field name="code">aeat_mod_303_title_12</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_34" model="account.report.line">
+                                        <field name="name">[34] Base</field>
+                                        <field name="code">aeat_mod_303_34</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_34'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_35" model="account.report.line">
+                                        <field name="name">[35] Cuota</field>
+                                        <field name="code">aeat_mod_303_35</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_35'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_13" model="account.report.line">
+                                <field name="name">En adquisiciones intracomunitarias de bienes y servicios corrientes</field>
+                                <field name="code">aeat_mod_303_title_13</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_36" model="account.report.line">
+                                        <field name="name">[36] Base</field>
+                                        <field name="code">aeat_mod_303_36</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_36'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_37" model="account.report.line">
+                                        <field name="name">[37] Cuota</field>
+                                        <field name="code">aeat_mod_303_37</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_37'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_14" model="account.report.line">
+                                <field name="name">En adquisiciones intracomunitarias de bienes de inversión</field>
+                                <field name="code">aeat_mod_303_title_14</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_38" model="account.report.line">
+                                        <field name="name">[38] Base</field>
+                                        <field name="code">aeat_mod_303_38</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_38'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_39" model="account.report.line">
+                                        <field name="name">[39] Cuota</field>
+                                        <field name="code">aeat_mod_303_39</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_39'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_title_15" model="account.report.line">
+                                <field name="name">Rectificación de deducciones</field>
+                                <field name="code">aeat_mod_303_title_15</field>
+                                <field name="children_ids">
+                                    <record id="mod_303_casilla_40" model="account.report.line">
+                                        <field name="name">[40] Base</field>
+                                        <field name="code">aeat_mod_303_40</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_40'))])</field>
+                                    </record>
+                                    <record id="mod_303_casilla_41" model="account.report.line">
+                                        <field name="name">[41] Cuota</field>
+                                        <field name="code">aeat_mod_303_41</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_41'))])</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_casilla_42" model="account.report.line">
+                                <field name="name">[42] Compensaciones Régimen especial A. G. y P. - Cuota compras</field>
+                                <field name="code">aeat_mod_303_42</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">sum([('tax_tag_ids','=',ref('l10n_es.mod_303_42'))])</field>
+                            </record>
+                            <record id="mod_303_casilla_43" model="account.report.line">
+                                <field name="name">[43] Regularización bienes de inversión</field>
+                                <field name="code">aeat_mod_303_43</field>
+                                <field name="expression_ids">
+                                    <record id="mod_303_casilla_43_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_casilla_44" model="account.report.line">
+                                <field name="name">[44] Regularización por aplicación del porcentaje definitivo de prorrata</field>
+                                <field name="code">aeat_mod_303_44</field>
+                                <field name="expression_ids">
+                                    <record id="mod_303_casilla_44_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_casilla_45" model="account.report.line">
+                        <field name="name">[45] Total a deducir</field>
+                        <field name="code">aeat_mod_303_45</field>
+                        <field name="aggregation_formula">aeat_mod_303_29.balance + aeat_mod_303_31.balance + aeat_mod_303_33.balance + aeat_mod_303_35.balance + aeat_mod_303_37.balance + aeat_mod_303_39.balance + aeat_mod_303_41.balance + aeat_mod_303_42.balance + aeat_mod_303_43.balance + aeat_mod_303_44.balance</field>
+                    </record>
+                    <record id="mod_303_casilla_46" model="account.report.line">
+                        <field name="name">[46] Resultado régimen general</field>
+                        <field name="code">aeat_mod_303_46</field>
+                        <field name="aggregation_formula">aeat_mod_303_27.balance - aeat_mod_303_45.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="mod_303_title_16" model="account.report.line">
+                <field name="name">Información adicional</field>
+                <field name="code">aeat_mod_303_title_16</field>
+                <field name="children_ids">
+                    <record id="mod_303_casilla_59" model="account.report.line">
+                        <field name="name">[59] Entregas intracomunitarias de bienes y servicios - Base ventas</field>
+                        <field name="code">aeat_mod_303_59</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_59'))])</field>
+                    </record>
+                    <record id="mod_303_casilla_60" model="account.report.line">
+                        <field name="name">[60] Exportaciones y operaciones asimiladas - Base ventas</field>
+                        <field name="code">aeat_mod_303_60</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_60'))])</field>
+                    </record>
+                    <record id="mod_303_casilla_120" model="account.report.line">
+                        <field name="name">[120] Operaciones no sujetas por reglas de localización (excepto las incluidas en la casilla 123)</field>
+                        <field name="code">aeat_mod_303_120</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_120'))])</field>
+                    </record>
+                    <record id="mod_303_casilla_122" model="account.report.line">
+                        <field name="name">[122] Operaciones sujetas con inversión del sujeto pasivo</field>
+                        <field name="code">aeat_mod_303_122</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_122'))])</field>
+                    </record>
+                    <record id="mod_303_casilla_123" model="account.report.line">
+                        <field name="name">[123] OSS. Operaciones no sujetas por reglas de localización acogidas a la OSS</field>
+                        <field name="code">aeat_mod_303_123</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_123'))])</field>
+                    </record>
+                    <record id="mod_303_casilla_124" model="account.report.line">
+                        <field name="name">[124] OSS. Operaciones sujetas y acogidas a la OSS</field>
+                        <field name="code">aeat_mod_303_124</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('tax_tag_ids','=',ref('l10n_es.mod_303_124'))])</field>
+                    </record>
+                    <record id="mod_303_title_17" model="account.report.line">
+                        <field name="name">Importes de las entregas de bienes y prestaciones de servicios a las que habiéndoles sido aplicado el régimen especial del criterio de caja hubieran resultado devengadas</field>
+                        <field name="code">aeat_mod_303_title_17</field>
+                        <field name="children_ids">
+                            <record id="mod_303_casilla_62" model="account.report.line">
+                                <field name="name">[62] Base imponible</field>
+                                <field name="code">aeat_mod_303_62</field>
+                                <field name="expression_ids">
+                                    <record id="mod_303_casilla_62_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_casilla_63" model="account.report.line">
+                                <field name="name">[63] Cuota</field>
+                                <field name="code">aeat_mod_303_63</field>
+                                <field name="expression_ids">
+                                    <record id="mod_303_casilla_63_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="mod_303_title_18" model="account.report.line">
+                <field name="name">Resultado</field>
+                <field name="code">aeat_mod_303_title_18</field>
+                <field name="children_ids">
+                    <record id="mod_303_casilla_65" model="account.report.line">
+                        <field name="name">[65] % Atribuible a la Administración del Estado</field>
+                        <field name="code">aeat_mod_303_65</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_65_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="figure_type">percentage</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_casilla_66" model="account.report.line">
+                        <field name="name">[66] Atribuible a la Administración del Estado</field>
+                        <field name="code">aeat_mod_303_66</field>
+                        <field name="aggregation_formula">aeat_mod_303_65.balance * aeat_mod_303_46.balance</field>
+                    </record>
+                    <record id="mod_303_casilla_67" model="account.report.line">
+                        <field name="name">[67] Cuotas a compensar de periodos anteriores</field>
+                        <field name="code">aeat_mod_303_67</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_67_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_casilla_68" model="account.report.line">
+                        <field name="name">[68] Resultado de la regularización anual</field>
+                        <field name="code">aeat_mod_303_68</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_68_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_casilla_69" model="account.report.line">
+                        <field name="name">[69] Resultado</field>
+                        <field name="code">aeat_mod_303_69</field>
+                        <field name="aggregation_formula">aeat_mod_303_66.balance + aeat_mod_303_77.balance - aeat_mod_303_78.balance + aeat_mod_303_68.balance</field>
+                    </record>
+                    <record id="mod_303_casilla_70" model="account.report.line">
+                        <field name="name">[70] A deducir</field>
+                        <field name="code">aeat_mod_303_70</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_70_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="date_scope">normal</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_casilla_71" model="account.report.line">
+                        <field name="name">[71] Resultado de la liquidación</field>
+                        <field name="code">aeat_mod_303_71</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_71_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">aeat_mod_303_69.balance - aeat_mod_303_70.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_title_19" model="account.report.line">
+                        <field name="name">Importe de las adquisiciones de bienes y servicios a las que sea de aplicación o afecte el régimen especial del criterio de caja</field>
+                        <field name="code">aeat_mod_303_title_19</field>
+                        <field name="children_ids">
+                            <record id="mod_303_casilla_74" model="account.report.line">
+                                <field name="name">[74] Base imponible</field>
+                                <field name="code">aeat_mod_303_74</field>
+                                <field name="expression_ids">
+                                    <record id="mod_303_casilla_74_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_casilla_75" model="account.report.line">
+                                <field name="name">[75] Cuota</field>
+                                <field name="code">aeat_mod_303_75</field>
+                                <field name="expression_ids">
+                                    <record id="mod_303_casilla_75_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_casilla_77" model="account.report.line">
+                        <field name="name">[77] IVA a la importación liquidado por la Aduana pendiente de ingreso</field>
+                        <field name="code">aeat_mod_303_77</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_77_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_casilla_78" model="account.report.line">
+                        <field name="name">[78] Cuotas a compensar de periodos anteriores aplicadas en este periodo</field>
+                        <field name="code">aeat_mod_303_78</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_78_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_303_casilla_87" model="account.report.line">
+                        <field name="name">[87] Cuotas a compensar de periodos previos pendientes para periodos posteriores</field>
+                        <field name="code">aeat_mod_303_87</field>
+                        <field name="aggregation_formula">aeat_mod_303_110.balance - aeat_mod_303_78.balance</field>
+                    </record>
+                    <record id="mod_303_casilla_110" model="account.report.line">
+                        <field name="name">[110] Cuotas a compensar pendientes de periodos anteriores</field>
+                        <field name="code">aeat_mod_303_110</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_110_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

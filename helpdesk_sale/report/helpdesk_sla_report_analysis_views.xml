@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_sla_report_analysis_view_search_inherit_sale" model="ir.ui.view">
+        <field name="name">helpdesk.sla.report.analysis.inherit.sale</field>
+        <field name="model">helpdesk.sla.report.analysis</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_sla_report_analysis_view_search"/>
+        <field name="arch" type="xml">
+            <field name="ticket_stage_id" position="after">
+                <field name="sale_order_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

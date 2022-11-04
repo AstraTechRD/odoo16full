@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.PivotView" t-inherit="web.PivotView" owl="1">
+        <xpath expr="//t[@t-call='web.ActionHelper']" position="attributes">
+            <attribute name="t-call">timesheet_grid.ActionHelper</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web.NoContentHelper']" position="attributes">
+            <attribute name="t-call">timesheet_grid.NoContentHelper</attribute>
+        </xpath>
+    </t>
+
+</templates>

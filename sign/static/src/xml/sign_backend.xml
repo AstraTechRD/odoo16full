@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.sign_item_custom_popover">
+        <div class="o_sign_item_custom_popover">
+            <div class="mb-1 clearfix o_popover_placeholder" t-if="widget.debug">
+                <label for="o_sign_name">Placeholder</label>
+                <div>
+                    <input type="text" id="o_sign_name" class="o_input"/>
+                </div>
+            </div>
+            <div class="mb-1 o_sign_options_group">
+                <label for="o_sign_select_options_input">Options</label>
+                <div class="o_sign_options_select">
+                    <input id="o_sign_options_select_input" type="hidden"/>
+                </div>
+            </div>
+            <div class="mb-1">
+                <label for="o_sign_responsible_select_input">Filled by</label>
+                <div class="o_sign_responsible_select">
+                    <select id="o_sign_responsible_select_input"/>
+                </div>
+            </div>
+            <div class="o_sign_field_align_group">
+                <label class="w-100">Alignment</label>
+                <div class="btn-group mb-2" role="group">
+                    <button type="button" title="Left" data-align="left" class="btn btn-default o_sign_align_button fa fa-align-left fa-sm p-2"/>
+                    <button type="button" title="Center" data-align="center" class="btn btn-default o_sign_align_button fa fa-align-center fa-sm p-2"/>
+                    <button type="button" title="Right" data-align="right" class="btn btn-default o_sign_align_button fa fa-align-right fa-sm p-2"/>
+                </div>
+            </div>
+            <div class="mb-1">
+                <div>
+                    <div class="checkbox">
+                        <label for="o_sign_required_field">
+                            <input type="checkbox" id="o_sign_required_field"/> Mandatory field
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-1">
+                <button class="btn o_sign_validate_field_button btn-primary">Validate</button>
+                <span class="fa fa-trash fa-lg o_sign_delete_field_button"></span>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="sign.initial_all_pages_dialog">
+        <div class="mb-1">
+            <label for="responsible_select_initials_input" class="col-md-2">Responsible</label>
+            <div class="o_sign_responsible_select_initials col-md-10">
+                <select id="responsible_select_initials_input"/>
+            </div>
+        </div>
+    </t>
+    <t t-name="sign.template_cp_buttons">
+        <t t-if="action_type===''||action_type==='sign_send_request'">
+            <button type="button" class="btn btn-primary me-2 o_sign_template_send">Send</button>
+            <button type="button" class="btn btn-primary me-2 o_sign_template_sign_now">Sign Now</button>
+            <t t-if="action_type!=='sign_send_request' &amp;&amp; widget.sign_template.responsible_count &lt;=1">
+                <button type="button" class="btn btn-secondary me-2 o_sign_template_share">Share</button>
+            </t>
+        </t>
+        <t t-elif="action_type==='sign_template_edit'">
+            <button type="button" class="btn btn-primary me-2 o_sign_template_save">Save</button>
+            <button t-if="widget.nextTemplate &amp;&amp; widget.nextTemplate.template" type="button" class="btn btn-primary me-2 o_sign_template_next" t-att-template-id="widget.nextTemplate.template" t-att-template-name="widget.nextTemplate.name">Next Document</button>
+        </t>
+        <t t-if="widget.has_sign_requests &amp;&amp; widget.isPDF">
+            <div class="alert o_duplicate d-inline">
+                <span class="fa fa-exclamation-triangle"/> <button type="button" class="o_sign_template_duplicate btn btn-link mb-1 p-0">Duplicate</button> this template to modify it.
+            </div>
+        </t>
+    </t>
+    <t t-name="sign.template">
+        <div class="o_sign_template_header_wrapper px-4 py-2 align-items-center d-flex">
+            <div class="o_sign_template_header_document_name align-items-center d-flex me-auto">
+                <span t-if="!widget.has_sign_requests" class="fa fa-pencil me-2" title="Edit template name" role="img" aria-label="Edit template name"/>
+                <input type="text" class="o_sign_template_name_input o_input" t-att-value="widget.sign_template.display_name"/>
+            </div>
+             <div t-if="widget.manage_template_access" class="o_sign_template_authorized_ids_and_save align-items-center d-flex">
+                 <label for="o_sign_template_authorized_ids" class="p-0 m-0 me-2">Authorized Users:</label>
+                 <div id="o_sign_template_authorized_ids" class="o_sign_template_authorized_ids"/>
+                 <div class="o_sign_template_saved_info alert alert-success m-0 ms-2" role="status"><span class="fa fa-check"/>Saved</div>
+             </div>
+
+            <div t-if="widget.manage_template_access" class="o_sign_template_group_id_and_save align-items-center d-flex">
+                <label for="o_sign_template_group_id" class="p-0 m-0 me-2">Authorized Groups:</label>
+                <div id="o_sign_template_groupe_id" class="o_sign_template_group_id"/>
+                <div class="o_sign_template_saved_info alert alert-success m-0 ms-2" role="status"><span class="fa fa-check"/>Saved</div>
+            </div>
+
+            <div class="o_sign_template_tags_and_save align-items-center d-flex">
+                <label for="o_sign_template_tags" class="p-0 m-0 me-2">Tags:</label>
+                <div id="o_sign_template_tags" class="o_sign_template_tags"/>
+                <div class="o_sign_template_saved_info alert alert-success m-0 ms-2" role="status"><span class="fa fa-check"/>Saved</div>
+            </div>
+
+            <button class="btn btn-secondary float-end o_sign_template_edit_form">Template Properties</button>
+
+        </div>
+        <t t-if="widget.isPDF">
+            <iframe class="o_sign_pdf_iframe"/>
+        </t>
+        <t t-else="">
+            <div class="o_sign_image_document">
+                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpe|jpg|png)').test(widget.sign_template.attachment_id.mimetype)"/>
+                <img t-if="webimage" class="img img-fluid" t-attf-src="/web/image/{{widget.sign_template.attachment_id.id}}" alt="Signature"/>
+                <div t-if="!webimage" class="o_image" t-att-data-mimetype="widget.sign_template.attachment_id.mimetype"/>
+            </div>
+        </t>
+    </t>
+    <t t-name="sign.type_buttons">
+        <div class="o_sign_field_type_toolbar_title d-flex justify-content-center align-items-center">Fields</div>
+        <div class="o_sign_field_type_toolbar_items d-flex flex-column">
+            <t t-foreach="sign_item_types" t-as="item_type">
+                <button type="button" class="o_sign_field_type_button btn btn-primary flex-shrink-0" t-att-data-item-type-id="item_type.id" title="Drag &amp; Drop a field in the PDF"><t t-esc="item_type.name"/></button>
+            </t>
+            <!-- When you mouse hover the last sign type button the button will be zoomed in a little
+                 The following <br/> is added to prevent the horizontal overflow which will trigger a horizontal scrollbar. -->
+            <br/>
+        </div>
+    </t>
+    <t t-name="sign.rotate_pdf_button">
+        <button id='rotateCw' class='toolbarButton o_sign_rotate rotateCw' t-att-title='title'/>
+    </t>
+</templates>

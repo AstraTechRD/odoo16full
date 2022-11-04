@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="account_base_import.AccountListView.buttons" t-inherit="web.ListView.Buttons" owl="1">
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="after">
+            <button type="button" class="btn btn-secondary" t-on-click="() => this._importAccountAction()">
+                Import
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="account_base_import.accountImportTemplate" owl="1">
+        <ControlPanel display="{
+            'top-right': false,
+            'bottom-left': false,
+            'bottom-right': false,
+        }"/>
+        <div class="container text-justify overflow-auto h-100">
+            <div class="d-flex flex-column my-5 pt-4">
+                <div class="title">
+                    <h1>
+                        Accounting Import Options
+                    </h1>
+                    <p>
+                        Use predefined format to import your data faster.
+                    </p>
+                </div>
+                <t t-if="countryCode === 'BE'">
+                    <div class="winbooks-import pt-4">
+                        <h2 class="text-odoo">
+                            Winbooks
+                        </h2>
+                        <p>
+                            Winbooks is an old school Belgian accounting software acquired by Exact.
+                            Use the
+                            <a class="fw-bold" href="#" t-on-click.prevent="() => this._openModuleInstallation('account_winbooks_import')">
+                                Account Winbooks Import module
+                            </a>
+                            to import a Winbooks full back-up (Maintenance > Backup) to get the chart of accounts, contacts, taxes, history of journal entries, and documents.
+                            Support versions: Winbooks Desktop 5.50, 6, 7, 8.
+                        </p>
+                    </div>
+                </t>
+                <t t-if="['FR', 'LU'].includes(countryCode)">
+                    <div class="fec-import pt-4">
+                        <h2 class="text-odoo">
+                            FEC
+                        </h2>
+                        <p>
+                            Most accounting software in France support exporting FEC file for audit purposes.
+                            Use the
+                            <a class="fw-bold" href="#" t-on-click.prevent="() => this._openModuleInstallation('l10n_fr_fec_import')">
+                                FEC Import module
+                            </a>
+                            to import the FEC file. We will setup your charts of accounts and the history of journal entries.
+                        </p>
+                    </div>
+                </t>
+                <div class="excel-import pt-4">
+                    <h2 class="text-odoo">
+                        Excel Import
+                    </h2>
+                    <p>
+                        Use templates to import CSV or Excel for your accounting setup.
+                    </p>
+                    <ol class="d-flex flex-column flex-lg-row">
+                        <li class="pt-4">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <h3>Import contacts</h3>
+                                    <p>Import customers or suppliers (partners) and their contacts using a
+                                        <a class="fw-bold" href="https://docs.google.com/spreadsheets/d/1UUapTtjyzC6lMLECBcDN0SiJjhNjHbiXVnv5JSNS7Hg/edit?usp=sharing" target="blank">
+                                            template.
+                                        </a>
+                                    </p>
+                                    <button type="button" class="btn btn-primary" t-on-click="() => this._importAccountGuideAction('account_base_import.action_partner_import')">Import Contacts</button>
+                                </div>
+                                <div class="col-lg-2 border-start"/>
+                            </div>
+                        </li>
+                        <li class="pt-4">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <h3>Import Chart of Accounts</h3>
+                                    <p>Import the Chart of Accounts and initial balances using a
+                                        <a class="fw-bold" href="https://docs.google.com/spreadsheets/d/1rneV51mYaA5uTJlQlfYGg9Yy0fYiORu13xiNbK7ANYk/edit?usp=sharing" target="blank">
+                                            template.
+                                        </a>
+                                    </p>
+                                    <button type="button" class="btn btn-primary" t-on-click="() => this._importAccountGuideAction('account_base_import.action_account_import')" style="margin-right: 2px;">Import CoA</button>
+                                    or<button type="button" class="btn btn-link px-2" t-on-click="() => this._importAccountGuideAction('account_base_import.action_open_coa_setup')">Review Manually</button>
+                                </div>
+                                <div class="col-lg-2 border-start"/>
+                            </div>
+                        </li>
+                        <li class="pt-4">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <h3>Import Journal Items</h3>
+                                    <p>Optional, but useful to import open receivables &amp; payables using a
+                                        <a class="fw-bold" href="https://docs.google.com/spreadsheets/d/17a8GjOCjRyQGOLGZt8CeA-nxKzW4Dys5gq5UplAAT2A/edit?usp=sharing" target="blank">
+                                            template.
+                                        </a>
+                                    </p>
+                                    <button type="button" class="btn btn-primary" t-on-click="() => this._importAccountGuideAction('account_base_import.action_account_move_line_import')">Import Journal Items</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                    <div class="pt-5 pb-5">
+                        <p>Tip: we recommend importing your initial balances using the Chart of Account import. Only use the Journal Items import for unreconciled entries in your Payable and Receivable Accounts.</p>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+    </t>
+
+</templates>

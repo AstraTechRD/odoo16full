@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sign.SignRequest" owl="1">
+        <t t-if="signRequestView">
+            <button class="o_SignRequest btn btn-link" t-attf-class="{{ className }}" title="Request Signature" t-on-click="signRequestView.onClickRequestSign" t-ref="root">
+                <i class="fa fa-pencil-square-o"/> Request Signature
+            </button>
+        </t>
+    </t>
+
+</templates>

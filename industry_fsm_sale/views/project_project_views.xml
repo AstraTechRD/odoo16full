@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_view_form_inherit" model="ir.ui.view">
+        <field name="name">project.view.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_timesheet.project_project_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='billing_employee_rate']//group/field[@name='timesheet_product_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+                <attribute name="attrs">{'invisible': ['|', '|', ('allow_timesheets', '=', False), ('pricing_type', '=', False), ('is_fsm', '=', False)], 'required': [('is_fsm', '=', True), ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='billing_employee_rate']//group/field[@name='sale_line_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_fsm', '=', True)]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='sale_line_employee_ids']/tree/field[@name='sale_line_id']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.is_fsm', '=', True)], 'required': [('parent.is_fsm', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sale_line_employee_ids']/tree/field[@name='sale_line_id']" position="after">
+                <field name="timesheet_product_id" attrs="{'column_invisible': [('parent.is_fsm', '=', False)], 'required': [('parent.is_fsm', '=', True)]}" context="{'default_detailed_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
+            </xpath>
+            <xpath expr="//field[@name='sale_line_employee_ids']/tree/field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('parent.is_fsm', '=', False), ('timesheet_product_id', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group_sales_invoicing']/div" position="inside">
+                <field name="is_fsm" invisible="1"/>
+                <div class="o_setting_box mt-4">
+                    <div class="o_setting_left_pane">
+                        <field name="allow_material"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_material"/>
+                        <div class="text-muted" id="allow_billable_setting">
+                            Track the material used to complete tasks
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='group_sales_invoicing']/div" position="inside">
+                <div class="o_setting_box mt-4"  groups="industry_fsm.group_fsm_quotation_from_task">
+                    <div class="o_setting_left_pane">
+                        <field name="allow_quotations"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_quotations"/>
+                        <div class="text-muted" id="allow_billable_setting">
+                            Create new quotations directly from tasks
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='billing_employee_rate']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '&amp;', ('allow_timesheets', '=', False), ('is_fsm', '=', True), ('allow_billable', '=', False), '&amp;', ('partner_id', '=', False), ('is_fsm', '=', False)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_timesheet.project_project_view_form_simplified_inherit"/>
+        <field name="arch" type="xml">
+            <field name="allow_billable" position="after">
+                <field name="allow_material" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_project_view_inherit_project_filter_fsm_sale" model="ir.ui.view">
+        <field name="name">project.project.select.inherit.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_project.project_project_view_inherit_project_filter"/>
+        <field name="arch" type="xml">
+            <field name="sale_order_id" position="attributes">
+                <attribute name="invisible">context.get('fsm_mode')</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

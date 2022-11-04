@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task" inherit_id="industry_fsm.portal_my_task">
+        <xpath expr="//li[@t-if='task.comment and task.allow_worksheets']" position="attributes">
+            <attribute name="t-if">task.worksheet_count and task.worksheet_template_id.report_view_id and worksheet_map.get(task.id) and task.allow_worksheets</attribute>
+        </xpath>
+        <xpath expr="//div[@t-if='task.comment and task.allow_worksheets']" position="replace">
+            <t t-if="task.worksheet_count and task.worksheet_template_id.report_view_id and worksheet_map.get(task.id) and task.allow_worksheets">
+                <div name="worksheet_map" style="page-break-inside: avoid">
+                    <hr class="mt-4 mb-1"/>
+                    <h5 id="task_worksheet" class="mt-2 mb-2" data-anchor="true">Worksheet</h5>
+                    <t t-set="worksheet" t-value="worksheet_map.get(task.id)"/>
+                    <t t-call="#{task.worksheet_template_id.report_view_id.id}"/>
+                </div>
+            </t>
+            <t t-elif="task.comment">$0</t>
+        </xpath>
+        <xpath expr="//li[@id='nav-report']" position="attributes">
+            <attribute name="t-if">(not task.is_fsm and timesheets and allow_timesheets) or (task.is_fsm and task.allow_worksheets and (task.worksheet_count or task.comment))</attribute>
+        </xpath>
+    </template>
+
+</odoo>

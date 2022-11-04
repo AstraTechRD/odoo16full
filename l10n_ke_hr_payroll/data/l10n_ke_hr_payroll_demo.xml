@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_company_ke" model="res.company">
+        <field name="name">My Kenyan Company</field>
+        <field name="currency_id" ref="base.KES"/>
+        <field name="street">97-01028 Gatukuyu</field>
+        <field name="zip">01000</field>
+        <field name="city">Thika</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('l10n_ke_hr_payroll.res_company_ke'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('l10n_ke_hr_payroll.res_company_ke'))]"/>
+    </record>
+
+    <record id="job_developer_kenya" model="hr.job">
+        <field name="name">Experienced Developer LU</field>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+    </record>
+
+    <record id="hr_employee_ahmed" model="hr.employee">
+        <field name="name">Ahmed Kalejaiye</field>
+        <field name="job_id" ref="job_developer_kenya"/>
+        <field name="country_id" ref="base.ke"/>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+        <field name="image_1920" type="base64" file="l10n_ke_hr_payroll/static/img/hr_employee_ahmed.jpg"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="res_partner_barack" model="res.partner">
+        <field name="name">Barack Akintola</field>
+        <field name="street">Dunga Close Off Dunga Rd</field>
+        <field name="city">Nairobi</field>
+        <field name="zip">00501</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="phone">+254202224167</field>
+        <field name="email">barack.akintola@example.com</field>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+    </record>
+
+    <record id="user_barack" model="res.users">
+        <field name="partner_id" ref="l10n_ke_hr_payroll.res_partner_barack"/>
+        <field name="login">barackakintola</field>
+        <field name="password">barackakintola</field>
+        <field name="signature" type="html"><span>--<br/>+B. Akintola</span></field>
+        <field name="company_ids" eval="[(4, ref('l10n_ke_hr_payroll.res_company_ke'))]"/>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="l10n_ke_hr_payroll/static/img/hr_employee_barack.jpg"/>
+    </record>
+
+    <record id="res_partner_barack_work_address" model="res.partner">
+        <field name="name">Kenyan Offices</field>
+        <field name="street">21-60103 Runyenjes</field>
+        <field name="city">Embu</field>
+        <field name="zip">00453</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+    </record>
+
+    <record id="res_partner_barack_private_address" model="res.partner">
+        <field name="name">Barack Akintola</field>
+        <field name="street">Box 6-70100</field>
+        <field name="city">Garissa</field>
+        <field name="zip">00247</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="phone">+25420318879</field>
+        <field name="email">barack.akintola@example.com</field>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+        <field name="type">private</field>
+    </record>
+
+    <record id="res_partner_bank_account_barack" model="res.partner.bank">
+        <field name="acc_number">KE030103599935698356</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_ke_hr_payroll.res_partner_barack_private_address"/>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+    </record>
+
+    <record id="hr_employee_barack" model="hr.employee">
+        <field name="name">Barack Akintola (bak)</field>
+        <field name="gender">male</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="address_home_id" ref="l10n_ke_hr_payroll.res_partner_barack_private_address"/>
+        <field name="address_id" ref="l10n_ke_hr_payroll.res_partner_barack_work_address"/>
+        <field name="emergency_contact">Mohamed Akintola</field>
+        <field name="emergency_phone">+25420318879</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="km_home_work">25</field>
+        <field name="place_of_birth">Nairobi</field>
+        <field name="country_of_birth" ref="base.ke"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">University of Nairobi</field>
+        <field name="parent_id" ref="l10n_ke_hr_payroll.hr_employee_ahmed"/>
+        <field name="country_id" ref="base.ke"/>
+        <field name="resource_calendar_id" ref="l10n_ke_hr_payroll.resource_calendar_std_45h"/>
+        <field name="identification_id">8752027365496</field>
+        <field name="bank_account_id" ref="l10n_ke_hr_payroll.res_partner_bank_account_barack"/>
+        <field name="image_1920" type="base64" file="l10n_ke_hr_payroll/static/img/hr_employee_barack.jpg"/>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+        <field name="user_id" ref="l10n_ke_hr_payroll.user_barack"/>
+    </record>
+
+    <record id="hr_contract_cdi_barack_previous" model="hr.contract">
+        <field name="name">CDI - Barack Akintola - Experienced Developer</field>
+        <field name="employee_id" ref="hr_employee_barack"/>
+        <field name="job_id" ref="l10n_ke_hr_payroll.job_developer_kenya"/>
+        <field name="structure_type_id" ref="l10n_ke_hr_payroll.structure_type_employee_ken"/>
+        <field name="wage">100000</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" ref="l10n_ke_hr_payroll.resource_calendar_std_45h"/>
+        <field name="l10n_ke_mortgage_interest">21000</field>
+        <field name="l10n_ke_pension_contribution">17000</field>
+        <field name="l10n_ke_insurance_relief">4000</field>
+    </record>
+
+    <record id="hr_contract_cdi_barack" model="hr.contract">
+        <field name="name">CDI - Barack Akintola - Experienced Developer</field>
+        <field name="employee_id" ref="hr_employee_barack"/>
+        <field name="job_id" ref="l10n_ke_hr_payroll.job_developer_kenya"/>
+        <field name="structure_type_id" ref="l10n_ke_hr_payroll.structure_type_employee_ken"/>
+        <field name="wage">120000</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="l10n_ke_hr_payroll.res_company_ke"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+        <field name="resource_calendar_id" ref="l10n_ke_hr_payroll.resource_calendar_std_45h"/>
+        <field name="l10n_ke_mortgage_interest">21000</field>
+        <field name="l10n_ke_pension_contribution">17000</field>
+        <field name="l10n_ke_insurance_relief">4000</field>
+    </record>
+
+    <record id="hr_employee_barack" model="hr.employee">
+        <field name="contract_id" ref="l10n_ke_hr_payroll.hr_contract_cdi_barack"/>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="filter_info_template" inherit_id="account_reports.filter_info_template">
+        <xpath expr="//div[hasclass('row')]" position="inside">
+            <t t-if="env.company.country_code=='BE'">
+                <div class="col-4">
+                    <div t-if="'ask_restitution' in options" style="text-align:right">Ask restitution:
+                        <t t-if="options.get('ask_restitution')">Yes</t>
+                        <t t-else="">No</t>
+                    </div>
+                    <div t-if="'ask_payment' in options" style="text-align:right">Ask payment:
+                        <t t-if="options.get('ask_payment')">Yes</t>
+                        <t t-else="">No</t>
+                    </div>
+                    <div t-if="'client_nihil' in options" style="text-align:right">Client nihil:
+                        <t t-if="options.get('client_nihil')">Yes</t>
+                        <t t-else="">No</t>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

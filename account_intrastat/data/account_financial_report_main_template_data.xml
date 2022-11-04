@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="account_intrastat_main_template" inherit_id="account_reports.main_template" primary="True">
+    <xpath expr="//div[hasclass('o_account_reports_body')]" position="before">
+        <t t-if="options.get('intrastat_warnings')">
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options['intrastat_warnings'].get('expired_trans')">
+                <span>
+                    Some lines have expired intrastat <a type="action" action="action_invalid_code_moves" t-att-data-option_key="'expired_trans'">transaction codes</a>.
+                </span>
+            </div>
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options['intrastat_warnings'].get('premature_trans')">
+                <span>
+                    Some lines have premature intrastat<a type="action" action="action_invalid_code_moves" t-att-data-option_key="'premature_trans'">transaction codes</a>.
+                </span>
+            </div>
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options['intrastat_warnings'].get('missing_trans')">
+                <span>
+                    Some lines have undefined <a type="action" action="action_invalid_code_moves"
+                    t-att-data-option_key="'missing_trans'">transaction codes</a>.
+                </span>
+            </div>
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options['intrastat_warnings'].get('expired_comm')">
+                <span>
+                    Check the expired <a type="action" action="action_invalid_code_products"
+                    t-att-data-option_key="'expired_comm'">product's commodity codes</a>.
+                </span>
+            </div>
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options['intrastat_warnings'].get('premature_comm')">
+                <span>
+                    Check the premature <a type="action" action="action_invalid_code_products"
+                    t-att-data-option_key="'premature_comm'">product's commodity codes</a>.
+                </span>
+            </div>
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options['intrastat_warnings'].get('missing_comm')">
+                <span>
+                    Some products have undefined <a type="action" action="action_invalid_code_products"
+                    t-att-data-option_key="'missing_comm'">commodity codes</a>.
+                </span>
+            </div>
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options['intrastat_warnings'].get('missing_weight')">
+                <span>
+                    Some products have undefined <a type="action" action="action_undefined_weight_products"
+                    t-att-data-option_key="'missing_weight'">weights</a> when they are required.
+                </span>
+            </div>
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options['intrastat_warnings'].get('missing_unit')">
+                <span>
+                    Some products have undefined <a type="action" action="action_undefined_units_products"
+                    t-att-data-option_key="'missing_unit'">supplementary units</a> when they are required.
+                </span>
+            </div>
+        </t>
+    </xpath>
+</template>
+
+</odoo>

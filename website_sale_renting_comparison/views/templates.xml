@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_compare" inherit_id="website_sale_comparison.product_compare">
+        <xpath expr="//div[hasclass('product_summary')]/span[hasclass('o_comparison_price')]/del" position="before">
+            <span t-if="combination_info['is_rental']">from</span>
+        </xpath>
+        <xpath expr="//div[hasclass('product_summary')]/span[hasclass('o_comparison_price')]/del" position="attributes">
+            <attribute name="t-if">not combination_info['is_rental']</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('product_summary')]/span[hasclass('o_comparison_price')]" position="inside">
+            <t t-if="combination_info['is_rental']">
+                <span>per</span>
+                <span t-if="combination_info['rental_duration'] > 1" t-esc="combination_info['rental_duration']"/>
+                <span t-esc="combination_info['rental_unit']" style="text-transform:lowercase;"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('product_summary')]/form/*[1]" position="before">
+            <div t-if="combination_info['is_rental']" class="o_not_editable">
+                <div class="me-2 my-3 align-middle input-group-lg o_website_sale_daterange_picker o_comparison_daterangepicker variant_attribute">
+                    <input type="hidden" name="is_rental" t-att-value="combination_info['is_rental']"/>
+                    <input type="hidden" name="default_start_date" t-att-value="combination_info['default_start_date']"/>
+                    <input type="hidden" name="default_end_date" t-att-value="combination_info['default_end_date']"/>
+                    <input type="hidden" name="rental_duration_unit" t-att-value="combination_info['rental_duration_unit']"/>
+                    <strong class="attribute_name">Rental Period</strong>
+                    <div class="oe_unremovable">
+                        <div class="s_website_form_datetime input-group date col-md-8 ps-0"
+                                data-target-input="nearest"
+                                id="rentingDates">
+                            <input type="text" name="renting_dates"
+                                    class="form-control daterange-input"/>
+                            <div class="input-group-text" data-target="#rentingDates"
+                                 data-toggle="daterange">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_renting_warning d-none my-2">
+                    <span class="text-warning">
+                        <i class="fa fa-warning"/>
+                        <span name="renting_warning_message"/>
+                    </span>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="product_product" inherit_id="website_sale_comparison.product_product">
+        <xpath expr="//div/h6/div/span" position="after">
+            <t t-if="combination_info['is_rental']">
+                <span>per</span>
+                <span t-if="combination_info['rental_duration'] > 1" t-esc="combination_info['rental_duration']"/>
+                <span t-esc="combination_info['rental_unit']" style="text-transform:lowercase;"/>
+            </t>
+        </xpath>
+        <xpath expr="//div/h6/div/del" position="before">
+            <span t-if="combination_info['is_rental']">from</span>
+        </xpath>
+        <xpath expr="//div/h6/div/del" position="attributes">
+            <attribute name="t-if">not combination_info['is_rental']</attribute>
+        </xpath>
+    </template>
+</odoo>

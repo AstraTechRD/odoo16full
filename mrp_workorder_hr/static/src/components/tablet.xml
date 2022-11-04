@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mrp_workorder.Tablet" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_tablet_client_action')]" position="inside">
+            <div t-if="popup['SelectionPopup'].isShown" class="o_tablet_popups o_unblock">
+                <SelectionPopup popupData="popup['SelectionPopup'].data" onClosePopup.bind="closePopup" onSelectEmployee.bind="startEmployee"/>
+            </div>
+            <div t-if="popup['PinPopup'].isShown" class="o_tablet_popups o_unblock">
+                <PinPopup popupData="popup['PinPopup'].data" onClosePopup.bind="closePopup" onPinValidate.bind="redirectToAction"/>
+            </div>
+            <div t-if="popup['WorkingEmployeePopup'].isShown" class="o_tablet_popups o_unblock">
+                <WorkingEmployeePopup
+                    popupData="popup['WorkingEmployeePopup'].data"
+                    onClosePopup.bind="closePopup"
+                    onAddEmployee.bind="popupAddEmployee"
+                    onLockEmployee.bind="lockEmployee"
+                    onStopEmployee.bind="stopEmployee"
+                    onStartEmployee.bind="startEmployee"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

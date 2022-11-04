@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.AttachmentViewer" owl="1" t-inherit="mail.AttachmentViewer" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_AttachmentViewer_buttonDownload')]" position="before">
+            <div t-if="attachmentViewer.withPdfSplit and attachmentViewer.hasPdfSplit" class="o_AttachmentViewer_buttonSplit o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton d-flex align-items-center px-3 cursor-pointer" t-on-click="attachmentViewer.onClickPdfSplit" role="button" title="Split PDF">
+                <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-scissors fa-fw" t-att-class="{ 'o-hasLabel me-2': messaging.device.sizeClass > messaging.device.sizeClasses.MD }" role="img"/>
+                <t t-if="messaging.device.sizeClass > messaging.device.sizeClasses.MD">
+                    <span>Split PDF</span>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

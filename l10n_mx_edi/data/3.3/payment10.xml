@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment10">
+        <cfdi:Comprobante
+            xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd"
+            xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:pago10="http://www.sat.gob.mx/Pagos"
+            Version="3.3"
+            t-att-Fecha="cfdi_date"
+            t-att-Folio="format_string(folio_number, 40)"
+            t-att-Serie="format_string(serie_number, 25)"
+            Sello=""
+            t-att-NoCertificado="certificate_number"
+            t-att-Certificado="certificate_key"
+            SubTotal="0"
+            Moneda="XXX"
+            Total="0"
+            TipoDeComprobante="P"
+            t-att-LugarExpedicion="issued_address.zip or supplier.zip"
+            t-att-Confirmacion="confirmation">
+            <t t-if="origin_uuids">
+                <cfdi:CfdiRelacionados t-att-TipoRelacion="origin_type">
+                    <t t-foreach="origin_uuids" t-as="uuid">
+                        <cfdi:CfdiRelacionado t-att-UUID="uuid"/>
+                    </t>
+                </cfdi:CfdiRelacionados>
+            </t>
+            <cfdi:Emisor
+                t-att-Rfc="supplier.vat"
+                t-att-Nombre="format_string(supplier.name, 254)"
+                t-att-RegimenFiscal="record.company_id.l10n_mx_edi_fiscal_regime"/>
+            <cfdi:Receptor
+                t-att-Rfc="customer_rfc"
+                t-att-Nombre="format_string(customer.commercial_partner_id.name, 254)"
+                t-att-ResidenciaFiscal="customer_fiscal_residence"
+                UsoCFDI="P01"/>
+            <cfdi:Conceptos>
+                <cfdi:Concepto
+                    ClaveProdServ="84111506"
+                    Cantidad="1"
+                    ClaveUnidad="ACT"
+                    Descripcion="Pago"
+                    ValorUnitario="0"
+                    Importe="0"/>
+            </cfdi:Conceptos>
+            <cfdi:Complemento>
+                <pago10:Pagos Version="1.0">
+                    <pago10:Pago
+                        t-att-FechaPago="cfdi_payment_date"
+                        t-att-FormaDePagoP="record.l10n_mx_edi_payment_method_id.code"
+                        t-att-MonedaP="currency.name"
+                        t-att-TipoCambioP="format_float(rate_payment_curr_mxn, 6)"
+                        t-att-Monto="format_float(amount, record.currency_id.decimal_places)"
+                        t-att-NumOperacion="format_string(record.ref, 100)"
+                        t-att-RfcEmisorCtaOrd="emitter_vat_ord"
+                        t-att-NomBancoOrdExt="bank_vat_ord"
+                        t-att-CtaOrdenante="payment_account_ord"
+                        t-att-RfcEmisorCtaBen="receiver_vat_ord"
+                        t-att-CtaBeneficiario="payment_account_receiver">
+                        <t t-foreach="invoice_vals_list" t-as="invoice_vals">
+                            <t t-set="invoice" t-value="invoice_vals['invoice']"/>
+                            <pago10:DoctoRelacionado
+                                t-att-IdDocumento="invoice.l10n_mx_edi_cfdi_uuid"
+                                t-att-Folio="format_string(invoice_vals['folio_number'], 40)"
+                                t-att-Serie="format_string(invoice_vals['serie_number'], 25)"
+                                t-att-MonedaDR="invoice.currency_id.name"
+                                t-att-TipoCambioDR="format_float(invoice_vals['exchange_rate'], 6)"
+                                t-att-MetodoDePagoDR="invoice_vals['payment_policy']"
+                                t-att-NumParcialidad="invoice_vals['number_of_payments']"
+                                t-att-ImpSaldoAnt="format_float(invoice_vals['amount_before_paid'], invoice.currency_id.decimal_places)"
+                                t-att-ImpPagado="format_float(invoice_vals['amount_paid'], invoice.currency_id.decimal_places)"
+                                t-att-ImpSaldoInsoluto="format_float(invoice_vals['amount_before_paid'] - invoice_vals['amount_paid'], invoice.currency_id.decimal_places)"/>
+                        </t>
+                    </pago10:Pago>
+                </pago10:Pagos>
+            </cfdi:Complemento>
+        </cfdi:Comprobante>
+    </template>
+</odoo>

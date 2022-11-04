@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_workorder.SummaryStep" owl="1">
+        <div class="o_tablet_summary">
+            <h1>Good Job!</h1>
+            <span> Completion Time: <t t-esc="data.duration" t-options='{"widget": "float_time"}'/> minutes</span>
+            <t t-if="data.position &lt;= 0">
+                <span>Best Time! Congratulations!</span>
+            </t>
+            <t t-elif="data.position &lt;= 4">
+                <span>Wow, you made the the Top 5!</span>
+            </t>
+            <t t-elif="data.position &lt;= 9">
+                <span>Well done, you're in the Top 10!</span>
+            </t>
+            <div class="mt-5 o_tablet_summary_quality">
+                <span>Quality</span>
+                <t t-foreach="[...Array(data.quality_score).keys()]" t-key="i" t-as="i">
+                    <i class="fa fa-star"/>
+                </t>
+                <t t-foreach="[...Array(3 - data.quality_score).keys()]" t-key="i" t-as="i">
+                    <i class="fa fa-star-o"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

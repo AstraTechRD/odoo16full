@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode.KanbanRenderer" t-inherit="web.KanbanRenderer" owl="1">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <div t-if="display_protip" class="o_kanban_tip_filter text-center h5 w-100 mt-4 mb-2">
+                <p t-if="packageEnabled">Scan a transfer, a product or a package to filter your records</p>
+                <p t-else="">Scan a transfer or a product to filter your records</p>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

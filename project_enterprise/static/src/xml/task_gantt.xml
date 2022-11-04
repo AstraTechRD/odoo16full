@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="TaskGanttView.PillsConnectors" t-extend="GanttView.PillsConnectors">
+        <t t-jquery="t[t-call='GanttView.Connector']" t-operation="attributes">
+            <attribute name="t-if">widget.dependencyEnabled &amp;&amp; pill.allow_task_dependencies</attribute>
+        </t>
+    </t>
+    <t t-name="TaskGanttMilestonesView" t-extend="GanttView">
+        <t t-jquery='t[t-foreach="widget.viewInfo.slots"] div' t-operation="append">
+            <t t-set="slotMilestonesInfo" t-value="widget.viewInfo.slotMilestonesInfo(slot)"></t>
+            <t t-if="slotMilestonesInfo.milestones.length">
+                <t t-set="unreachedMilestoneClass"
+                   t-value="slotMilestonesInfo.hasDeadLineExceeded ? ' o_unreached_milestones' : ''"></t>
+                <t t-set="edgeSlotClass" t-value="slot_last ? ' edge_slot' : ''"></t>
+                <div t-att="{
+                                'data-slot-key': widget.viewInfo.getSlotKey(slot),
+                                'class': 'o_project_milestone_diamond' + unreachedMilestoneClass + edgeSlotClass
+                            }">
+                    <i t-attf-class="fa fa-check o_milestones_reached{{edgeSlotClass}}" t-if="slotMilestonesInfo.allReached"/>
+                </div>
+            </t>
+        </t>
+    </t>
+    <t t-name="TaskGanttMilestonesView.Row" t-extend="GanttView.Row">
+        <t t-jquery='div[t-foreach="widget.slots"]' t-operation="append">
+            <div t-if="slot.milestonesInfo.milestones.length > 0"
+                 t-attf-class="o_project_milestone {{slot.milestonesInfo.hasDeadLineExceeded ? 'o_unreached_milestones' : ''}}">
+            </div>
+        </t>
+        <t t-jquery="*[t-esc='widget.progressBar.value_formatted']" t-operation="after">
+            h
+        </t>
+        <t t-jquery="*[t-esc='widget.progressBar.max_value_formatted']" t-operation="after">
+            h
+        </t>
+        <t t-jquery="*[t-esc='widget.name']" t-operation="replace">
+            <div t-if="widget.showUserAvatar" t-attf-class="o_gantt_row_user_avatar d-inline-flex #{widget.isGroup ? 'ms-1' : ''}" />
+            <t t-else="" t-esc="widget.name"/>
+        </t>
+        <t t-jquery="*[t-attf-class~='o_gantt_row_title']" t-operation="attributes">
+            <attribute name="t-att-style" value="widget.showUserAvatar &amp;&amp; 'text-overflow: clip'"/>
+        </t>
+        <t t-jquery="t[t-call='GanttView.PillsConnectors']" t-operation="attributes">
+            <attribute name="t-call">TaskGanttView.PillsConnectors</attribute>
+        </t>
+    </t>
+    <t t-name="gantt-milestone-popover">
+        <ul class="mb-0 list-unstyled">
+            <t t-set="previous_project_id" t-value="false"></t>
+            <li t-foreach="milestones" t-as="milestone">
+                <t t-if="display_project_name and previous_project_id != milestone.project_id[0]">
+                    <div><u><t t-out="milestone.project_id[1]"/></u></div>
+                </t>
+                <t t-if="milestone.is_deadline_exceeded">
+                    <i t-attf-class="fa fa-square-o fa-fw text-start o_unreached_milestones"></i>
+                </t>
+                <t t-else="">
+                    <i t-attf-class="fa fa-fw text-start {{milestone.is_reached ? 'fa-check-square-o o_milestones_reached' : 'fa-square-o'}}"></i>
+                </t>
+                <strong><t t-out="milestone.name"/></strong>
+                <span t-if="display_milestone_dates"><t t-out="milestone.deadlineUserFormatted"/></span>
+                <t t-set="previous_project_id" t-value="milestone.project_id[0]"></t>
+            </li>
+        </ul>
+    </t>
+</templates>

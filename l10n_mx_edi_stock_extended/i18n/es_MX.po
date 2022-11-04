@@ -1,0 +1,73 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_mx_edi_stock_extended
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-10 18:20+0000\n"
+"PO-Revision-Date: 2022-01-10 18:20+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_mx_edi_stock_extended
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_stock_extended.l10n_mx_edi_cartaporte_report_delivery_comex
+msgid "<strong>Customs Number</strong>"
+msgstr "<strong>Número de Pedimento</strong>"
+
+#. module: l10n_mx_edi_stock_extended
+#: code:addons/l10n_mx_edi_stock_extended/models/stock_picking.py:0
+#, python-format
+msgid "A zip code and state are required to generate a delivery guide"
+msgstr "El Código Postal y el Estado son requeridos para generar la Carta Porte"
+
+#. module: l10n_mx_edi_stock_extended
+#: model:ir.model.fields,field_description:l10n_mx_edi_stock_extended.field_stock_picking__l10n_mx_edi_customs_no
+msgid "Customs Number"
+msgstr "Número de Pedimento"
+
+#. module: l10n_mx_edi_stock_extended
+#: model:ir.model.fields,field_description:l10n_mx_edi_stock_extended.field_stock_picking__display_name
+msgid "Display Name"
+msgstr "Nombre Mostrado"
+
+#. module: l10n_mx_edi_stock_extended
+#: model:ir.model.fields,field_description:l10n_mx_edi_stock_extended.field_stock_picking__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_mx_edi_stock_extended
+#: model:ir.model.fields,field_description:l10n_mx_edi_stock_extended.field_stock_picking____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: l10n_mx_edi_stock_extended
+#: model:ir.model.fields,help:l10n_mx_edi_stock_extended.field_stock_picking__l10n_mx_edi_customs_no
+msgid ""
+"Optional field for entering the customs information in the case of first-hand sales of imported goods or in the case of foreign trade operations with goods or services.\n"
+"The format must be:\n"
+" - 2 digits of the year of validation followed by two spaces.\n"
+" - 2 digits of customs clearance followed by two spaces.\n"
+" - 4 digits of the serial number followed by two spaces.\n"
+" - 1 digit corresponding to the last digit of the current year, except in case of a consolidated customs initiated in the previous year of the original request for a rectification.\n"
+" - 6 digits of the progressive numbering of the custom.\n"
+"example: 15  48  3009  0001235"
+msgstr ""
+"Campo opcional para ingresar el Número de Pedimento asociado al transporte.\n"
+"El formato deberá ser:\n"
+" - 2 dígitos correspondientes al año de validación seguido por dos espacios.\n"
+" - 2 dígitos de la liberación aduanera seguido por dos espacios.\n"
+" - 4 dígitos del número de serie seguido por dos espacios.\n"
+" - 1 dígito correspondiente al último dígito del corriente año, expecto en caso de consolidación aduanera iniciada en el año anterior sujeta a rectificación.\n"
+" - 6 dígitos del número progresivo de aduana.\n"
+"ejemplo: 15  48  3009  0001235"
+
+#. module: l10n_mx_edi_stock_extended
+#: model:ir.model,name:l10n_mx_edi_stock_extended.model_stock_picking
+msgid "Transfer"
+msgstr "Trasladar"

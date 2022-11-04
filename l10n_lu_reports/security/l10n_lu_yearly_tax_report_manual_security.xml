@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Users should only see tax reports that belong to the company they belong to -->
+        <record id="multi_company_annual_tax_report_view_rule" model="ir.rule">
+            <field name="name">LU Annual Tax Report Multi-company</field>
+            <field name="model_id" ref="model_l10n_lu_yearly_tax_report_manual"/>
+            <field name="domain_force">['|', ('company_ids', 'in', company_ids), ('company_ids', '=', False)]</field>
+        </record>
+    </data>
+
+</odoo>

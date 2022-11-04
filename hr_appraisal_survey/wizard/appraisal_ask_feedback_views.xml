@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="appraisal_ask_feedback_view_form" model="ir.ui.view">
+            <field name="name">appraisal.ask.feedback.view.form</field>
+            <field name="model">appraisal.ask.feedback</field>
+            <field name="arch" type="xml">
+                <form string="Ask Feedback">
+                    <sheet>
+                        <field name="appraisal_id" invisible="1" />
+                        <group col="1">
+                            <group>
+                                <field name="render_model" invisible="1"/>
+                                <field name="survey_template_id" options="{'no_create':1,'no_quick_create':1}"/>
+                                <field name="employee_ids"
+                                    options="{'no_create':1,'no_quick_create':1}"
+                                    widget="many2many_tags"
+                                    placeholder="Add employees..."
+                                    context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
+                                <field name="subject" placeholder="Subject..."/>
+                            </group>
+                        </group>
+                        <div>
+                            <field name="user_body" class="oe-bordered-editor" placeholder="Optional message" options="{'style-inline': true}"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group>
+                                <field name="deadline"/>
+                            </group>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button string="Send" name="action_send" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

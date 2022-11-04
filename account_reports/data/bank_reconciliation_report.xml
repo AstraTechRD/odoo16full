@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Custom template to add some warnings. -->
+    <template id="bank_reconciliation_report_main_template" inherit_id="account_reports.main_template" primary="True">
+        <xpath expr="//div[@id='warnings_div']" position="inside">
+
+            <!-- Warning on top about inconsistent bank statements. -->
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options.get('inconsistent_statement_ids')">
+                <span>There are some <a action="bank_reconciliation_report_open_inconsistent_statements">statements</a> having a starting balance different than the previous ending balance</span>
+            </div>
+
+            <!-- Warning on top about miscellaneous move lines affecting the bank accounts. -->
+            <div class="alert alert-info text-center mb-0 no_print" t-if="options.get('has_bank_miscellaneous_move_lines')">
+                <span>"<t t-out="options['account_names']"/>" account balance is affected by <a action="open_bank_miscellaneous_move_lines">journal items</a> which doesn't result from a bank statement nor payments.</span>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Custom cell_template to get a clickable link to the last bank statement -->
+    <template id="bank_reconciliation_report_cell_template_link_last_statement">
+        <table style="width:100%;">
+            <tr>
+                <td t-att-style="'padding-right:0; padding-top:0; padding-bottom:0; ' + (style or 'text-align:right;')" t-att-class="classes">
+                    Last Statement: <a action="action_redirect_to_bank_statement_form" href="#" t-att-data-statement_id="cell['last_statement_id']"><t t-out="cell['last_statement_name']"/></a>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!-- Custom cell_template to render the unexplained difference in the balance line -->
+    <template id="bank_reconciliation_report_cell_template_unexplained_difference">
+        <table style="width:100%;">
+            <tr>
+                <td t-att-style="'padding-right:0; padding-top:0; padding-bottom:0; ' + (style or 'text-align:right;')" t-att-class="classes">
+                    <span class="fa fa-warning" t-att-title="cell['title']"/>&amp;nbsp;<t t-out="cell['name']"/>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <record id="bank_reconciliation_report" model="account.report">
+        <field name="name">Bank Reconciliation Report</field>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="search_bar" eval="True"/>
+        <field name="main_template">account_reports.bank_reconciliation_report_main_template</field>
+        <field name="custom_handler_model_id" ref="model_account_bank_reconciliation_report_handler"/>
+        <field name="column_ids">
+            <record id="bank_reconciliation_report_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="bank_reconciliation_report_label" model="account.report.column">
+                <field name="name">Label</field>
+                <field name="expression_label">label</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="bank_reconciliation_report_amount_currency" model="account.report.column">
+                <field name="name">Amount Currency</field>
+                <field name="expression_label">amount_currency</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="bank_reconciliation_report_currency" model="account.report.column">
+                <field name="name">Currency</field>
+                <field name="expression_label">currency</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="bank_reconciliation_report_amount" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="account_accountant.BankRecWidgetRejectDialog" t-inherit="web.FormViewDialog" t-inherit-mode="primary" owl="1">
+        <xpath expr="//View" position="attributes">
+            <attribute name="kanbanDoAction">props.kanbanActionFn</attribute>
+            <attribute name="dialogCloseFn">props.close</attribute>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_plm_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.plm.production.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <field name="bom_id" position='after'>
+                <field name='latest_bom_id' invisible='1'/>
+                <button name="action_update_bom" string="Update BoM" type="object" attrs="{'invisible': ['|', ('latest_bom_id', '=', False), ('state', '!=', 'draft')]}" class="text-danger"/>
+                <widget name='plm_toaster_button' attrs="{'invisible': ['|', ('latest_bom_id', '=', False), ('state', '!=', 'confirmed')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

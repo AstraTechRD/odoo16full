@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="report_project_task_user_view_search_inherited" model="ir.ui.view">
+        <field name="name">report.project.task.user.view.search.inherit.timesheet.grid</field>
+        <field name="model">report.project.task.user</field>
+        <field name="priority">10</field>
+        <field name="inherit_id" ref="project.view_task_project_user_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='late']" position="after">
+                <filter name="conflict_task" string="Tasks in Conflict" domain="[('planning_overlap', '&gt;', 0)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

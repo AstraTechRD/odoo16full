@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.mail.mobile</field>
+        <field name="model">res.config.settings</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="user_default_rights" position="after">
+                <div id="mobile_settings" groups="base.group_no_one">
+                    <h2>Mobile</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_ocn"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_ocn"/>
+                                <div class="text-muted">
+                                    Receive notifications on Android and iOS application
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="disable_redirect_firebase_dynamic_link"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="disable_redirect_firebase_dynamic_link"/>
+                                <div class="text-muted">
+                                    If disabled, you won't be able to open external URL's in the Android/iOS mobile app (e.g. "View Task" button in email).
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

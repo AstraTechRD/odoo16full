@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_mx_edi_cartaporte_report_delivery_comex" inherit_id="l10n_mx_edi_stock.l10n_mx_edi_cartaporte_report_delivery_document">
+        <xpath expr="//div[@id='mx_edi_row_2']" position="inside">
+            <t t-if="o.l10n_mx_edi_status == 'sent' and o.l10n_mx_edi_customs_no">
+                <div class="col-3">
+                    <strong>Customs Number</strong>
+                    <p t-field="o.l10n_mx_edi_customs_no"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='mx_edi_row_2']/div[1]" position="attributes">
+            <t t-if="o.l10n_mx_edi_status == 'sent' and o.l10n_mx_edi_customs_no">
+                <attribute name="t-att-class">'col-6' if not o.l10n_mx_edi_customs_no else 'col-4'</attribute>
+            </t>
+        </xpath>
+    </template>
+</odoo>

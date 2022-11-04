@@ -1,0 +1,78 @@
+.o_account_reports_summary_edit {
+    display: none !important;
+}
+.caret {
+    display: none !important;
+}
+.o_account_reports_body_print {
+    background-color: white !important;
+    color: black !important;
+    font-size: 12px !important;
+    .o_account_reports_header {
+        padding: 10px;
+        background-color: #eee;
+    }
+    .o_account_reports_page {
+        color: black !important;
+    }
+    .o_account_reports_table {
+        margin-bottom: 0px;
+        font-size: 12px !important;
+        > tbody > tr {
+            /* fix thead overlapping http://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
+            page-break-inside: avoid;
+        }
+    }
+    .o_account_reports_level0, .o_account_reports_level1, .o_account_reports_level2, .o_account_reports_domain_total, .total {
+        .text-muted {
+            color: black !important;
+        }
+    }
+    .o_foldable_total {
+        color: black !important;
+    }
+}
+a {
+    color: inherit !important;
+}
+.print_only {
+    display: block !important;
+    &.row {
+        display: flex !important;
+    }
+}
+[name="summary"] {
+    display: none;
+}
+.no_print {
+    display: none !important;
+}
+
+.o_account_reports_page {
+    .o_account_report_line {
+        font-size: 14px !important;
+    }
+    .o_account_report_line_ellipsis, .o_account_report_name_ellipsis{
+        position: relative;
+        span {
+            position: absolute;
+        }
+        span.js_account_report_line_footnote {
+            /* fix footnote alignment in rtl direction */
+            position: relative;
+        }
+        > span[class="account_report_line_name"],
+        > span[class="o_account_report_column_value"],
+        span[class^="o_account_reports_domain_line_"] {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: initial;
+            position: relative;
+        }
+    }
+    .number {
+        font-family: 'Courier New', monospace;
+        font-feature-settings: 'tnum';
+        font-weight: bold;
+    }
+}

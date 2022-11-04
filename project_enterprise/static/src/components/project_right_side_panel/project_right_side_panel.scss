@@ -1,0 +1,32 @@
+@include media-breakpoint-down(lg) {
+    .o_controller_with_rightpanel .o_content {
+        display: flex;
+        flex-direction: column-reverse;
+
+        .o_kanban_renderer {
+            width: 100%;
+            overflow: hidden;
+        }
+    }
+
+    html .o_web_client > .o_action_manager > .o_action.o_controller_with_rightpanel > .o_content {
+        overflow: inherit;
+    }
+
+    .o_rightpanel {
+        border: 1px solid lightgray;
+        flex-basis: auto;
+        height: auto;
+        overflow: inherit;
+        padding: 0 $o-rightpanel-p;
+        width: 100%;
+
+        .o_rightpanel_section {
+            padding-top: $o-rightpanel-p-tiny;
+            padding-bottom: $o-rightpanel-p-tiny;
+            .o_rightpanel_header {
+                padding: $o-rightpanel-p-tiny 0 $o-rightpanel-p-tiny 0;
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view__form" model="ir.ui.view">
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Referrals" string="Referrals" data-key="hr_referral" groups="hr.group_hr_manager">
+                    <h2>Background</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-12 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="hr_referral_background" />
+                                <div class="content-group">
+                                    <div class="mt16 w-50" style="min-height: 200px;">
+                                        <field name="hr_referral_background" widget="image" string="Background Image" />
+                                    </div>
+                                    <div>
+                                        <button name="restore_default_referral_background" type="object" string="Restore Default" icon="fa-arrow-right" class="ms-4 btn-link" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_referral_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'hr_referral', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="hr_referral_menu_configuration"
+        name="Settings"
+        parent="menu_hr_referral_configuration"
+        sequence="0"
+        action="action_hr_referral_configuration"
+        groups="hr_recruitment.group_hr_recruitment_manager"/>
+</odoo>

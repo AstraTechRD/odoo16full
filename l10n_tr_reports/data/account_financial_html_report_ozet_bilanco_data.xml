@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_l10n_tr_ozet_bilanco" model="account.report">
+        <field name="name">Özet Bilanço</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.tr"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_tr_ozet_bilanco_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_tr_br_bs_active" model="account.report.line">
+                <field name="name">AKTİF (VARLIKLAR)</field>
+                <field name="aggregation_formula">TRBS_1.balance + TRBS_2.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_tr_br_bs_1" model="account.report.line">
+                        <field name="name">DÖNEN VARLIKLAR</field>
+                        <field name="aggregation_formula">TRBS_10.balance + TRBS_11.balance + TRBS_12.balance + TRBS_13.balance + TRBS_15.balance + TRBS_17.balance + TRBS_18.balance - TRBS_19.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_tr_br_bs_10" model="account.report.line">
+                                <field name="name">Hazır Değerler</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_100.balance + TRBS_101.balance + TRBS_102.balance - TRBS_103.balance + TRBS_108.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_11" model="account.report.line">
+                                <field name="name">Menkul Kıymetler</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_110.balance + TRBS_111.balance + TRBS_112.balance + TRBS_118.balance - TRBS_119.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_12" model="account.report.line">
+                                <field name="name">Ticari Alacaklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_120.balance + TRBS_121.balance - TRBS_122.balance + TRBS_126.balance + TRBS_127.balance + TRBS_128.balance - TRBS_129.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_13" model="account.report.line">
+                                <field name="name">Diğer Alacaklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_131.balance + TRBS_132.balance + TRBS_133.balance + TRBS_135.balance + TRBS_136.balance - TRBS_137.balance - TRBS_138.balance - TRBS_139.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_15" model="account.report.line">
+                                <field name="name">Stoklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_150.balance + TRBS_151.balance + TRBS_152.balance + TRBS_153.balance + TRBS_157.balance - TRBS_158.balance + TRBS_159.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_17" model="account.report.line">
+                                <field name="name">Yıllara Yaygın İnş.ve Onarım Maaliyetleri</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_170.balance + TRBS_179.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_18" model="account.report.line">
+                                <field name="name">Gelecek Aylara Ait Gid.ve Gelir Tah.</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_180.balance + TRBS_181.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_19" model="account.report.line">
+                                <field name="name">Diğer Dönen Varlıklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_190.balance + TRBS_191.balance + TRBS_192.balance + TRBS_193.balance + TRBS_195.balance + TRBS_196.balance + TRBS_197.balance + TRBS_198.balance - TRBS_199.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_tr_br_bs_2" model="account.report.line">
+                        <field name="name">DURAN VARLIKLAR</field>
+                        <field name="aggregation_formula">TRBS_22.balance + TRBS_23.balance + TRBS_24.balance + TRBS_25.balance + TRBS_26.balance + TRBS_27.balance + TRBS_28.balance + TRBS_29.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_tr_br_bs_22" model="account.report.line">
+                                <field name="name">Ticari Alacaklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_220.balance + TRBS_221.balance - TRBS_222.balance + TRBS_226.balance - TRBS_229.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_23" model="account.report.line">
+                                <field name="name">Diğer Alacaklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_231.balance + TRBS_232.balance + TRBS_233.balance + TRBS_235.balance + TRBS_236.balance - TRBS_237.balance - TRBS_239.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_24" model="account.report.line">
+                                <field name="name">Mali Duran Varlıklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_240.balance - TRBS_241.balance + TRBS_242.balance - TRBS_243.balance - TRBS_244.balance + TRBS_245.balance - TRBS_246.balance - TRBS_247.balance + TRBS_248.balance - TRBS_249.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_25" model="account.report.line">
+                                <field name="name">Maddi Duran Varlıklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_250.balance + TRBS_251.balance + TRBS_252.balance + TRBS_253.balance + TRBS_254.balance + TRBS_255.balance + TRBS_256.balance - TRBS_257.balance + TRBS_258.balance + TRBS_259.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_26" model="account.report.line">
+                                <field name="name">Maddi Olmayan Duran Varlıklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_260.balance + TRBS_261.balance + TRBS_262.balance + TRBS_263.balance + TRBS_264.balance + TRBS_267.balance - TRBS_268.balance + TRBS_269.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_27" model="account.report.line">
+                                <field name="name">Özel Tükenmeye Tabi Varlıklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_271.balance + TRBS_272.balance + TRBS_277.balance - TRBS_278.balance + TRBS_279.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_28" model="account.report.line">
+                                <field name="name">Gelecek Yıllara Ait Gid.ve Gelir Tahakukları</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_280.balance + TRBS_281.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_29" model="account.report.line">
+                                <field name="name">Diğer Duran Varlıklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_291.balance + TRBS_292.balance + TRBS_293.balance + TRBS_294.balance + TRBS_295.balance + TRBS_297.balance - TRBS_298.balance - TRBS_299.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_tr_br_bs_pasive" model="account.report.line">
+                <field name="name">PASİF (KAYNAKLAR)</field>
+                <field name="aggregation_formula">TRBS_3.balance + TRBS_4.balance + TRBS_5.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_tr_br_bs_3" model="account.report.line">
+                        <field name="name">KISA VADELİ YABANCI KAYNAK</field>
+                        <field name="aggregation_formula">TRBS_30.balance + TRBS_32.balance + TRBS_33.balance + TRBS_34.balance + TRBS_35.balance + TRBS_36.balance + TRBS_37.balance + TRBS_38.balance + TRBS_39.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_tr_br_bs_30" model="account.report.line">
+                                <field name="name">Mali Borçlar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_300.balance + TRBS_303.balance + TRBS_304.balance + TRBS_305.balance + TRBS_306.balance - TRBS_308.balance + TRBS_309.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_32" model="account.report.line">
+                                <field name="name">Ticari Borçlar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_320.balance + TRBS_321.balance - TRBS_322.balance + TRBS_326.balance + TRBS_329.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_33" model="account.report.line">
+                                <field name="name">Diğer Borçlar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_331.balance + TRBS_332.balance + TRBS_333.balance + TRBS_335.balance + TRBS_336.balance - TRBS_337.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_34" model="account.report.line">
+                                <field name="name">Alınan Avanslar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_340.balance + TRBS_349.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_35" model="account.report.line">
+                                <field name="name">Yıllara Yaygın İnş. ve Onarım Hakedişleri</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_350.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_36" model="account.report.line">
+                                <field name="name">Ödenecek Vergi ve Diğer Yükümlülükler</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_360.balance + TRBS_361.balance + TRBS_368.balance + TRBS_369.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_37" model="account.report.line">
+                                <field name="name">Borç ve Gider Karşılıkları</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_370.balance + TRBS_371.balance + TRBS_372.balance + TRBS_373.balance + TRBS_379.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_38" model="account.report.line">
+                                <field name="name">Gelecek Aylara Ait Gelirler ve Gid. Tahakkuk</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_380.balance + TRBS_381.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_39" model="account.report.line">
+                                <field name="name">Diğer Kısa Vadeli Yabancı Kaynaklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_391.balance + TRBS_392.balance + TRBS_393.balance + TRBS_397.balance + TRBS_399.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_tr_br_bs_4" model="account.report.line">
+                        <field name="name">UZUN VADELİ YABANCI KAYNAKLAR</field>
+                        <field name="aggregation_formula">TRBS_40.balance + TRBS_42.balance + TRBS_43.balance + TRBS_44.balance + TRBS_47.balance + TRBS_48.balance + TRBS_49.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_tr_br_bs_40" model="account.report.line">
+                                <field name="name">Mali Borçlar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_400.balance + TRBS_405.balance + TRBS_407.balance - TRBS_408.balance + TRBS_409.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_42" model="account.report.line">
+                                <field name="name">Ticari Borçlar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_420.balance + TRBS_421.balance - TRBS_422.balance + TRBS_426.balance + TRBS_429.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_43" model="account.report.line">
+                                <field name="name">Diğer Borçlar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_431.balance + TRBS_432.balance + TRBS_433.balance + TRBS_436.balance - TRBS_437.balance + TRBS_438.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_44" model="account.report.line">
+                                <field name="name">Alınan Avanslar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_440.balance + TRBS_449.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_47" model="account.report.line">
+                                <field name="name">Borç ve Gider Karşılıkları</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_472.balance + TRBS_479.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_48" model="account.report.line">
+                                <field name="name">Gelecek Yıllara Ait Gel.ve Gid.Karşılıkları</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_480.balance + TRBS_481.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_49" model="account.report.line">
+                                <field name="name">Diğer Uzun Vadeli Yabancı Kaynaklar</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_492.balance + TRBS_493.balance + TRBS_499.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_tr_br_bs_5" model="account.report.line">
+                        <field name="name">ÖZKAYNAKLAR</field>
+                        <field name="aggregation_formula">TRBS_50.balance + TRBS_52.balance + TRBS_54.balance + TRBS_57.balance - TRBS_58.balance + TRBS_59.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_tr_br_bs_50" model="account.report.line">
+                                <field name="name">Ödenmiş Sermaye</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_500.balance - TRBS_501.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_52" model="account.report.line">
+                                <field name="name">Sermaye Yedekleri</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_520.balance + TRBS_521.balance + TRBS_522.balance + TRBS_523.balance + TRBS_529.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_54" model="account.report.line">
+                                <field name="name">Kar Yedekleri</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_540.balance + TRBS_541.balance + TRBS_542.balance + TRBS_548.balance + TRBS_549.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_57" model="account.report.line">
+                                <field name="name">Geçmiş Yıllar Karları</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_570.balance</field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_58" model="account.report.line">
+                                <field name="name">Geçmiş Yıllar Zararları (-)</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_tr_br_bs_58_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TRBS_580.balance</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_tr_br_bs_59" model="account.report.line">
+                                <field name="name">Dönem Net Karı (Zararı)</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="aggregation_formula">TRBS_590.balance - TRBS_591.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

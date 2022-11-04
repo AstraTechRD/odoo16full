@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- In hr_contract, the resource_calendar_id field is replaced to manage the mismatch calendar.
+        So this view adds again the invisible condition on the field.
+    -->
+    <record id="hr_employee_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.hr_work_entry_contract_planning</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority">80</field>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='resource_calendar_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('flexible_hours', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//div[./field[@name='resource_calendar_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('flexible_hours', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="PlanningGanttView.buttons" t-extend="GanttView.buttons">
+        <t t-jquery="> :last-child" t-operation="after">
+            <button t-if="activeActions.create &amp;&amp; activateScale == 'week'" class="o_gantt_button_copy_previous_week btn btn-primary" title="Copy previous week" data-hotkey="c">
+                Copy previous week
+            </button>
+            <button t-if="activeActions.edit" class="o_gantt_button_send_all btn btn-primary" title="Send schedule" data-hotkey="w">
+                Publish
+            </button>
+        </t>
+    </t>
+
+    <t t-name="PlanningGanttView.Row" t-extend="HrGanttView.Row">
+        <t t-jquery="*[t-esc='widget.progressBar.value_formatted']" t-operation="after">
+            h
+        </t>
+        <t t-jquery="*[t-esc='widget.progressBar.max_value_formatted']" t-operation="after">
+            h
+            <t t-if="!widget.isResourceMaterial">
+                (<t t-esc="widget.progressBar.percentage"/>)
+            </t>
+        </t>
+        <t t-jquery="div[t-if='widget.showEmployeeAvatar']" t-operation="before">
+            <div t-if="widget.isResourceMaterial" class="d-inline-flex align-items-center justify-content-center me-1 rounded-circle bg-200 o_material_resource cursor-default">
+                <i class="fa fa-wrench"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="planning.Many2OneResourceAvatar">
+        <t t-if="widget.record.data.resource_type !== 'material'">
+            <t t-call="web.Many2OneAvatar"/>
+        </t>
+        <t t-else="">
+            <div class="o_m2o_avatar">
+                <span t-if="value" class="d-inline-flex align-items-center justify-content-center rounded-circle o_material_resource cursor-default" t-att-title="value">
+                    <i class="fa fa-wrench"/>
+                </span>
+                <span t-elif="widget.mode === 'edit'" class="o_m2o_avatar_empty"></span>
+                <span t-if="widget.mode === 'readonly' and !widget.nodeOptions.hide_label" t-esc="value"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

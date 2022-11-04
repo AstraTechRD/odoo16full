@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail_enterprise.SwiperView" owl="1">
+        <t t-if="swiperView">
+            <div class="o_SwiperView" t-attf-class="{{ className }}" t-ref="root">
+                <ActionSwiper
+                    onLeftSwipe="swiperView.hasLeftSwipe ? { action: swiperView.onLeftSwipe, bgColor: swiperView.leftSwipeBackgroundColor, icon: swiperView.leftSwipeIcon } : undefined"
+                    onRightSwipe="swiperView.hasRightSwipe ? { action: swiperView.onRightSwipe, bgColor: swiperView.rightSwipeBackgroundColor, icon: swiperView.rightSwipeIcon } : undefined"
+                >
+                    <t t-if="swiperView"><!-- because slot has strange life-cycle -->
+                        <t
+                            t-component="constructor.components[swiperView.componentName]"
+                            className="'o_SwiperView_component'"
+                            t-props="{ record: swiperView.record }"
+                        />
+                    </t>
+                </ActionSwiper>
+            </div>
+        </t>
+    </t>
+</templates>

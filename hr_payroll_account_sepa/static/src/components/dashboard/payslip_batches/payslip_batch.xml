@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-inherit="hr_payroll.PayslipBatch" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_hr_payroll_dashboard_batch')]" position="after">
+            <div t-if="_hasSepaExport()" class="col col-2 btn text-end">
+                <PayrollDashboardPayslipBatchAdapter t-if="batch['sepa_export']" Component="FieldBinaryFile" widgetArgs="['sepa_export', _generateRecord(batch), {mode: 'readonly'}]"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_timesheet_report_search_grid" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.search</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_report_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='month']" position="before">
+                <filter name="nonvalidated" string="Draft" domain="[('validated', '=', False)]"/>
+                <filter name="validated" string="Validated" domain="[('validated', '=', True)]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//filter[@name='month']" position="after">
+                <separator/>
+                <filter string="Suspicious Durations" name="suspicious_durations" domain="['|', ('unit_amount', '&gt;', 24), ('unit_amount', '=', 0), ('date', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_timer_running', '=', False)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='mine']" position="after">
+                <filter name="my_team_timesheet" string="My Team" domain="[
+                    '|', ('employee_id.timesheet_manager_id', '=', uid),
+                        '|', ('employee_id.parent_id.user_id', '=', uid),
+                            '|', ('project_id.user_id', '=', uid), ('user_id', '=', uid)]"/>
+                <filter name="my_department_timesheet" string="My Department" domain="[('employee_id.member_of_department', '=', True)]"/>
+                <filter name="my_project" string="My Projects" domain="[('project_id.user_id', '=', uid)]" context="{'group_expand': False}"/>
+                <filter name="my_tasks" string="My Tasks" domain="[('task_id.user_ids', 'in', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

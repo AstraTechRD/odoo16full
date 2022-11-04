@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_mps_production_schedule_form_view" model="ir.ui.view" >
+        <field name="name">mrp.production.schedule.form.view</field>
+        <field name="model">mrp.production.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        <field name="product_tmpl_id" invisible="1"/>
+                        <field name="bom_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        <field name="warehouse_id" attrs="{'readonly': [('id', '!=', False)]}" groups="stock.group_stock_multi_warehouses"/>
+                    </group>
+                    <group>
+                        <label for="forecast_target_qty"/>
+                        <div class="o_row">
+                            <field name="forecast_target_qty"/>
+                            <field name="product_uom_id" groups="uom.group_uom" readonly="1"/>
+                        </div>
+                        <label for="min_to_replenish_qty"/>
+                        <div class="o_row">
+                            <field name="min_to_replenish_qty"/>
+                            <field name="product_uom_id" groups="uom.group_uom" readonly="1"/>
+                        </div>
+                        <label for="max_to_replenish_qty"/>
+                        <div class="o_row">
+                            <field name="max_to_replenish_qty"/>
+                            <field name="product_uom_id" groups="uom.group_uom" readonly="1"/>
+                        </div>
+                    </group>
+                </group>
+                <footer>
+                    <button special="save" data-hotkey="v" type="object" string="Save" class="btn-primary"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrp_mps_search_view" model="ir.ui.view" >
+        <field name="name">mrp.production.schedule.search.view</field>
+        <field name="model">mrp.production.schedule</field>
+        <field name="arch" type="xml">
+          <search>
+              <field name="product_id"/>
+              <field name="warehouse_id"/>
+              <field name="bom_id"/>
+          </search>
+        </field>
+    </record>
+
+</odoo>

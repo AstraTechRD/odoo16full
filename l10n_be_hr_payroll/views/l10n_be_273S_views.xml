@@ -1,0 +1,66 @@
+<odoo>
+    <record id="l10n_be_273S_view_form" model="ir.ui.view">
+        <field name="name">l10n_be.273s.view.form</field>
+        <field name="model">l10n_be.273s</field>
+        <field name="arch" type="xml">
+            <form string="273S Sheet">
+                <header>
+                    <button string="Export XML file" name="action_generate_xml" type="object" class="btn-primary" states="draft,waiting"/>
+                    <button string="Export PDF file" name="action_generate_pdf" type="object" class="btn-primary" states="draft,waiting"/>
+                    <button string="Export XML file" name="action_generate_xml" type="object" states="done"/>
+                    <button string="Export PDF file" name="action_generate_pdf" type="object" states="done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="year"/>
+                        <field name="month"/>
+                        <field name="period" invisible="1"/>
+                        <field name="company_id" invisible="1" />
+                        <field name="currency_id" invisible="1" />
+                        <field name="state" invisible="1" />
+                        <field name="xml_filename" invisible="1" />
+                    </group>
+                    <div states="waiting,done">
+                        <h2 attrs="{'invisible': [('xml_file', '=', False), ('pdf_file', '=', False)]}">Generation Complete</h2>
+                        <p attrs="{'invisible': [('pdf_file', '=', False)]}">
+                            Download the 273S PDF file: <field name="pdf_file" readonly="1" filename="pdf_filename"/>
+                        </p>
+                        <p attrs="{'invisible': [('xml_file', '=', False)]}" class="oe_inline">
+                            Download the XML Export file: <field name="xml_file" readonly="1" filename="xml_filename"/>
+                            <!-- Payment Structured Communication: <field name="payment_reference" attrs="{'invisible': [('payment_reference', '=', False)]}" readonly="1"/> -->
+                            <field name="xml_validation_state" widget="state_selection" nolabel="1"/>
+                            <field name="error_message" attrs="{'invisible': [('xml_validation_state', '!=', 'invalid')]}" nolabel="1"/>
+                        </p>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_273S_view_tree" model="ir.ui.view">
+        <field name="name">l10n_be.273s.view.tree</field>
+        <field name="model">l10n_be.273s</field>
+        <field name="arch" type="xml">
+            <tree string="273S Sheets">
+                <field name="month"/>
+                <field name="year"/>
+                <field name="period" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_be_273S_action" model="ir.actions.act_window">
+        <field name="name">273S Sheet</field>
+        <field name="res_model">l10n_be.273s</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_273S"
+        name="273S Sheet"
+        action="l10n_be_273S_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="90"
+    />
+</odoo>

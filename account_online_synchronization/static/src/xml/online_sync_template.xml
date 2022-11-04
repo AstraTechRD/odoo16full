@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account_online_synchronization.ListView.buttons" t-inherit="web.ListView.Buttons" owl="1">
+        <xpath expr="//t[@t-if='model.root.editedRecord']" position="before">
+            <button type="button" class="btn btn-primary" t-on-click="createBankAccountAction">
+                Add A Bank Account
+            </button>
+        </xpath>
+    </t>
+</templates>

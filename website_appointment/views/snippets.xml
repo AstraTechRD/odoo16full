@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Appointment Snippet Options">
+    <xpath expr="." position="inside">
+        <div data-selector="main:has(.o_appointment_index)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Appointments Page">
+            <we-checkbox string="Card Design"
+                         data-customize-website-views="website_appointment.opt_appointments_list_cards"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website_appointment.s_searchbar_000_js" model="ir.asset">
+    <field name="name">Appointment Searchbar 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website_appointment/static/src/snippets/s_searchbar/000.js</field>
+</record>
+
+</odoo>

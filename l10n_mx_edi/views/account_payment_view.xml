@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_account_payment_form_inh_l10n_mx">
+        <field name="name">view.account.payment.form.inh.l10n.mx</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <group name="group2" position="inside">
+                <!-- Invisible fields -->
+                <field name="l10n_mx_edi_force_generate_cfdi" invisible="1"/>
+                <field name="reconciled_invoice_ids" invisible="1"/>
+
+                <!-- Visible fields -->
+                <field name="l10n_mx_edi_payment_method_id"
+                       attrs="{'invisible': [('country_code', '!=', 'MX')], 'readonly': [('state', '!=', 'draft')]}"/>
+
+                <!-- SAT -->
+                <label for="l10n_mx_edi_sat_status"
+                       attrs="{'invisible': ['|', ('state', 'not in', ('posted', 'cancel')), ('country_code', '!=', 'MX')]}"/>
+                <div class="o_row"
+                     attrs="{'invisible': ['|', ('state', 'not in', ('posted', 'cancel')), ('country_code', '!=', 'MX')]}">
+                    <field name="l10n_mx_edi_sat_status"/>
+                    <button name="l10n_mx_edi_update_sat_status" type="object"
+                            string="Retry" class="oe_link"
+                            groups="account.group_account_invoice"
+                                attrs="{'invisible': ['|', ('state', 'not in', ('posted', 'cancel')), ('country_code', '!=', 'MX')]}"/>
+                </div>
+
+                <!-- CFDI -->
+                <field name="l10n_mx_edi_cfdi_uuid"
+                       attrs="{'invisible': ['|', ('state', 'not in', ('posted', 'cancel')), ('country_code', '!=', 'MX')]}"/>
+                <field name="l10n_mx_edi_origin"
+                       attrs="{'invisible': [('country_code', '!=', 'MX')]}"/>
+
+                <button name="action_l10n_mx_edi_force_generate_cfdi" type="object"
+                        string="Force CFDI" class="oe_link"
+                        groups="account.group_account_invoice"
+                        attrs="{'invisible': ['|', '|', '|', '|',
+                                              ('state', '!=', 'posted'),
+                                              ('country_code', '!=', 'MX'),
+                                              ('reconciled_invoice_ids', '=', []),
+                                              ('l10n_mx_edi_force_generate_cfdi', '=', True),
+                                              ('edi_document_ids', '!=', [])]}"/>
+            </group>
+        </field>
+    </record>
+</odoo>

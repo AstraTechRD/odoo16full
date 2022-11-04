@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Pages -->
+    <template id="appointments_list_layout" name="Appointment Types">
+        <t t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="portal.portal_layout">
+            <div id="wrap" class="o_appointment_index bg-o-color-4 px-3 mt-3">
+                <div class="oe_structure container o_appointment_choice">
+                    <h1 class="o_page_header mt32 mb24">
+                        Schedule an Appointment
+                    </h1>
+                    <div t-if="not appointment_types" class="col-12 px-0 o_appointment_not_found">
+                        <h2 class="mb-3 d-none">No appointment found.</h2>
+                        <div class="o_appointment_svg col-12 mx-auto text-center py-5 w-75">
+                            <i class="mx-auto h3 fa fa-spinner fa-spin"/>
+                        </div>
+                    </div>
+                    <div t-else="">
+                        <form class="form o_appointment_appointments_list_form pt-3"
+                            t-attf-action="/appointment/#{appointment_types[0].id}?#{keep_query('*')}"
+                            method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <t t-call="appointment.appointment_type_select"/>
+                            <div t-out="appointment_types[0].message_intro" class="o_calendar_intro my-2"/>
+                            <div class="row">
+                                <div class="mx-auto">
+                                    <button type="submit" class="btn btn-primary">Preview <span class="fa fa-arrow-right"/></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="appointment_type_select" name="Website Appointment: Appointment Select Form Input">
+        <div id="appointment_type_select">
+            <select name="appointment_type_id" id="appointment_type_id"
+                t-attf-class="py-2 px-3 #{'form-control' if len(appointment_types) == 1 else 'form-select'}"
+                t-att-disabled="len(appointment_types) == 1">
+                <t t-foreach="appointment_types" t-as="appointment_type">
+                    <option t-att-value="appointment_type.id" t-att-selected="appointment_type.id == appointment_types[0].id and 'selected'">
+                        <t t-out="appointment_type.name"/>
+                    </option>
+                </t>
+            </select>
+            <input type="hidden" name="invite_token" t-att-value="invite_token"/>
+            <input type="hidden" name="filter_appointment_type_ids" t-att-value="filter_appointment_type_ids"/>
+            <input type="hidden" name="filter_staff_user_ids" t-att-value="filter_staff_user_ids"/>
+        </div>
+    </template>
+
+    <!-- Appointment Info & Availabilities-->
+    <template id="appointment_info" name="Online Appointment: Appointment Info">
+        <t t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="portal.portal_layout">
+            <div id="wrap" class="d-flex bg-o-color-4 px-3 mt-3">
+                <t t-set="o_portal_fullwidth_alert" groups="appointment.group_appointment_manager">
+                    <t t-call="appointment.appointment_edit_in_backend"/>
+                </t>
+                <div class="container mb64 o_appointment">
+                    <h1 class="o_page_header mt32">
+                        <t t-set="title_user_name" t-value="user_selected.name or user_default.name"/>
+                        Schedule <span class="text-primary" t-out="appointment_type.name"/> Appointment
+                        <span t-if="appointment_type.assign_method == 'chosen' and hide_select_dropdown and title_user_name and not (title_user_name in appointment_type.name)">
+                            with <span class="text-primary" t-out="title_user_name"/>
+                        </span>
+                    </h1>
+                    <div t-if="state == 'failed-staff-user'" class="alert alert-danger mt16" role="alert">
+                        <p>
+                            <strong>Appointment failed!</strong>
+                            The selected timeslot is not available anymore.
+                            Someone has booked the same time slot a few
+                            seconds before you.
+                        </p>
+                        <p class="mb-0">
+                            Please, select another date.
+                        </p>
+                    </div>
+                    <div t-if="state == 'failed-partner'" class="alert alert-danger mt16" role="alert">
+                        <p>
+                            <strong>Appointment failed!</strong>
+                            The selected timeslot is not available.
+                            It appears you already have another meeting with us at that date.
+                        </p>
+                        <p class="mb-0">
+                            Please, select another date.
+                        </p>
+                    </div>
+                    <div t-if="state == 'cancel'" class="alert alert-danger mt16" role="alert">
+                        <p class="mb-0">
+                            <strong>Appointment canceled!</strong>
+                            You can schedule another appointment from here.
+                        </p>
+                    </div>
+                    <div class="clearfix"/>
+                    <div class="d-flex row pe-0 pt-3">
+                        <t t-set="no_users" t-value="not appointment_type.staff_user_ids"/>
+                        <t t-set="no_slots" t-value="not appointment_type.slot_ids"/>
+                        <div t-if="no_users or no_slots" class="col-12 o_appointment_missing_configuration d-none">
+                            <div class="alert alert-info rounded-0 mb-3 o_not_editable" groups="appointment.group_appointment_manager">
+                                <t t-if="no_users and no_slots">
+                                    This appointment type has no availabilities because it has no staff assigned and does not have any opening hours configured
+                                </t>
+                                <t t-elif="no_users">
+                                    This appointment type has no availabilities because it has no staff assigned
+                                </t>
+                                <t t-elif="no_slots">
+                                    This appointment type has no availabilities because it does not have any opening hours configured
+                                </t>
+                                <a t-attf-href="/web#model=#{main_object._name}&amp;id=#{main_object.id}&amp;menu_id=#{backend_menu_id}" class="d-block">
+                                    <i class="fa fa-arrow-right me-2"/><em>Configure <t t-out="appointment_type.name"/></em>
+                                </a>
+                            </div>
+                        </div>
+                        <div t-attf-class="o_appointment_info_main #{'col-12' if month_first_available is False else 'col-lg-8'}">
+                            <div class="row px-0">
+                                <form id="slots_form" class="form o_appointment_appointment_info_form" autocomplete="off">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="appointment_type_id" t-att-value="appointment_type.id"/>
+                                    <input type="hidden" name="invite_token" t-att-value="invite_token"/>
+                                    <input type="hidden" name="filter_appointment_type_ids" t-att-value="filter_appointment_type_ids"/>
+                                    <input type="hidden" name="filter_staff_user_ids" t-att-value="filter_staff_user_ids"/>
+                                    <input type="hidden" name="hide_select_dropdown" t-att-value="hide_select_dropdown"/>
+                                    <t t-if="appointment_type.assign_method == 'chosen'" t-call="appointment.staff_user_select"/>
+                                </form>
+                            </div>
+                            <div t-field="appointment_type.message_intro" placeholder="Add an intro message here..."
+                                 t-attf-class="o_appointment_intro text-muted #{'pt-1 mb-4' if not is_html_empty(appointment_type.message_intro) else 'd-none'}"/>
+                            <t t-call="appointment.appointment_calendar"/>
+                            <div t-attf-class="o_appointment_timezone_selection #{'d-none' if month_first_available is False else ''}">
+                                <div class="d-flex float-start mb-2">
+                                    <label for="timezone" class="col-form-label text-muted me-1">Timezone: </label>
+                                    <form autocomplete="off">
+                                        <select class="form-select border-0 ps-0 pe-1" id="timezone" name="timezone" style="cursor: pointer;">
+                                            <t t-foreach="appointment_type._fields['appointment_tz'].selection(appointment_type)" t-as="tz">
+                                                <option t-att-value="tz[0]" t-out="tz[1]" t-att-selected="(tz[0] == timezone) or None"/>
+                                            </t>
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-attf-class="col-lg-4 mb-2 o_appointment_details_column o_not_editable #{'d-none' if month_first_available is False else ''}">
+                            <div t-if="appointment_type.category == 'website'">
+                                <div class="d-flex fs-6 lh-lg text-muted w-100 ps-0 mb-1">
+                                    <i class="fa fa-map-marker o_appointment_fa_width text-center fs-5 me-2 mt-1"/>
+                                    <span t-if="appointment_type.location_id">
+                                        <div t-att-class="str(appointment_type.location_id.contact_address).strip() and 'fw-bold' or ''"
+                                             t-field="appointment_type.location_id" t-options="{'widget': 'contact', 'fields': ['name']}"/>
+                                        <div class="lh-base" t-field="appointment_type.location_id"
+                                             t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': true}"/>
+                                    </span>
+                                    <t t-else=""><span class="o_not_editable">Online</span></t>
+                                </div>
+                                <div class="d-flex text-muted fs-6 lh-lg w-100 ps-0 py-1">
+                                    <i class="fa fa-clock-o o_appointment_fa_width text-center fs-5 me-2 mt-1"/>
+                                    <span class="me-1" t-out="appointment_type.appointment_duration" t-options="{'widget': 'duration', 'unit': 'hour'}"/>
+                                </div>
+                            </div>
+                            <div id="slotsList" class="o_appointment_availabilities o_not_editable" t-att-data-appointments-count="len(available_appointments)"/>
+                        </div>
+                        <div class="o_appointment_no_slot_overall_helper col-12"/>
+                    </div>
+                    <div class="oe_structure oe_empty" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL APPOINTMENTS"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="staff_user_select" name="Website Appointment: Appointment Calendars">
+        <div name="staff_user_select" t-attf-class="col-12 d-flex float-start mb-3 #{'o_hidden' if hide_select_dropdown else ''}">
+            <label for="selectStaffUser" class="col-form-label pe-1">With</label>
+            <select class="form-select border-0 ps-1 w-auto" name="staff_user_id" id="selectStaffUser" style="cursor: pointer;">
+                <t t-foreach="users_possible" t-as="staff_user">
+                    <option t-att-value="staff_user.id" t-att-selected="staff_user.id == (user_selected.id or user_default.id) and 'selected'">
+                        <t t-out="staff_user.name"/>
+                    </option>
+                </t>
+            </select>
+        </div>
+    </template>
+
+    <template id="appointment_calendar" name="Online Appointment">
+        <div class="o_appointment_slots_loading d-flex align-items-center pb-5 mt-md-n5">
+            <i class="fa fa-3x fa-spin fa-spinner mx-auto text-o-color-2"/>
+        </div>
+        <div id="slots_availabilities" class="mb-3 d-none">
+            <span t-if="month_first_available is False" class="col-lg-12">
+                <i class="mx-auto h3 fa fa-spinner fa-spin"/>
+            </span>
+            <div id="calendar" t-attf-class="px-0 #{'d-none' if month_first_available is False else ''}">
+                <t t-set="displayed_month_id" t-value="month_kept_from_update if month_kept_from_update is not False else month_first_available"/>
+                <div t-foreach="slots" t-as="month" t-attf-id="month-#{month['id']}" t-attf-class="o_appointment_month #{'d-none' if month['id'] != displayed_month_id else ''}">
+                    <div id="calendarHeader" class="d-inline-flex align-items-baseline container-fluid">
+                        <button t-if="month['id'] > 0" type="button" id="prevCal" t-attf-class="btn btn-primary o_js_calendar_navigate"><i class="fa fa-arrow-left"/></button>
+                        <span t-if="month['nb_slots_previous_months'] and appointment_type.category == 'custom'"
+                            class="badge bg-o-color-2 rounded-circle align-self-start mt-n1 ml-n2"
+                            t-out="month['nb_slots_previous_months']"/>
+                        <h4 t-out="month['month']" class="o_appointment_month_name col text-center"/>
+                        <button t-if="len(slots) > month['id'] + 1" type="button" id="nextCal" t-attf-class="btn btn-primary o_js_calendar_navigate ms-1">
+                            <i class="fa fa-arrow-right"/>
+                        </button>
+                        <span t-if="month['nb_slots_next_months'] and appointment_type.category == 'custom'"
+                            class="badge bg-o-color-2 rounded-circle align-self-start mt-n1 ml-n2"
+                            t-out="month['nb_slots_next_months']"/>
+                    </div>
+                    <table class="table mt-2">
+                        <tr class="active">
+                            <t t-foreach="formated_days" t-as="day">
+                                <th class="text-center p-md-2 p-1 align-middle" t-out="day"/>
+                            </t>
+                        </tr>
+                        <tr t-foreach="month['weeks']" t-as="weeks" class="o_appointment_days">
+                            <t t-foreach="weeks" t-as="day">
+                                <td t-attf-class="align-middle p-md-2 p-1 text-center#{day['slots'] and ' o_day' or ''} #{day['weekend_cls']} #{day['today_cls']}"
+                                    t-attf-title="#{day['today_cls'] and 'Today' or ''}">
+                                    <t t-if="day['slots']">
+                                        <div t-att-id="day['day']" class="o_day_wrapper o_slot_button mx-auto px-1 px-md-2 py-2 w-75 w-md-50" t-out="day['day'].day" t-att-data-available-slots="json.dumps(day['slots'])"/>
+                                    </t>
+                                    <t t-if="not day['slots']">
+                                        <div t-out="day['day'].day" t-attf-class="o_day_wrapper mx-auto px-1 px-md-2 py-2 w-75 w-md-50 #{day['mute_cls']}"/>
+                                    </t>
+                                </td>
+                            </t>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="appointment_edit_in_backend" name="Appointment portal preview alert">
+        <t t-call="portal.portal_back_in_edit_mode">
+            <t t-set="backend_url" t-value="'/web#id=%s&amp;view_type=form&amp;model=%s&amp;action=appointment.appointment_type_action' % (appointment_type.id, appointment_type._name)"/>
+            <t t-set="custom_html">This is a preview of the customer appointment form.</t>
+        </t>
+    </template>
+</odoo>

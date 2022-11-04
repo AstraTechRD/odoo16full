@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sale -->
+    <record model="ir.ui.view" id="view_account_asset_sale_tree">
+        <field name="name">account.asset.sale.tree</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Deferred Revenues" decoration-info="(state == 'draft')" decoration-muted="(state == 'close')" sample="1">
+                <field name="name" string="Revenue Name"/>
+                <field name="book_value"/>
+                <field name="value_residual" widget="monetary"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_model_sale_tree">
+        <field name="name">account.asset.model.sale.tree</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Deferred Revenues Models">
+                <field name="name" string="Revenue Name"/>
+                <field name="account_depreciation_id" string="Revenue Account"/>
+                <field name="account_depreciation_expense_id" string="Deferred Revenue Account"/>
+                <field name="method_number" string="Number of Recognitions"/>
+                <field name="method_period" string="Period length"/>
+                <field name="state" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_revenue_model_search" model="ir.ui.view">
+        <field name="name">account.asset.model.search</field>
+        <field name="model">account.asset</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <search string="Asset Model">
+                <field name="name"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By...">
+                        <filter string="Revenue Account" name="account_depreciation_id" domain="[]" context="{'group_by':'account_depreciation_id'}"/>
+                        <filter string="Deferred Revenue Account" name="account_depreciation_expense_id" domain="[]" context="{'group_by':'account_depreciation_expense_id'}"/>
+                        <filter string="Journal" name="journal_id" domain="[]" context="{'group_by':'journal_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_revenue_form">
+        <field name="name">account.asset.revenue.form</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="/form" position="attributes">
+                <attribute name="string">Revenue Recognition</attribute>
+            </xpath>
+            <xpath expr="//page[@name='main_page']" position="attributes">
+                <attribute name="string">Revenue</attribute>
+            </xpath>
+            <xpath expr="//button[@name='compute_depreciation_board']" position="attributes">
+                <attribute name="string">Compute Revenue</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_asset_modify']" position="attributes">
+                <attribute name="string">Modify Revenue</attribute>
+            </xpath>
+            <xpath expr="//page[@name='related_items']" position="attributes">
+                <attribute name="string">Related Sales</attribute>
+            </xpath>
+            <xpath expr="//label[@name='name_label']" position="attributes">
+                <attribute name="string">Deferred Revenue name</attribute>
+            </xpath>
+            <xpath expr="//label[@name='model_name_label']" position="attributes">
+                <attribute name="string">Deferred Revenue Model name</attribute>
+            </xpath>
+            <xpath expr="//group[@name='asset_values']" position="attributes">
+                <attribute name="string">Recognition Values</attribute>
+            </xpath>
+            <xpath expr="//group[@name='current_values']" position="attributes">
+                <attribute name="string">Residual Amount to Recognize</attribute>
+            </xpath>
+            <field name="name" position="attributes">
+                <attribute name="placeholder">e.g. Annual Subscription</attribute>
+            </field>
+            <xpath expr="//sheet/group/group/field[@name='account_depreciation_expense_id']" position="attributes">
+                <attribute name="string">Revenue Account</attribute>
+                <attribute name="help">Account used to recognize the revenue</attribute>
+                <attribute name="domain">[('account_type', 'in', ('income', 'income_other'))]</attribute>
+                <attribute name="context">{'default_account_type': 'income', 'account_type_domain': [('account_type', 'in', ('income', 'income_other'))]}</attribute>
+            </xpath>
+            <xpath expr="//sheet/group/group/field[@name='account_depreciation_id']" position="attributes">
+                <attribute name="string">Deferred Revenue Account</attribute>
+                <attribute name="help">Account used to record the deferred income</attribute>
+                <attribute name="domain">[('account_type', '=', 'liability_current')]</attribute>
+                <attribute name="context">{'default_account_type': 'liability_current', 'account_type_domain': [('account_type', '=', 'liability_current')]}</attribute>
+            </xpath>
+            <xpath expr="//notebook/page/group/group//field[@name='account_depreciation_expense_id']" position="attributes">
+                <attribute name="string">Revenue Account</attribute>
+                <attribute name="help">Account used to recognize the revenue</attribute>
+                <attribute name="domain">[('account_type', 'in', ('income', 'income_other'))]</attribute>
+                <attribute name="context">{'default_account_type': 'income', 'account_type_domain': [('account_type', 'in', ('income', 'income_other'))]}</attribute>
+            </xpath>
+            <xpath expr="//notebook/page/group/group//field[@name='account_depreciation_id']" position="attributes">
+                <attribute name="string">Deferred Revenue Account</attribute>
+                <attribute name="help">Account used to record the deferred income</attribute>
+                <attribute name="domain">[('account_type', '=', 'liability_current')]</attribute>
+                <attribute name="context">{'default_account_type': 'liability_current', 'account_type_domain': [('account_type', '=', 'liability_current')]}</attribute>
+            </xpath>
+            <field name="method_number" position="attributes">
+                <attribute name="string">Number of Recognitions</attribute>
+            </field>
+            <xpath expr="//label[@for='method_number']" position="attributes">
+                <attribute name="string">Number of Recognitions</attribute>
+            </xpath>
+            <field name="book_value" position="attributes">
+                <attribute name="string">Deferred Revenue Amount</attribute>
+            </field>
+            <field name="value_residual" position="attributes">
+                <attribute name="string">Residual Amount to Recognize</attribute>
+            </field>
+            <field name="model_id" position="attributes">
+                <attribute name="string">Deferred Revenue Model</attribute>
+                <attribute name="domain">[('state', '=', 'model'), ('account_asset_id.account_type', '=?', account_type), ('asset_type', '=', 'sale')]</attribute>
+                <attribute name="context">{'default_asset_type': 'sale'}</attribute>
+            </field>
+            <xpath expr="//page[@name='depreciation_board']" position="attributes">
+                <attribute name="string">Revenue Board</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']/tree" position="attributes">
+                <attribute name="string">Revenue Lines</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']//field[@name='date']" position="attributes">
+                <attribute name="string">Revenue Date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']//field[@name='asset_depreciated_value']" position="attributes">
+                <attribute name="string">Cumulative Revenue</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']//field[@name='depreciation_value']" position="attributes">
+                <attribute name="string">Revenue</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']//field[@name='asset_remaining_value']" position="attributes">
+                <attribute name="string">Next Period Revenue</attribute>
+            </xpath>
+            <field name="original_move_line_ids" position="attributes">
+                <attribute name="domain">[
+                    ('parent_state', '=', 'posted'),
+                    ('debit', '=', '0'),
+                    ('company_id', '=', company_id),
+                    ('account_id.account_type', 'in', ('income', 'income_other'))
+                ]</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Deferred Revenues Action -->
+
+    <record model="ir.actions.act_window" id="action_account_revenue_form">
+        <field name="name">Deferred Revenues</field>
+        <field name="res_model">account.asset</field>
+        <field name="domain">[('asset_type', '=', 'sale'), ('state', '!=', 'model'), ('parent_id', '=', False)]</field>
+        <field name="context">{'asset_type': 'sale', 'default_asset_type': 'sale'}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_asset_sale_tree')}),
+            (0, 0, {'view_mode': 'kanban'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_asset_revenue_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new deferred revenue
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_account_revenue_model_form">
+        <field name="name">Deferred Revenue Models</field>
+        <field name="res_model">account.asset</field>
+        <field name="domain">[('asset_type', '=', 'sale'), ('state', '=', 'model')]</field>
+        <field name="context">{'asset_type': 'sale', 'default_asset_type': 'sale', 'default_state': 'model'}</field>
+        <field name="search_view_id" ref="view_account_revenue_model_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_asset_model_sale_tree')}),
+            (0, 0, {'view_mode': 'kanban'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_asset_revenue_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new deferred revenue model
+            </p>
+        </field>
+    </record>
+
+    <menuitem parent="account.menu_finance_entries_management" id="menu_action_account_revenue_recognition" action="action_account_revenue_form" sequence="103" groups="account.group_account_readonly"/>
+    <menuitem parent="account.account_management_menu" sequence="2" id="menu_action_account_revenue_model_recognition" action="action_account_revenue_model_form" groups="account.group_account_manager"/>
+</odoo>

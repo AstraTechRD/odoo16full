@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="manual_reminder_view_form_inherit_snailmail" model="ir.ui.view">
+            <field name="name">account.followup.manual_reminder.view.form.inherit</field>
+            <field name="model">account_followup.manual_reminder</field>
+            <field name="inherit_id" ref="account_followup.manual_reminder_view_form"/>
+            <field name="arch" type="xml">
+                <group name="options" position="inside">
+                    <group name="snailmail" colspan="1">
+                        <field name="snailmail" string="By post" nolabel="1"/><label for="snailmail"/>
+                    </group>
+                </group>
+                <group name="print_options" position="attributes">
+                    <attribute name="attrs">{'invisible': [('print','=',False),('snailmail','=',False)]}</attribute>
+                    <attribute name="string">Print/Letter</attribute>
+                </group>
+                <group name="main" position="after">
+                    <div name="snailmail_cost" attrs="{'invisible':[('snailmail','=',False)]}" class="text-start d-inline-block">
+                        <span> Sending this document by post will cost
+                            <b>
+                                <field name="snailmail_cost" options="{'digits':[0,0]}" class="mr4"/>
+                                <label for="snailmail_cost" class="mr4"/>
+                            </b>
+                        </span>
+                        <i class="fa fa-info-circle" role="img" aria-label="Warning"
+                           title="The letter will be sent using the IAP service from Odoo.&#10;Make sure you have enough credits on your account or proceed to a recharge."/>
+                        <br/>
+                    </div>
+                </group>
+                <group name="email_content" position="attributes">
+                    <attribute name="attrs">{'invisible': [('print','=',False),('email','=',False),('snailmail','=',False)]}</attribute>
+                </group>
+                <field name="template_id" position="attributes">
+                    <attribute name="attrs">{'invisible': [('print','=',False),('email','=',False),('snailmail','=',False)]}</attribute>
+                </field>
+                <xpath expr="//footer/button[1]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('print','=',False),'&amp;','&amp;',('email','=',False),('sms', '=', False),('snailmail','=',False)]}</attribute>
+                </xpath>
+                <xpath expr="//footer/button[2]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('print','=',True),'&amp;','&amp;',('email','=',False),('sms','=',False),('snailmail','=',False)]}</attribute>
+                </xpath>
+                <xpath expr="//footer/button[3]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|','|','|',('print','=',False),('email','=',True),('sms','=',True),('snailmail','=',True)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

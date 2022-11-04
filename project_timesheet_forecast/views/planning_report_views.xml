@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>   
+   
+    <record id="planning_slot_view_search_inherit_project_timesheet_forecast" model="ir.ui.view">
+        <field name="name">planning.slot.report.search</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="inherit_id" ref="project_forecast.planning_analysis_report_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='human']" position="before">
+                <filter name="no_timesheets" string="No Timesheets" domain="[('effective_hours', '=', 0), ('end_datetime', '&lt;=', datetime.datetime.now())]" groups="hr_timesheet.group_hr_timesheet_user"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

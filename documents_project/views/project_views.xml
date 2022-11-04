@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="edit_project_document_form_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">33</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_documents_analytics']" position="attributes">
+                <attribute name="string">Documents &amp; Analytics</attribute>
+                <attribute name="attrs">{'invisible': []}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='analytic_div']" position="before">
+                <div class="o_setting_box mt-4" id="documents_setting">
+                    <div class="o_setting_left_pane">
+                        <field name="use_documents"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="use_documents"/>
+                        <div class="text-muted">
+                            Categorize and share your documents with your customers
+                        </div>
+                        <div attrs="{'invisible': [('use_documents', '=', False)]}" class="mt-3">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label for="documents_folder_id" class="fw-bold"/>
+                                    <field name="company_id" invisible="1"/>
+                                </div>
+                                <div class="col-9">
+                                    <field name="documents_folder_id" class="ps-2 w-75" attrs="{'required': [('use_documents', '=', True), ('id', '!=', False)]}" context="{'documents_project': True, 'default_company_id': company_id}"/>
+                                </div>
+                            </div>
+                            <div class="row" attrs="{'invisible': [('documents_folder_id', '=', False)]}">
+                                <div class="col-3">
+                                    <label for="documents_tag_ids" class="fw-bold"/>
+                                </div>
+                                <div class="col-9">
+                                    <field name="documents_tag_ids" class="ps-2 w-75" widget="many2many_tags" options="{'no_quick_create': True}" context="{'form_view_ref': 'documents_project.tag_view_form_inherit', 'documents_project_folder': documents_folder_id}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_view_documents_project_task" model="ir.actions.act_window">
+        <field name="name">Documents</field>
+        <field name="res_model">documents.document</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id)]</field>
+        <field name="context">{'default_res_model': 'project.task', 'default_res_id': active_id, 'limit_folders_to_project': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload <span class="fw-normal">a file or </span>drag <span class="fw-normal">it here.</span>
+            </p>
+        </field>
+    </record>
+
+    <record id="view_task_form2_document_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="project_use_documents" invisible="1"/>
+                <button class="oe_stat_button" name="%(action_view_documents_project_task)d" groups="documents.group_documents_user"
+                    type="action" icon="fa-file-text-o" attrs="{'invisible': [('project_use_documents', '=', False)]}" context="{'default_partner_id': partner_id}">
+                    <field string="Documents" name="document_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_view_kanban_inherit_documents" model="ir.ui.view">
+        <field name="name">project.kanban.inherit.documents</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="priority">27</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+                <field name="use_documents" invisible="1"/>
+                <div role="menuitem" groups="documents.group_documents_user" attrs="{'invisible': [('use_documents', '=', False)]}">
+                    <a name="action_view_documents_project" type="object">Documents</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

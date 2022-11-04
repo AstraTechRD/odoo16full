@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsViews.Buttons" owl="1">
+        <t t-set="disabled" t-value="hasDisabledButtons()"/>
+        <button type="button" t-attf-class="btn btn-primary o_documents_kanban_upload {{additionalClasses}}" t-att-disabled="disabled"
+            t-on-click.stop.prevent="() => this.uploadFileInputRef.el.click()">
+            Upload
+        </button>
+        <input type="file" multiple="true" t-ref="uploadFileInput" class="o_input_file o_hidden" t-on-change.stop="onFileInputChange"/>
+        <button type="button" t-attf-class="btn btn-secondary o_documents_kanban_request {{additionalClasses}}" t-att-disabled="disabled"
+            t-on-click.stop.prevent="onClickDocumentsRequest">
+            Request
+        </button>
+        <button type="button" t-attf-class="btn btn-secondary o_documents_kanban_url {{additionalClasses}}" t-att-disabled="disabled"
+            t-on-click.stop.prevent="onClickDocumentsAddUrl">
+            Add a Link
+        </button>
+        <button type="button" t-attf-class="btn btn-secondary o_documents_kanban_share_domain {{additionalClasses}}" title="Share this domain" t-att-disabled="disabled" groups="documents.group_documents_user"
+            t-on-click.stop.prevent="onClickShareDomain">
+            Share
+        </button>
+    </t>
+
+    <div t-name="documents.DocumentsViews.ControlPanel" owl="1" class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="cpButtons">
+        <t t-call="documents.DocumentsViews.Buttons">
+            <t t-set="additionalClasses" t-value="''"/>
+        </t>
+    </div>
+
+    <div t-name="documents.DocumentsViews.ControlPanelMobile" owl="1" class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons">
+        <div class="dropdown">
+            <a role="button" class="btn btn-primary dropdown-toggle" href="#"
+                data-bs-toggle="dropdown" aria-expanded="false">Action</a>
+            <div class="dropdown-menu" role="menu">
+                <t t-call="documents.DocumentsViews.Buttons">
+                    <t t-set="additionalClasses">dropdown-item</t>
+                </t>
+            </div>
+        </div>
+    </div>
+</templates>

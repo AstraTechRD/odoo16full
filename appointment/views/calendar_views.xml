@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="calendar_event_calendar_view_inherit_appointment" model="ir.ui.view">
+        <field name="name">calendar.event.view.calendar.inherit.appointment</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//calendar" position="attributes">
+                <attribute name="banner_route">/onboarding/appointment</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sunat_guiaremision">
+            <DespatchAdvice xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2"
+                xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+                <ext:UBLExtensions>
+                    <ext:UBLExtension>
+                        <ext:ExtensionContent>
+                            <ds:Signature
+                                Id="placeholder"
+                                xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+                        </ext:ExtensionContent>
+                    </ext:UBLExtension>
+                </ext:UBLExtensions>
+                <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+                <cbc:CustomizationID>1.0</cbc:CustomizationID>
+                <cbc:ID t-esc='document_number'/>
+                <cbc:IssueDate t-esc='date_issue'/>
+                <cbc:IssueTime t-esc='time_issue'/>
+                <cbc:DespatchAdviceTypeCode>09</cbc:DespatchAdviceTypeCode>
+                <cbc:Note t-if="l10n_pe_edi_observation" t-esc='l10n_pe_edi_observation[:250]'/>
+                <cac:DespatchSupplierParty>
+                    <cbc:CustomerAssignedAccountID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"><t t-esc='record.company_id.vat'/></cbc:CustomerAssignedAccountID>
+                    <cac:Party>
+                        <cac:PartyLegalEntity>
+                            <cbc:RegistrationName><t t-esc='record.company_id.name'/></cbc:RegistrationName>
+                        </cac:PartyLegalEntity>
+                    </cac:Party>
+                </cac:DespatchSupplierParty>
+                <cac:DeliveryCustomerParty>
+                    <cbc:CustomerAssignedAccountID t-att-schemeID="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"><t t-esc='record.partner_id.vat'/></cbc:CustomerAssignedAccountID>
+                    <cac:Party>
+                        <cac:PartyLegalEntity>
+                            <cbc:RegistrationName><t t-esc='record.partner_id.commercial_partner_id.name'/></cbc:RegistrationName>
+                        </cac:PartyLegalEntity>
+                    </cac:Party>
+                </cac:DeliveryCustomerParty>
+                <cac:Shipment>
+                    <cbc:ID>1</cbc:ID>
+                    <cbc:HandlingCode><t t-esc='record.l10n_pe_edi_reason_for_transfer'/></cbc:HandlingCode>
+                    <cbc:Information><t t-esc='reason_for_transfer'/></cbc:Information>
+                    <cbc:GrossWeightMeasure t-att-unitCode="weight_uom.l10n_pe_edi_measure_unit_code"><t t-esc='format_float(record.weight, 3)'/></cbc:GrossWeightMeasure>
+                    <cbc:SplitConsignmentIndicator>false</cbc:SplitConsignmentIndicator>
+                    <cac:ShipmentStage>
+                        <cbc:TransportModeCode t-esc='record.l10n_pe_edi_transport_type'/>
+                        <cac:TransitPeriod>
+                            <cbc:StartDate t-esc='format_date(record.l10n_pe_edi_departure_start_date)'/>
+                        </cac:TransitPeriod>
+                        <cac:TransportMeans t-if="record.l10n_pe_edi_vehicle_id.license_plate">
+                            <cac:RoadTransport>
+                                <cbc:LicensePlateID t-esc='record.l10n_pe_edi_vehicle_id.license_plate'/>
+                            </cac:RoadTransport>
+                        </cac:TransportMeans>
+                        <cac:DriverPerson>
+                            <cbc:ID t-att-schemeID="record.l10n_pe_edi_operator_id.l10n_latam_identification_type_id.l10n_pe_vat_code"><t t-esc='record.l10n_pe_edi_operator_id.vat'/></cbc:ID>
+                        </cac:DriverPerson>
+                    </cac:ShipmentStage>
+
+                    <cac:Delivery>
+                        <cac:DeliveryAddress>
+                            <cbc:ID t-esc='record.partner_id.l10n_pe_district.code'/>
+                            <cbc:StreetName t-esc='record.partner_id.street'/>
+                        </cac:DeliveryAddress>
+                    </cac:Delivery>
+                    <cac:TransportHandlingUnit>
+                        <cbc:ID t-esc='record.l10n_pe_edi_vehicle_id.license_plate'/>
+                        <cac:TransportEquipment>
+                            <cbc:ID t-esc='record.l10n_pe_edi_vehicle_id.license_plate'/>
+                        </cac:TransportEquipment>
+                    </cac:TransportHandlingUnit>
+                    <cac:OriginAddress>
+                        <cbc:ID t-esc='warehouse_address.l10n_pe_district.code'/>
+                        <cbc:StreetName t-esc='warehouse_address.street'/>
+                    </cac:OriginAddress>
+                </cac:Shipment>
+                <t t-foreach="moves" t-as="move">
+                    <cac:DespatchLine>
+                        <cbc:ID t-esc="move_index + 1"/>
+                        <cbc:DeliveredQuantity t-att-unitCode="move.product_uom.l10n_pe_edi_measure_unit_code"><t t-esc='format_float(move.quantity_done, 10)'/></cbc:DeliveredQuantity>
+                        <cac:OrderLineReference>
+                            <cbc:LineID t-esc="move_index + 1"/>
+                        </cac:OrderLineReference>
+                        <cac:Item>
+                            <cbc:Name t-esc="move.product_id.name[:250]"/>
+                            <cac:SellersItemIdentification t-if="move.product_id.barcode or move.product_id.default_code">
+                                <cbc:ID t-esc="move.product_id.barcode or move.product_id.default_code"/>
+                            </cac:SellersItemIdentification>
+                        </cac:Item>
+                    </cac:DespatchLine>
+                </t>
+            </DespatchAdvice>
+        </template>
+    </data>
+</odoo>

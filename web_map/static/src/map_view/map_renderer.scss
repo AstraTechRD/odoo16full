@@ -1,0 +1,184 @@
+$map-table-row-padding: 25px;
+$map-table-line-padding: 20px;
+$map-number-color: white;
+$map-number-font-size: 19px;
+$map-marker-color: #2c8397;
+
+.o-map-renderer {
+    height: 100%;
+
+    &--container {
+        height: 100%;
+    }
+
+    &--popup-table {
+        vertical-align: top;
+
+        &-content-name {
+            font-weight: bold;
+            white-space: nowrap;
+            line-height: $map-table-row-padding;
+            vertical-align: baseline;
+        }
+
+        &-content-value {
+            vertical-align: baseline;
+        }
+
+        &-space {
+            padding-left: $map-table-line-padding;
+        }
+    }
+
+    &--popup-buttons {
+        display: flex;
+        justify-content: left;
+        align-items: flex-end;
+        margin-top: 8px;
+
+        &-divider {
+            width: 5px;
+            height: auto;
+            display: inline-block;
+        }
+    }
+
+    &--pin-list {
+        &-container {
+            padding: 8px 8px 8px 22px !important;
+            height: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        &-group {
+            margin-bottom: 1rem;
+
+            &-header {
+                display: flex;
+                align-items: baseline;
+                color: #212529;
+            }
+
+            svg {
+                height: 1.25rem;
+                margin-right: 0.5rem;
+            }
+
+            > i {
+                margin-right: 1rem;
+                width: 0.5rem;
+            }
+
+            > .o-map-renderer--pin-list-details {
+                margin-left: 2rem;
+            }
+        }
+
+        &-header {
+            padding: 8px 0;
+            text-transform: uppercase;
+            color: $headings-color;
+
+            i {
+                margin-right: 0.5rem;
+            }
+        }
+
+        &-details {
+            padding-left: 0px;
+            padding-bottom: 0px;
+
+            a {
+                color: $gray-900;
+            }
+
+            > li {
+                list-style-position: inside;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                &.o-map-renderer--pin-located:hover {
+                    text-decoration: none;
+                    background-color: $o-gray-100;
+                }
+
+                &:not(.o-map-renderer--pin-located) {
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    ul.o-map-renderer--pin-list-details {
+        list-style: none;
+        cursor: default;
+        padding-bottom: 2px;
+    }
+
+    &--marker {
+        //the height and width correspond to the height and width of the custom icon png file
+        height: 40px !important;
+        width: 30px !important;
+        margin-top: -40px !important;
+        margin-left: -15px !important;
+        color: $map-marker-color;
+
+        &-badge {
+            @include o-position-absolute($top: -8px, $right: -10px);
+            font-size: 12px;
+        }
+
+        &-number {
+            position: relative;
+            top: -40px;
+            color: $map-number-color;
+            font-size: $map-number-font-size;
+            text-align: center;
+            margin-top: 10%;
+        }
+    }
+
+    &--alert {
+        @include o-position-absolute($top: 0);
+        width: 100%;
+        z-index: 401; // leaflet have 400
+    }
+
+    .leaflet-fade-anim .leaflet-popup {
+        // used to disabled opening animation for the popups.
+        transition: none;
+        .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+            .leaflet-popup-content {
+                margin: 24px 20px 20px 20px;
+            }
+        }
+        .leaflet-popup-close-button {
+            color: #666666;
+        }
+    }
+
+    .leaflet-container a {
+        color: $link-color;
+        &:hover {
+            color: $link-hover-color;
+        }
+    }
+}
+
+/* Fix opw-2124233, preventing rtlcss to reverse the map position */
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+    left: 0 #{"/*rtl:ignore*/"};
+    right: auto #{"/*rtl:ignore*/"};
+}

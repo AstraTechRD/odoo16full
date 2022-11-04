@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_quality_check_wizard_inherit_worksheet" model="ir.ui.view">
+        <field name="name">quality_check_wizard_inherit_worksheet</field>
+        <field name="model">quality.check.wizard</field>
+        <field name="inherit_id" ref="quality_control.view_quality_check_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='do_measure']" position='after'>
+                <field name='worksheet_template_id' invisible="1"/>
+                <button name="do_worksheet" type="object" class="btn-primary" string="Worksheet" attrs="{'invisible': ['|', ('quality_state', '!=', 'none'), ('test_type', '!=', 'worksheet')]}"/>
+                <button name="do_worksheet" type="object" class="btn-secondary" string="Worksheet" attrs="{'invisible': ['|', ('quality_state', '=', 'none'), ('test_type', '!=', 'worksheet')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

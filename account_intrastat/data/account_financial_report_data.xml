@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="search_template_intrastat_type">
+            <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                <span class="fa fa-filter"/>
+                Types:
+                <t t-set="type_value">All</t>
+                <t t-set="selected_types" t-value="[c['name'] for c in options['intrastat_type'] if c['selected']]"/>
+                <t t-if="len(selected_types) > 0">
+                    <t t-set="type_value" t-value="', '.join(selected_types)"/>
+                </t>
+                <t t-out="type_value"/>
+            </button>
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <t t-foreach="options['intrastat_type']" t-as="c">
+                    <a t-att-title="c.get('name')"
+                        data-filter="intrastat_type"
+                        t-att-data-id="c.get('id')"
+                        class="dropdown-item js_account_report_choice_filter">
+                        <t t-out="c.get('name')"/>
+                    </a>
+                </t>
+            </div>
+        </template>
+
+        <template id="search_template_intrastat_extended">
+            <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                <span class="fa fa-filter"/> Options:
+                <t t-if="options['intrastat_extended']">Extended</t>
+                <t t-if="not options['intrastat_extended']">Standard</t>
+            </button>
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <a role="menuitem" title="Extended" data-filter="intrastat_extended"
+                    class="dropdown-item js_account_report_bool_filter">
+                    Extended Mode
+                </a>
+            </div>
+        </template>
+
+        <template id="search_template_vat">
+            <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                <span class="fa fa-filter"/> Partners:
+                <t t-if="options['intrastat_with_vat']">With VAT numbers</t>
+                <t t-if="not options['intrastat_with_vat']">All</t>
+            </button>
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <a role="menuitem" title="Include VAT" data-filter="intrastat_with_vat"
+                    class="dropdown-item js_account_report_bool_filter">
+                    Only with VAT numbers
+                </a>
+            </div>
+        </template>
+
+        <template id="search_template_intrastat" inherit_id="account_reports.search_template" primary="True">
+            <xpath expr="." position="inside">
+                <div class="btn-group dropdown o_account_reports_filter_intrastat_type"
+                     t-if="options.get('intrastat_type') != None">
+                    <t t-call="account_intrastat.search_template_intrastat_type"/>
+                </div>
+                <div class="btn-group dropdown o_account_reports_filter_intrastat_extended"
+                     t-if="options.get('intrastat_extended') != None">
+                    <t t-call="account_intrastat.search_template_intrastat_extended"/>
+                </div>
+                <div class="btn-group dropdown o_account_reports_filter_vat"
+                     t-if="options.get('intrastat_with_vat') != None">
+                    <t t-call="account_intrastat.search_template_vat"/>
+                </div>
+            </xpath>
+        </template>
+
+        <record id="intrastat_report" model="account.report">
+            <field name="name">Intrastat Report</field>
+            <field name="filter_show_draft" eval="False"/>
+            <field name="filter_unreconciled" eval="False"/>
+            <field name="filter_unfold_all" eval="False"/>
+            <field name="filter_period_comparison" eval="True"/>
+            <field name="filter_growth_comparison" eval="False"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="custom_handler_model_id" ref="model_account_intrastat_report_handler"/>
+            <field name="search_template">account_intrastat.search_template_intrastat</field>
+            <field name="main_template">account_intrastat.account_intrastat_main_template</field>
+            <field name="load_more_limit" eval="80"/>
+            <field name="column_ids">
+                <record id="intrastat_report_column_system" model="account.report.column">
+                    <field name="name">System</field>
+                    <field name="expression_label">system</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_country_code" model="account.report.column">
+                    <field name="name">Country</field>
+                    <field name="expression_label">country_name</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_transaction_code" model="account.report.column">
+                    <field name="name">Transaction Code</field>
+                    <field name="expression_label">transaction_code</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_region_code" model="account.report.column">
+                    <field name="name">Region Code</field>
+                    <field name="expression_label">region_code</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_commodity_code" model="account.report.column">
+                    <field name="name">Commodity Code</field>
+                    <field name="expression_label">commodity_code</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_product_origin_country" model="account.report.column">
+                    <field name="name">Origin Country</field>
+                    <field name="expression_label">intrastat_product_origin_country_name</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_partner_vat" model="account.report.column">
+                    <field name="name">Partner VAT</field>
+                    <field name="expression_label">partner_vat</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_transport_code" model="account.report.column">
+                    <field name="name">Transport Code</field>
+                    <field name="expression_label">transport_code</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_incoterm_code" model="account.report.column">
+                    <field name="name">Incoterm Code</field>
+                    <field name="expression_label">incoterm_code</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_weight" model="account.report.column">
+                    <field name="name">Weight</field>
+                    <field name="expression_label">weight</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_supplementary_units" model="account.report.column">
+                    <field name="name">Supplementary Units</field>
+                    <field name="expression_label">supplementary_units</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="intrastat_report_column_value" model="account.report.column">
+                    <field name="name">Value</field>
+                    <field name="expression_label">value</field>
+                    <field name="figure_type">monetary</field>
+                </record>
+            </field>
+        </record>
+
+        <!-- Intrastat Report -->
+        <record id="action_account_report_intrastat" model="ir.actions.client">
+            <field name="name">Intrastat Report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_intrastat.intrastat_report')}"/>
+        </record>
+
+        <menuitem id="menu_action_account_report_intrastat"
+                  action="action_account_report_intrastat"
+                  parent="account_reports.account_reports_audit_reports_menu"/>
+
+        <!-- display ec sales list report menu item -->
+        <record model="ir.ui.menu" id="account_reports.menu_action_account_report_sales">
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

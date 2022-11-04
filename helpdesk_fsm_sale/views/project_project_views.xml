@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- TODO: Remove me in master -->
+    <record id="project_view_form_inherit" model="ir.ui.view">
+        <field name="name">project.view.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_timesheet.project_project_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='billing_employee_rate']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '&amp;', ('allow_timesheets', '=', False), ('is_fsm', '=', True), ('allow_billable', '=', False), '&amp;', ('partner_id', '=', False), ('is_fsm', '=', False)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

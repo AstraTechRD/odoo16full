@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_workorder_hr.SelectionPopup" owl="1">
+        <div class="popup popup-selection">
+            <h3 class="title" t-esc="title"/>
+            <div class="selection scrollable-y">
+                <t t-foreach="list" t-as="item" t-key="item.id">
+                    <div class="selection-item" t-att-class="{ 'selected': item.isSelected }" t-on-click="() => this.selectItem(item.id)">
+                        <t t-esc="item.label" />
+                    </div>
+                </t>
+            </div>
+            <footer class="footer">
+                <div class="btn cancel text-uppercase" t-on-click="cancel">Cancel</div>
+            </footer>
+        </div>
+    </t>
+</templates>

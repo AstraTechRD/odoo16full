@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.SpreadsheetSelectorPanel" owl="1">
+        <div class="o-sp-dialog-cp">
+            <div class="o-sp-searchview">
+                <input type="text" class="o-sp-searchview-input" placeholder="Search..." t-on-input="onSearchInput"/>
+                <i class="o-sp-searchview-icon oi oi-search" role="img" aria-label="Search..." title="Search..."></i>
+            </div>
+            <div class="o-pager">
+                <Pager offset="state.pagerProps.offset" limit="state.pagerProps.limit" total="state.pagerProps.total" onUpdate.bind="onUpdatePager" isEditable="false" />
+            </div>
+        </div>
+        <div class="o-sp-dialog-items">
+            <div t-if="props.displayBlank" class="o-sp-dialog-item o-sp-dialog-item-blank">
+                <img tabindex="0" t-on-focus="() => this._selectItem(false)" t-att-class="{ selected: state.selectedSpreadsheetId === false }" src="spreadsheet/static/img/spreadsheet.svg" t-att-title="Blank"/>
+                <div class="o-sp-dialog-item-label">Blank spreadsheet</div>
+            </div>
+            <div t-foreach="state.spreadsheets" t-as="spreadsheet" t-key="spreadsheet.id" class="o-sp-dialog-item">
+                <div t-if="!spreadsheet.thumbnail" class="o-sp-dialog-no-preview text-muted" tabindex="0" t-on-focus="() => this._selectItem(spreadsheet.id)" t-att-class="{ selected: state.selectedSpreadsheetId === spreadsheet.id}" t-att-data-id="spreadsheet.id">No preview</div>
+                <img t-else="1" class="o-sp-dialog-item-img" tabindex="0" t-on-focus="() => this._selectItem(spreadsheet.id)" t-att-class="{ selected: state.selectedSpreadsheetId === spreadsheet.id}" t-att-src="getUrl(spreadsheet.thumbnail)" t-att-title="spreadsheet.name" t-att-data-id="spreadsheet.id"/>
+                <div class="o-sp-dialog-item-label" t-esc="spreadsheet.name"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

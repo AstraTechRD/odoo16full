@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.TimesheetUOMHoursToggle" owl="1">
+        <div class="d-flex align-items-center justify-content-center">
+            <button type="button" title="Decrease Time"
+                    class="btn btn-light btn-sm fa fa-minus shadow-none" t-on-click.stop.prevent="onClickDecrease">
+            </button>
+            <div class="o_kanban_timer_start d-flex align-items-center justify-content-center"
+                 t-on-mouseover.stop="onMouseOver" t-on-mouseout.stop="onMouseOut">
+                <TimesheetDisplayTimer t-props="TimesheetDisplayTimerProps" t-if="!state.displayButton"/>
+                <TimerToggleButton t-props="TimerToggleButtonProps" t-if="state.displayButton"/>
+            </div>
+            <button type="button" title="Increase Time"
+                    class="btn btn-light btn-sm fa fa-plus shadow-none" t-on-click.stop.prevent="onClickIncrease">
+            </button>
+        </div>
+    </t>
+
+</templates>

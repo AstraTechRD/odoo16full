@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.ke.hr.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <group name="salary_info" position="inside">
+                <group string="Tax Deduction" name="l10n_ke_tax_deduction">
+                    <label for="l10n_ke_mortgage_interest" attrs="{'invisible': ['|', ('country_code', '!=', 'KE'), ('wage_type', '=', 'hourly')]}"/>
+                    <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'KE'), ('wage_type', '=', 'hourly')]}">
+                        <field name="l10n_ke_mortgage_interest" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="l10n_ke_pension_contribution" attrs="{'invisible': ['|', ('country_code', '!=', 'KE'), ('wage_type', '=', 'hourly')]}"/>
+                    <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'KE'), ('wage_type', '=', 'hourly')]}">
+                        <field name="l10n_ke_pension_contribution" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                </group>
+                <group string="Reliefs" name="l10n_ke_reliefs">
+                    <label for="l10n_ke_insurance_relief" attrs="{'invisible': ['|', ('country_code', '!=', 'KE'), ('wage_type', '=', 'hourly')]}"/>
+                    <div class="o_row" attrs="{'invisible': ['|', ('country_code', '!=', 'KE'), ('wage_type', '=', 'hourly')]}">
+                        <field name="l10n_ke_insurance_relief" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

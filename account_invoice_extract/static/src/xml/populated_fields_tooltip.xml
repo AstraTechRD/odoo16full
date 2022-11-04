@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_invoice_extract.PopulatedFieldsTooltip" owl="1">
+        <div>
+            <p class="p-1 m-0">The following fields were populated by the OCR:</p>
+            <p class="p-1 m-0" t-esc="populated_fields"/>
+            <p class="p-1 m-0">You can always change the mapping by clicking on one field in the Invoice form and select the appropriate value in the PDF.</p>
+        </div>
+    </t>
+
+    <t t-name="account_invoice_extract.PopulatedFieldsWidget" owl="1">
+        <sup class="p-1 me-1" t-att-data-tooltip-template="'account_invoice_extract.PopulatedFieldsTooltip'" t-att-data-tooltip-info="getTooltipInfo()">
+            ?
+        </sup>
+    </t>
+</templates>

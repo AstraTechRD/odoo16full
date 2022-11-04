@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_de_pos_dsfinvk_export_view_form" model="ir.ui.view">
+        <field name="name">l10n_de_pos.dsfinvk_export.form.view</field>
+        <field name="model">l10n_de_pos.dsfinvk_export</field>
+        <field name="arch" type="xml">
+            <form string="DSFinV-K export form">
+                <sheet>
+                    <div class="oe_button_box" name="buttons">
+                        <field name="state" invisible="1"/>
+                        <button name="l10n_de_action_refresh_state" string="Refresh state" class="oe_highlight" type="object"
+                                attrs="{'invisible':[('state', 'not in', ['pending','working'])]}"
+                        />
+                        <button name="l10n_de_action_download_export" string="Download export" class="oe_highlight" type="object"
+                                attrs="{'invisible':[('state', '!=', 'completed')]} " icon="fa-download"
+                        />
+                        <span class="text-warning mb4 mt16" attrs="{'invisible': [('state','in',[False,'completed','pending','working'])]}">
+                            The export is not available, please create a new one sale.
+                        </span>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="start_datetime" attrs="{'readonly':[('state','!=',False)]}"/>
+                            <field name="end_datetime" attrs="{'readonly':[('state','!=',False)]}"/>
+                            <field name="config_id" attrs="{'readonly':[('state','!=',False)]}"/>
+                        </group>
+                        <group>
+                            <field name="l10n_de_fiskaly_export_uuid"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_de_pos_dsfinvk_export_view_search" model="ir.ui.view">
+        <field name="name">l10n_de_pos.dsfinvk_export.search.view</field>
+        <field name="model">l10n_de_pos.dsfinvk_export</field>
+        <field name="arch" type="xml">
+            <search string="DSFinV-K export">
+                <field name="config_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_de_pos_dsfinvk_export_view_list" model="ir.ui.view">
+        <field name="name">l10n_de_pos.dsfinvk_export.tree.view</field>
+        <field name="model">l10n_de_pos.dsfinvk_export</field>
+        <field name="arch" type="xml">
+            <tree string="DSFinV-K export">
+                <field name="state"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="config_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_l10n_de_pos_dsfinvk_export" model="ir.actions.act_window">
+        <field name="name">DSFinV-K Exports</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_de_pos.dsfinvk_export</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_l10n_de_pos_dsfinvk_export" parent="point_of_sale.menu_point_of_sale"
+              action="action_l10n_de_pos_dsfinvk_export" sequence="80"
+              groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"
+    />
+
+    <template id="dsfinvk_cash_point_closing_template">
+        <t t-translation="off">
+        {
+            "client_id":"<t t-esc="config.l10n_de_fiskaly_client_id"/>",
+            "cash_point_closing_export_id":<t t-esc="session.id"/>,
+            "head":{
+                "export_creation_date":<t t-esc="int(session.write_date.timestamp())"/>,
+                "first_transaction_export_id":"<t t-esc="orders[0].id"/>",
+                "last_transaction_export_id":"<t t-esc="orders[-1].id"/>"
+            },
+            "cash_statement":{
+                "business_cases":[ {
+                    "type":"Umsatz",
+                    "amounts_per_vat_id":[ <t t-foreach="amounts_per_vat_id" t-as="a"> {
+                        "vat_definition_export_id": <t t-esc="vat_definitions[a['amount']]"/>,
+                        "incl_vat": <t t-esc="float_repr(a['incl_vat'], 5)"/>,
+                        "excl_vat": <t t-esc="float_repr(a['excl_vat'], 5)"/>,
+                        "vat": <t t-esc="float_repr(a['incl_vat'] - a['excl_vat'], 5)"/>
+                    },</t>]
+                } ],
+                "payment":{
+                    "full_amount": <t t-esc="float_repr(total_cash + total_bank, 5)"/> ,
+                    "cash_amount": <t t-esc="float_repr(total_cash, 5)"/>,
+                    "cash_amounts_by_currency":[
+                        {
+                            "currency_code": "EUR",
+                            "amount": <t t-esc="float_repr(total_cash, 5)"/>
+                        }
+                    ],
+                    "payment_types":[
+                        <t t-if="total_cash or not total_bank">
+                            {
+                                "type": "Bar",
+                                "currency_code": "EUR",
+                                "amount": <t t-esc="float_repr(total_cash, 5)"/>
+                            },
+                        </t>
+                        <t t-if="total_bank">
+                            {
+                                "type": "Unbar",
+                                "currency_code": "EUR",
+                                "amount": <t t-esc="float_repr(total_bank, 5)"/>
+                            }
+                        </t>
+                    ]
+                }
+            },
+            "transactions":[<t t-foreach="orders" t-as="o">{
+                "head":{
+                    "tx_id": "<t t-esc="o.l10n_de_fiskaly_transaction_uuid"/>",
+                    "transaction_export_id": "<t t-esc="o.id"/>",
+                    "closing_client_id": "<t t-esc="config.l10n_de_fiskaly_client_id"/>",
+                    "type": "Beleg",
+                    "storno": False,
+                    "number": <t t-esc="o.id"/>,
+                    "timestamp_start": <t t-esc="int(o.l10n_de_fiskaly_time_start.timestamp())"/>,
+                    "timestamp_end": <t t-esc="int(o.l10n_de_fiskaly_time_end.timestamp())"/>,
+                    "user":{
+                        "user_export_id": "<t t-esc="o.user_id.id"/>",
+                        "name": "<t t-esc="o.user_id.name[:50]"/>"
+                    },
+                    "buyer": {
+                        <t t-if="o.partner_id">
+                            "name": "<t t-esc="o.partner_id.name[:50]"/>",
+                            "buyer_export_id": "<t t-esc="o.partner_id.id"/>",
+                            "type": <t t-if="company_id != o.partner_id.company_id">"Kunde"</t> <t t-else="">"Mitarbeiter"</t>,
+                            <t t-if="o.amount_total > 200">
+                                "address": {
+                                    <t t-if="o.partner_id.street">"street": "<t t-esc="o.partner_id.street"/>",</t>
+                                    <t t-if="o.partner_id.zip">"postal_code": "<t t-esc="o.partner_id.zip"/>",</t>
+                                    <t t-if="COUNTRY_CODE_MAP.get(o.partner_id.country_id.code)">"country_code": "<t t-esc="COUNTRY_CODE_MAP.get(o.partner_id.country_id.code)"/>"</t>
+                                }
+                            </t>
+                        </t>
+                        <t t-else="">
+                            "name": "Customer",
+                            "buyer_export_id": "null",
+                            "type": "Kunde"
+                        </t>
+                    }
+                },
+                "data":{
+                    "full_amount_incl_vat":<t t-esc="float_repr(o.amount_total, 5)" />,
+                    "payment_types":[ <t t-foreach="o._l10n_de_payment_types()" t-as="p"> {
+                        "type": "<t t-esc="p['type']"/>",
+                        "currency_code": "EUR",
+                        "amount": <t t-esc="float_repr(p['amount'], 5)"/>
+                    },</t>],
+                    "amounts_per_vat_id":[<t t-foreach="o._l10n_de_amounts_per_vat()" t-as="a">{
+                        "vat_definition_export_id": <t t-esc="vat_definitions[a['amount']]"/>,
+                        "incl_vat": <t t-esc="float_repr(a['incl_vat'], 5)"/>,
+                        "excl_vat": <t t-esc="float_repr(a['excl_vat'], 5)"/>,
+                        "vat": <t t-esc="float_repr(a['incl_vat'] - a['excl_vat'], 5)"/>
+                    },</t> ],
+                    "lines":[<t t-foreach="o.lines" t-as="l">{
+                        "business_case":{
+                            "type":"Umsatz",
+                            "amounts_per_vat_id":[ {
+                                "vat_definition_export_id": <t t-esc="vat_definitions[l.tax_ids[0].amount]"/>,
+                                "incl_vat": <t t-esc="float_repr(l.price_subtotal_incl, 5)"/>,
+                                "excl_vat": <t t-esc="float_repr(l.price_subtotal, 5)"/>,
+                                "vat": <t t-esc="float_repr(l.price_subtotal_incl - l.price_subtotal, 5)"/>
+                            } ]
+                        },
+                        "lineitem_export_id": "<t t-esc="l.id"/>",
+                        "storno": False,
+                        "text": "<t t-esc="l.product_id.product_tmpl_id.name"/>",
+                        "item":{
+                            "number": "<t t-esc="l.product_id.id"/>",
+                            "quantity": <t t-esc="float_repr(l.qty, 3)"/>,
+                            "price_per_unit": <t t-esc="float_repr(l.price_unit, 5) if l.qty == 0 else float_repr(l.price_subtotal_incl / l.qty, 5)"/>
+                        }
+                    },</t> ]
+                },
+                "security":{
+                    "tss_tx_id":"<t t-esc="o.l10n_de_fiskaly_transaction_uuid"/>"
+                }
+            },</t>]
+        }
+        </t>
+    </template>
+</odoo>

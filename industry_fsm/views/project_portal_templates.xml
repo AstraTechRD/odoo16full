@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_task_sign_button" name="Sign Button With Dialog">
+        <a t-if="task.has_to_be_signed()" role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
+            <i class="fa fa-check me-1"/>Sign
+        </a>
+        <!-- modal relative to the sign action -->
+        <div role="dialog" class="modal fade" id="modalaccept">
+            <div class="modal-dialog" t-if="task.has_to_be_signed()">
+                <form id="accept" method="POST" t-att-data-task-id="task.id" t-att-data-token="task.access_token" class="js_accept_json modal-content js_website_submit_form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <header class="modal-header">
+                        <h4 class="modal-title">Sign Task</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </header>
+                    <main class="modal-body" id="sign-dialog">
+                        <t t-call="portal.signature_form">
+                            <t t-set="call_url" t-value="task.get_portal_url(suffix='/worksheet/sign/%s' % source)"/>
+                            <t t-set="default_name" t-value="task.partner_id.name"/>
+                            <t t-set="font_color" t-value="'black'"/>
+                            <t t-set="send_label">Sign</t>
+                        </t>
+                    </main>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_my_task" inherit_id="project.portal_my_task">
+        <xpath expr="//t[@t-set='backend_url']" position="after">
+            <t t-set="source_action_id" t-value="task.env.ref('industry_fsm.project_task_action_fsm').id if source == 'fsm' else task.env.ref('project.action_view_all_task').id"/>
+            <t t-set="backend_url" t-value="'/web#model=project.task&amp;id=%s&amp;action=%s&amp;view_type=form' % (task.id, source_action_id)"/>
+        </xpath>
+        <xpath expr="//div/a[@t-if='task.partner_id.email']" position="after">
+            <div t-if="task.is_fsm" t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["address"]}'/>
+        </xpath>
+        <xpath expr="//li[@id='nav-report']" position="attributes">
+            <attribute name="t-if">(not task.is_fsm and timesheets and allow_timesheets) or (task.is_fsm and task.allow_worksheets and task.comment)</attribute>
+        </xpath>
+        <xpath expr="//li[@id='nav-report']" position="before">
+            <li class="list-group-item d-grid">
+                <t t-call="industry_fsm.portal_task_sign_button"/>
+            </li>
+        </xpath>
+        <xpath expr="//a[@t-field='task.project_id']" position="after">
+            <div t-if="task.planned_date_begin">
+                <strong>Planned Date:</strong>
+                <span t-field="task.planned_date_begin" t-options='{"widget": "datetime"}'/>
+                <i class="fa fa-long-arrow-right"/>
+                <span t-field="task.planned_date_end" t-options='{"widget": "datetime"}'/>
+            </div>
+        </xpath>
+        <xpath expr="//li[@t-if='timesheets and allow_timesheets']" position="after">
+            <li t-if="task.comment and task.allow_worksheets" class="nav-item">
+                <a class="nav-link ps-3" href="#task_worksheet">Worksheet</a>
+            </li>
+        </xpath>
+        <xpath expr="//div[@id='card_body']" position="inside">
+            <div class="container" t-if="task.comment and task.allow_worksheets">
+                <hr class="mt-4 mb-1"/>
+                <h5 id="task_worksheet" class="mt-2 mb-2" data-anchor="true">Worksheet</h5>
+                <t t-out="task.comment"/>
+            </div>
+            <div t-if="task.worksheet_signature" t-attf-class="#{'col-12 col-lg-3' if report_type != 'html' else 'col-sm-7 col-md-4'} ms-auto text-end" style="page-break-inside: avoid">
+                <h5>Signature</h5>
+                <img t-att-src="image_data_uri(task.worksheet_signature)" style="max-height: 6rem; max-width: 100%; color:black;"/><br/>
+                <span t-field="task.worksheet_signed_by"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

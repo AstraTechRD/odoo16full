@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- This template is only used when printing a dashboard report to a PDF output -->
+        <template id="print_template">
+            <html>
+                <head>
+                    <base t-att-href="base_url"/>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+                </head>
+                <body class="o_sale_subscription_dashboard_reports_body_print">
+                    <t t-call="web.html_container">
+                        <t t-out="body_html"/>
+                    </t>
+                </body>
+            </html>
+        </template>
+
+        <template id="sales_men_pdf_template">
+            <t t-foreach="statistics" t-as="sm">
+                <div class="salesman_name">
+                    <h1>
+                        <t t-esc="sm['saleman']['name']"/>
+                    </h1>
+                </div>
+                <div class="box">
+                    <div class="col-lg-6">
+                        <h2>Monthly Recurring Revenue :
+                            <t t-esc="sm['net_mrr_str']"/>
+                        </h2>
+                        <h2>Non-Recurring Revenue :
+                            <t t-esc="sm['net_nrr_str']"/>
+                        </h2>
+                        <img t-att-src="sm['image']" alt="graphic"/>
+                    </div>
+                </div>
+                <div class="box">
+                    <h2>Subscription Modifications</h2>
+                    <p class="text-muted">Subscription modifications aggregate all modifications that happened in
+                        selected period. Note that modifications happening on the same day can be grouped together
+                        (e.g. two upsells occuring on the same day, or a subscription getting closed and re-opened
+                        on the same day).
+                    </p>
+                    <div t-att-id="'contract_modifications_' + str(sm['saleman']['id'])">
+                        <div t-if="sm['n_modifications'] == 0">
+                            <i>There is no subscription modification during this period.</i>
+                        </div>
+                        <div t-else="" class="table-responsive o_list_view">
+                            <table class="o_list_table table table-hover table table-sm table-hover table-striped o_list_table_grouped o_table_dashboard">
+                                <tr>
+                                    <th/>
+                                    <th class=".o_subscription_nw">Date</th>
+                                    <th>Partner</th>
+                                    <th>Subscription</th>
+                                    <th>Template</th>
+                                    <th t-if="n_companies &gt; 1">Company</th>
+                                    <th style="white-space: nowrap">Previous MRR (<t t-esc="currency_symbol"/>)
+                                    </th>
+                                    <th style="white-space: nowrap">Current MRR (<t t-esc="currency_symbol"/>)
+                                    </th>
+                                    <th>Delta</th>
+                                </tr>
+                                <tr t-foreach="sm['contract_modifications']" t-as="modification" class="o_subscription_row">
+                                    <td>
+                                        <i t-att-class="modification['class_type']"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="modification['date'] or ''"/>
+                                    </td>
+                                    <td class="o_subscription_ellipsis">
+                                        <t t-esc="modification['partner'] or ''"/>
+                                    </td>
+                                    <td class="o_subscription_ellipsis">
+                                        <t t-esc="modification['subscription'] or ''"/>
+                                    </td>
+                                    <td class="o_subscription_ellipsis">
+                                        <t t-esc="modification['subscription_template'] or ''"/>
+                                    </td>
+                                    <td t-if="n_companies &gt; 1">
+                                        <t t-esc="modification['company_name'] or ''"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="round(modification['previous_mrr'], 2)"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="round(modification['current_mrr'], 2)"/>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <t t-esc="round(modification['diff'], 2)"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <h2>Non Recurring invoices</h2>
+                    <p class="text-muted">List all invoices containing non-recurring sales and the amount of
+                        non-recurring revenues in these invoices for this particular salesperson.
+                    </p>
+                    <div t-att-id="'NRR_invoices_' + str(sm['saleman']['id'])">
+                        <div t-if="sm['n_invoices'] == 0">
+                            <i>There is no invoice during this period.</i>
+                        </div>
+                        <div t-else="" class="table-responsive o_list_view">
+                            <table class="o_list_table table table-hover table table-sm table-hover table-striped o_list_table_grouped o_table_dashboard">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Partner</th>
+                                    <th>Document</th>
+                                    <th t-if="n_companies &gt; 1">Company</th>
+                                    <th>NRR (<t t-esc="currency_symbol"/>)
+                                    </th>
+                                </tr>
+                                <tr t-foreach="sm['nrr_invoices']" class="o_subscription_row" t-as="invoice"
+                                    t-att-data-id="invoice['move_id']" t-att-data-model="invoice['model']">
+                                    <td>
+                                        <t t-esc="invoice['date'] or ''"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="invoice['partner'] or ''"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="invoice['code'] or ''"/>
+                                    </td>
+                                    <td t-if="n_companies &gt; 1" t-esc="invoice['company_name']"></td>
+                                    <td>
+                                        <t t-esc="round(invoice['nrr'], 2)"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

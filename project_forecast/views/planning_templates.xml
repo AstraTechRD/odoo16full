@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="period_report_template" inherit_id="planning.period_report_template">
+        <xpath expr="//div[hasclass('o_calendar_widget')]" position="before">
+            <span class="has_project" t-att-value="has_project"/>
+        </xpath>
+        <xpath expr="//th[@id='o_role']" position="after">
+            <th t-if="has_project" class="text-start">Project</th>
+        </xpath>
+        <xpath expr="//td[@name='role_id']" position="after">
+            <td t-if="has_project" class="align-middle"><t t-esc="shift.project_id.name"/></td>
+        </xpath>
+        <xpath expr="//dd[@id='role']" position="after">
+            <dt class="col-sm-4">Project</dt>
+            <dd class="col-sm-8" id="project"/>
+        </xpath>
+    </template>
+</odoo>

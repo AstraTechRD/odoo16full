@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.renting</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale_renting.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('app_settings_block')][@data-key='sale_renting']" position="inside">
+                <h2>Rent Online</h2>
+                <div class="row mt16 o_settings_container" id="sale_renting_product_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="sale_renting_minimal_duration">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Minimal time of rental</span>
+                            <div class="text-muted">
+                                Minimal duration between pickup and return.
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <div class="col-12">
+                                        <label for="renting_minimal_time_duration"/>
+                                        <field class="w-25" name="renting_minimal_time_duration"/>
+                                        <field class="w-25" name="renting_minimal_time_unit"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="sale_renting_minimal_duration">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Unavailability days</span>
+                            <div class="text-muted">
+                                Days during which pickup and return are not possible.
+                            </div>
+                            <div class="mt16 col-12">
+                                <label for="renting_forbidden_mon"/>
+                                <field name="renting_forbidden_mon"/>
+                                <label for="renting_forbidden_tue"/>
+                                <field name="renting_forbidden_tue"/>
+                                <label for="renting_forbidden_wed"/>
+                                <field name="renting_forbidden_wed"/>
+                                <label for="renting_forbidden_thu"/>
+                                <field name="renting_forbidden_thu"/>
+                                <label for="renting_forbidden_fri"/>
+                                <field name="renting_forbidden_fri"/>
+                                <label for="renting_forbidden_sat"/>
+                                <field name="renting_forbidden_sat"/>
+                                <label for="renting_forbidden_sun"/>
+                                <field name="renting_forbidden_sun"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

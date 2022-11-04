@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="period_report_template" inherit_id="planning.period_report_template">
+        <xpath expr="//th[@t-if='has_project']" position="after">
+            <th name="sale_order_item" t-if="has_sale_line" position="move"/>
+        </xpath>
+        <xpath expr="//td[@t-if='has_project']" position="after">
+            <td name="sale_line_id" t-if="has_sale_line" position="move"/>
+        </xpath>
+        <xpath expr="//dd[@id='project']" position="after">
+            <dt name="sale_order_item"  position="move"/>
+            <dd id="sale_line" position="move"/>
+        </xpath>
+    </template>
+</odoo>

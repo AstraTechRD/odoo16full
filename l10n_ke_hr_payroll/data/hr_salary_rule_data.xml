@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_ke_employees_salary_fixed_commission" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Fixed Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.COMMISSION</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs.COMMISSION.amount
+result_name = inputs.COMMISSION.name
+        </field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+    </record>
+
+    <record id="l10n_ke_employees_salary_nssf" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Social Security Employee (NSSF)</field>
+        <field name="code">NSSF_EMPLOYEE</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories.BASIC + categories.COMMISSION</field>
+        <field name="amount_percentage">-6</field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="l10n_ke_employees_salary_mortgage_interest" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_tax_exemption"/>
+        <field name="name">Mortgage Interest</field>
+        <field name="code">MORTGAGE_INT</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">contract.l10n_ke_mortgage_interest</field>
+        <field name="amount_percentage">100</field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="l10n_ke_employees_salary_pension_contribution" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_tax_exemption"/>
+        <field name="name">Pension Contribution</field>
+        <field name="code">PENSION</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">contract.l10n_ke_pension_contribution</field>
+        <field name="amount_percentage">100</field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="l10n_ke_employees_salary_paye" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ke_hr_payroll.hr_salary_rule_category_paye"/>
+        <field name="name">PAYE</field>
+        <field name="code">TB1</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+lower_bound = payslip.rule_parameter('l10n_ke_paye_lower_bound')
+higher_bound = payslip.rule_parameter('l10n_ke_paye_higher_bound')
+lower_fixed_amount = payslip.rule_parameter('l10n_ke_paye_lower_fixed_amount')
+higher_fixed_amount = payslip.rule_parameter('l10n_ke_paye_higher_fixed_amount')
+gross = categories.GROSS - categories.EXEMPTION
+if gross &lt;= lower_bound:
+    result = gross * 0.1
+elif lower_bound &lt; gross &lt;= higher_bound:
+    result = lower_fixed_amount + (higher_bound - gross) * 0.25
+elif higher_bound &lt; gross:
+    result = lower_fixed_amount + higher_fixed_amount + (gross - higher_bound) * 0.3
+result = -result
+        </field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="l10n_ke_employees_salary_personal_relief" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ke_hr_payroll.hr_salary_rule_category_relief"/>
+        <field name="name">Personal Relief</field>
+        <field name="code">PERS.RELIEF</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+amount = payslip.rule_parameter('l10n_ke_personal_relief')
+if contract.employee_id.address_home_id.country_id.code == 'KE':
+    result = amount
+else:
+    result = 0
+        </field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="l10n_ke_employees_salary_insurance_relief" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ke_hr_payroll.hr_salary_rule_category_relief"/>
+        <field name="name">Insurance Relief</field>
+        <field name="code">INS.RELIEF</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.l10n_ke_insurance_relief
+        </field>
+        <field name="struct_id" ref="l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_ke_hr_payroll.hr_payroll_structure_ken_employee_salary')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{
+            'amount_python_compute': &quot;result = result = categories.BASIC + categories.ALW + categories.DED + categories.PAYE + categories.RELIEFS&quot;}"/>
+    </function>
+</odoo>

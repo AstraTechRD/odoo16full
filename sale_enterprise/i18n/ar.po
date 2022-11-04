@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_enterprise
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:57+0000\n"
+"PO-Revision-Date: 2022-09-22 05:48+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "# Customers"
+msgstr "عدد العملاء"
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "# Lines"
+msgstr "عدد البنود"
+
+#. module: sale_enterprise
+#: model:ir.model.fields,field_description:sale_enterprise.field_sale_report__avg_days_to_confirm
+msgid "Average Days To Confirm"
+msgstr "متوسط عدد الأيام حتى التأكيد  "
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "Average Days to Confirm"
+msgstr "متوسط عدد الأيام حتى التأكيد  "
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "Average Order"
+msgstr "متوسط الطلب "
+
+#. module: sale_enterprise
+#: model:ir.model.fields,help:sale_enterprise.field_sale_report__avg_days_to_confirm
+msgid ""
+"Average days to confirm a sales order after its creation. Due to a hack "
+"needed to calculate this,               every record will show the same "
+"average value, therefore only use this as an aggregated value with "
+"group_operator=avg"
+msgstr ""
+"متوسط عدد الأيام حتى تأكيد أمر بيع بعد أن يتم إنشاؤه. بسبب الحاجة إلى "
+"استخدام طريقة معينة لحساب ذلك،               سوف يُظهر كل سجل نفس القيمة "
+"المتوسطة، وبالتالي، استخدم ذلك فقط كقيمة إجمالية مع group_operator=avg "
+
+#. module: sale_enterprise
+#: model_terms:ir.actions.act_window,help:sale_enterprise.sale_report_action_dashboard
+msgid "Create a new sales order"
+msgstr "إنشاء أمر بيع جديد "
+
+#. module: sale_enterprise
+#: model:ir.actions.act_window,name:sale_enterprise.sale_report_action_dashboard
+#: model:ir.ui.menu,name:sale_enterprise.menu_sale_report_dashboard
+msgid "Dashboard"
+msgstr "لوحة البيانات "
+
+#. module: sale_enterprise
+#: model:ir.model.fields.selection,name:sale_enterprise.selection__sale_report__invoice_status__invoiced
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.view_order_product_search_inherit
+msgid "Fully Invoiced"
+msgstr "مفوتر بالكامل"
+
+#. module: sale_enterprise
+#: model:ir.model.fields,field_description:sale_enterprise.field_sale_report__invoice_status
+msgid "Invoice Status"
+msgstr "حالة الفاتورة"
+
+#. module: sale_enterprise
+#: model_terms:ir.actions.act_window,help:sale_enterprise.sale_report_action_dashboard
+msgid "No data yet!"
+msgstr "لا توجد أي بيانات بعد! "
+
+#. module: sale_enterprise
+#: model:ir.model.fields.selection,name:sale_enterprise.selection__sale_report__invoice_status__no
+msgid "Nothing to Invoice"
+msgstr "لا توجد مبالغ لفوترتها"
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "Orders"
+msgstr "الطلبات "
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_pivot
+msgid "Sales Analysis"
+msgstr "تحليل المبيعات"
+
+#. module: sale_enterprise
+#: model:ir.model,name:sale_enterprise.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "تقرير المبيعات التحليلي"
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "Sales Teams"
+msgstr "فرق المبيعات"
+
+#. module: sale_enterprise
+#: model:ir.model.fields.selection,name:sale_enterprise.selection__sale_report__invoice_status__to_invoice
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.view_order_product_search_inherit
+msgid "To Invoice"
+msgstr "بانتظار الفوترة"
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "Total Sales"
+msgstr "إجمالي المبيعات"
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "Total, Tax Included"
+msgstr "المجموع شامل الضريبة"
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "Untaxed Total"
+msgstr "الإجمالي دون الضريبة "
+
+#. module: sale_enterprise
+#: model:ir.model.fields.selection,name:sale_enterprise.selection__sale_report__invoice_status__upselling
+msgid "Upselling Opportunity"
+msgstr "فرصة الارتقاء بالصفقة "
+
+#. module: sale_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_enterprise.sale_report_view_dashboard
+msgid "days"
+msgstr "يوم"

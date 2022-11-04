@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- wysiwyg template for every command block. It will serve as a container
+         for a behaviorComponent during behavior injection in html_field.
+         This is not the owl template for the component abstractBehavior (it
+         does not have one).
+    -->
+    <t t-name="knowledge.abstract_behavior">
+        <div t-attf-class="o_knowledge_behavior_anchor #{behaviorType}">
+            <div class="p-3 text-center">
+                <i class="fa fa-circle-o-notch fa-2x fa-spin" title="loader" role="img"/>
+            </div>
+        </div>
+    </t>
+</templates>

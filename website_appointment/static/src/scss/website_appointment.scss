@@ -1,0 +1,148 @@
+// Make the footer only slightly (2vh) visible. 56px is the height
+// of the top header bar o_header_standard. (navbar + 1rem padding)
+.o_appointment_index, .o_wappointment_wrap {
+    min-height: calc(98vh - 56px);
+}
+
+.o_appointment .o_appointment_details_column {
+    min-height: unset;
+}
+
+.o_wappointment_appointment_list_columns {
+    .card {
+        header {
+            min-height: 150px;
+            height: 25vh;
+        }
+        .card-body {
+            padding: 1.25rem 1.5rem;
+            h2 {
+                font-size: 28px;
+            }
+            .o_wappointment_card_location, .o_wappointment_card_staff_users {
+                .fa::before {
+                    width: 2rem;
+                    display: block;
+                }
+            }
+            .o_wappointment_card_staff_users {
+                .o_wappointment_user_avatars {
+                    height: 32px;
+                    .o_wappointment_user_avatar {
+                        margin-left: -9px;
+                        height: 32px;
+                        width: 32px;
+                        object-fit: cover;
+                        border: 2px solid #FFFFFF;
+                        &:first-child {
+                            margin-left: 0px;
+                        }
+                        &:only-child {
+                            margin-right: 0.5rem;
+                        }
+                    }
+                }
+            }
+            .navbar-brand {
+                bottom: 10px;
+                left: 1.5rem;
+                &:hover {
+                    color: darken($o-brand-primary, 10%) !important;
+                }
+            }
+        }
+    }
+}
+
+.o_wappointment_navbar {
+    min-height: 65px;
+    .navbar-brand {
+        color: inherit;
+    }
+    .o_wappointment_navbar_link:hover {
+        color: map-get($theme-colors, 'primary') !important;
+    }
+}
+
+.o_wappointment_progress_bar {
+    $wappointment-progress-bar-color-1: mix(map-get($theme-colors, 'primary'), $body-bg, 20%);
+    $wappointment-progress-bar-color-2: mix(map-get($theme-colors, 'primary'), $body-bg, 30%);
+    padding: 0px 32px 0px 0px;
+    height: 64px;
+    li {
+        border: 1px solid transparent;
+        border-right-width: 0;
+        padding: 0 32px 0 64px;
+        height: 64px;
+        line-height: 64px;
+        &.o_passed_stage {
+            &:hover {
+                background-color: $wappointment-progress-bar-color-2 !important;
+                .chevron, .chevron::before {
+                    border-left-color: $wappointment-progress-bar-color-2 !important;
+                }
+            }
+            .chevron:before {
+                border-left: 32px solid $body-bg;
+            }
+        }
+        &.o_current_stage {
+            background: $wappointment-progress-bar-color-1;
+            .chevron:before {
+                border-left: 32px solid $wappointment-progress-bar-color-1;
+            }
+        }
+        &.o_future_stage .chevron:before {
+            border-left: 32px solid $body-bg;
+        }
+        &:first-child {
+            padding-left: 32px;
+        }
+        &:last-child .chevron {
+            background-color: transparent;
+        }
+        .chevron {
+            top: -1px;
+            right: -32px;
+            z-index: 1;
+            border: 32px solid transparent;
+            border-right: 0;
+            border-left: 32px solid $wappointment-progress-bar-color-2;
+            &:before {
+                position: absolute;
+                top: -32px;
+                right: 1px;
+                display: block;
+                border: 32px solid transparent;
+                border-right: 0;
+                content: "";
+            }
+        }
+    }
+}
+
+.o_wappointment_select_operator {
+    .o_wappointment_select_btn {
+        &:hover {
+            background-color: map-get($theme-colors, 'primary');
+            color: white !important;
+            text-decoration: none;
+        }
+        border: 1px solid map-get($theme-colors, 'primary');
+    }
+    .card {
+        header {
+            height: 300px;
+        }
+        .card-body {
+            padding: 1.25rem;
+            .o_wappointment_card_user_dsc {
+                color: rgba(0, 0, 0, 0.42) !important;
+            }
+            .o_wappointment_card_user_select {
+                bottom: 1rem;
+                width: calc(100% - 2 * 1.25rem);
+            }
+        }
+    }
+}

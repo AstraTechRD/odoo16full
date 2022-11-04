@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_form2_inherit_holidays" model="ir.ui.view">
+        <field name="name">project.task.view.form.holidays</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@role='alert']" position="attributes">
+                <attribute name="attrs">{'invisible': [('overlap_warning', '=', False), '|', ('leave_warning', '=', False), ('user_ids', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_fsm_view_overlapping_tasks']" position="before">
+                <p class="align-middle mb-0" attrs="{'invisible': ['|', ('leave_warning', '=', False), ('user_ids', '=', False)]}">
+                    <field name="leave_warning" nolabel="1"/>
+                </p>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_gantt_fsm_inherit_holidays" model="ir.ui.view">
+        <field name="name">project.task.view.gantt.holidays</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="decoration-danger">overlap_warning or leave_warning</attribute>
+            </xpath>
+            <xpath expr="//gantt" position="inside">
+                <field name="leave_warning"/>
+                <field name="overlap_warning"/>
+            </xpath>
+            <xpath expr="//div[@t-if='overlap_warning']" position="after">
+                <p t-if="leave_warning" class="text-danger mt-2 mb-0">
+                    <t t-esc="leave_warning"/>
+                </p>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_task_search_form_inherit_holidays" model="ir.ui.view">
+        <field name="name">project.task.search.inherit.holidays</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='conflict_task']" position="after">
+                <filter name="is_absent" string="Employees on Time Off" domain="[('is_absent', '=', True)]" groups="project.group_project_manager"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="table_header_template_followup_report">
+            <thead class="o_account_reports_header_hierarchy">
+                <t t-foreach="lines.get('columns_header')" t-as="header_line">
+                    <tr>
+                        <t t-foreach="header_line" t-as="cell">
+                            <th t-att-class="'o_account_report_column_header ' + (cell.get('class', ''))"
+                                t-att-style="cell.get('style', '')">
+                                <t t-call="{{cell.get('template', 'account_followup.cell_template_followup_report')}}"/>
+                            </th>
+                        </t>
+                    </tr>
+                </t>
+            </thead>
+        </template>
+
+        <template id="cell_template_followup_report">
+            <div t-att-class="classes" t-att-style="style">
+                <t t-esc="cell.get('name')"/>
+            </div>
+        </template>
+
+        <record id="action_report_followup" model="ir.actions.report">
+            <field name="name">Print Follow-up Letter</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_followup.report_followup_print_all</field>
+            <field name="report_file">account_followup.report_followup_print_all</field>
+            <field name="print_report_name">'Follow-up ' + object.display_name</field>
+        </record>
+
+        <template id="report_followup_print_all">
+            <t t-call="web.html_container">
+                <t t-call-assets="web.assets_common" t-js="false" />
+                <t t-set="company" t-value="docs.env.company"/>
+                <t t-foreach="docs" t-as="doc"> <!-- each doc is a 'res.partner', called doc for the 'web.external_layout' template -->
+                    <t t-call="web.external_layout">
+                        <t t-set="fallback_address" t-value="doc.browse(doc.address_get(['invoice'])['invoice']) or doc"/>
+                        <t t-call-assets="account_followup.assets_followup_report" />
+                        <div class="page">
+                            <span t-out="doc.get_followup_html(options)"/>
+                        </div>
+                    </t>
+                    <t t-if="(options or {}).get('join_invoices', doc.followup_line_id.join_invoices)" t-foreach="doc._get_included_unreconciled_aml_ids().move_id" t-as="o">
+                        <t t-set="lang" t-value="o.user_id.lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                        <t t-call="account.report_invoice_document" t-lang="lang"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record forcecreate="True" id="property_account_followup_next_action_date" model="ir.property">
+            <field name="name">followup_next_action_date</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','followup_next_action_date')]"/>
+            <field eval="False" name="value"/>
+        </record>
+
+        <template id="followup_filter_info_template">
+            <div t-if='context.get("mail") != True' class="print_only" style='margin-bottom: 20px;'>
+                <t t-if="invoice_address_id" t-set="partner_addr" t-value="invoice_address_id"/>
+                <t t-else="" t-set="partner_addr" t-value="partner"/>
+                <t t-if="context.get('snailmail_layout')" t-set="contact_widget_fields" t-value="['address', 'name']"/>
+                <t t-else="" t-set="contact_widget_fields" t-value="['address', 'name', 'phone']"/>
+                <div class="row fallback_header">
+                    <div class="col-5 offset-7">
+                        <div t-field="partner_addr.self"
+                            t-options='{"widget": "contact", "fields": contact_widget_fields, "no_marker": True}'/>
+                        <span t-field="partner_addr.vat"/>
+                    </div>
+                </div>
+                <p style="margin-top: 35px;">
+                    Date: <span t-esc="today" t-options="{'widget': 'date'}"/><br/>
+                    <t t-if='partner_addr.ref'>Customer ref: <span t-field="partner_addr.ref"/></t>
+                </p>
+            </div>
+        </template>
+
+        <template id="template_followup_report" inherit_id="account_reports.main_template" primary="True">
+            <xpath expr="//div[hasclass('o_account_reports_no_print')]" position="attributes">
+                <attribute name="class">o_account_reports_page o_account_reports_no_print o_account_followup</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_account_reports_summary')]" position="replace">
+                <div class="o_account_reports_summary">
+                    <div class="o_account_report_summary" role="alert">
+                        <span class="o_account_report_summary_content" t-att-style="'' if report_summary else 'display: none;'">
+                            <t t-esc="report_summary" t-options="{'widget': 'text'}"/>
+                        </span>
+                        <span class="o_account_report_summary_placeholder" t-att-style="'display: none;' if report_summary or context.get('print_mode') else ''">
+                            Add a note
+                        </span>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('table-responsive')]" position="attributes">
+                <attribute name="class"/>
+            </xpath>
+            <xpath expr="//table[hasclass('o_account_reports_table')]" position="replace">
+                <table class="o_account_reports_table" t-att-width="'100%'" style="page-break-inside: avoid">
+                    <t t-call="account_followup.table_header_template_followup_report"/>
+                    <t t-if="lines.get('lines')">
+                        <t t-call="account_reports.line_template">
+                            <t t-set="lines" t-value="lines.get('lines')"/>
+                        </t>
+                    </t>
+                </table>
+            </xpath>
+            <xpath expr="//t[@t-call='account_reports.filter_info_template']" position="replace"/>
+            <xpath expr="//div[hasclass('o_account_reports_header')]" position="before">
+                <t t-call="account_followup.followup_filter_info_template"/>
+            </xpath>
+        </template>
+
+        <template id="followup_search_template">
+            <div class="btn-group dropdown o_account_followup-filter">
+                <a type="button" class="dropdown-toggle" data-bs-toggle="dropdown">
+                    <span class="fa fa-filter"/> Partners:
+                    <t t-if="options.get('type_followup', '') == 'action'">
+                        In Need of Action
+                    </t>
+                    <t t-if="options.get('type_followup', '') != 'action'">
+                        With Overdue Invoices
+                    </t>
+                </a>
+                <div class="dropdown-menu o_filter_menu" role="menu">
+                    <a role="menuitem" class="dropdown-item js_account_reports_one_choice_filter" title="In Need of Action" data-filter="type_followup" data-id="action">In Need of Action</a>
+                    <a role="menuitem" class="dropdown-item js_account_reports_one_choice_filter" title="With Overdue Invoices" data-filter="type_followup" data-id="all">With Overdue Invoices</a>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

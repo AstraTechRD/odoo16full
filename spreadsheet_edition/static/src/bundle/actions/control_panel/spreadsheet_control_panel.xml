@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="spreadsheet_edition.SpreadsheetControlPanel" owl="1">
+    <ControlPanel display="controlPanelDisplay">
+        <t t-set-slot="control-panel-top-right">
+            <div class="o_cp_top_right_sp">
+                <div t-if="props.isSpreadsheetSynced !== undefined" class="o_spreadsheet_status o_spreadsheet_sync_status text-muted">
+                    <t t-if="props.isSpreadsheetSynced">
+                        <i class="fa fa-check"/>  Saved
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-spin fa-spinner"/> Saving
+                    </t>
+                </div>
+                <div t-if="props.numberOfConnectedUsers !== undefined" class="o_spreadsheet_status o_spreadsheet_number_users text-muted">
+                    <t t-if="props.numberOfConnectedUsers === 1">
+                        <i class="fa fa-user"> 1</i>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-users text-info"> <t t-esc="props.numberOfConnectedUsers"/></i>
+                    </t>
+                </div>
+            </div>
+        </t>
+        <t t-set-slot="control-panel-top-left">
+            <t t-call="spreadsheet_edition.Breadcrumbs" />
+        </t>
+    </ControlPanel>
+</t>
+
+</templates>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_281_45">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-10 border text-center text-uppercase fw-bold">
+                                281.45 Sheet - Year <span t-esc="data['f2002_inkomstenjaar']"/>
+                            </div>
+                            <div class="col-2 border text-center" t-esc="datetime.datetime.now().date()"/>
+                        </div>
+                        <div class="row border">
+                            <div class="col-12">
+                                <strong>1. N° :</strong> <span t-esc="data['f2009_volgnummer']"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 border">
+                                <div class="fw-bold">3. Name and address of income debtor:</div>
+                                <div class="ms-4" t-esc="data['v0014_naam']"></div>
+                                <div class="ms-4" t-esc="data['v0015_adres']"></div>
+                                <div class="ms-4">
+                                    <span t-esc="data['v0016_postcode']"/>
+                                    <span t-esc="data['v0017_gemeente']"/>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">Company number: </span>
+                                    <t t-esc="data['v0024_nationaalnr']"/>
+                                </div>
+                            </div>
+                            <div class="col-6 border">
+                                <div class="fw-bold">2a. Income recipient</div>
+                                <div class="ms-4" t-esc="data['f2013_naam']"/>
+                                <div class="ms-4" t-esc="data['f2015_adres']"/>
+                                <div class="ms-4" >
+                                    <span t-esc="data['employee_city']"/>
+                                    <span t-if="'f2016_postcodebelgisch' in data" t-esc="data['f2016_postcodebelgisch']"/>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">NISS: </span>
+                                    <t t-esc="data['f2011_nationaalnr']"/>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">Nature of beneficiary: </span>
+                                    <span>Natural Person</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row border">
+                            <div class="col-7 fw-bold">4. Gross amount of income</div>
+                            <div class="col-5 text-end"><span t-esc="data['f45_2060_brutoinkomsten']"/></div>
+                        </div>
+                        <div class="row border">
+                            <div class="col-3">
+                                <div class="fw-bold">5. Deducted fees</div>
+                            </div>
+                            <div class="col-5">
+                                <div class="fw-bold">A. Packages</div>
+                                <div class="fw-bold">B. Real</div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div t-esc="data['f45_2061_forfaitairekosten']"/>
+                                <div t-esc="data['f45_2062_werkelijkekosten']"/>
+                            </div>
+                        </div>
+                        <div class="row border">
+                            <div class="col-7 fw-bold">6. Amount of retained withholding tax</div>
+                            <div class="col-5 text-end"><span t-esc="data['f45_2063_roerendevoorheffing']"/></div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

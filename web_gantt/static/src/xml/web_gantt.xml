@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <div t-name="GanttView.buttons">
+        <button t-if="widget.is_action_enabled('create')" class="o_gantt_button_add btn btn-primary me-3" title="Add record" data-hotkey="r">
+            Add
+        </button>
+        <div class="d-inline-block me-3">
+            <button class="o_gantt_button_prev btn btn-primary" title="Previous">
+                <span class="fa fa-arrow-left"/>
+            </button>
+            <button class="o_gantt_button_today btn btn-primary" data-hotkey="t">
+                Today
+            </button>
+            <button class="o_gantt_button_next btn btn-primary" title="Next">
+                <span class="fa fa-arrow-right"/>
+            </button>
+        </div>
+        <div class="btn-group o_gantt_range">
+            <t t-call="GanttView.RangeButtons"/>
+        </div>
+        <div t-attf-class="btn-group #{displayExpandCollapseButtons ? '' : 'd-none'}">
+            <button class="o_gantt_button_expand_rows btn btn-secondary" title="Expand rows">
+                <i class="fa fa-expand"/>
+            </button>
+            <button class="o_gantt_button_collapse_rows btn btn-secondary" title="Collapse rows">
+                <i class="fa fa-compress"/>
+            </button>
+        </div>
+    </div>
+
+    <t t-name="GanttView.RangeButtons">
+        <t t-if="isMobile">
+            <t t-call="GanttView.RangeButtons.Mobile"/>
+        </t>
+        <t t-else="">
+            <t t-call="GanttView.RangeButtons.Loop"/>
+        </t>
+    </t>
+
+    <t t-name="GanttView.RangeButtons.Mobile">
+        <a class="btn btn-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+            <t t-esc="SCALES[activateScale].string"/>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <t t-call="GanttView.RangeButtons.Loop"/>
+        </ul>
+    </t>
+
+    <t t-name="GanttView.RangeButtons.Loop">
+        <t t-foreach="allowedScales" t-as="scale">
+            <button t-attf-class="o_gantt_button_scale btn btn-secondary #{scale == activateScale ? 'active' : ''} #{isMobile ? 'dropdown-item' : ''}" type="button" t-att-data-value="scale" t-att-data-hotkey="SCALES[scale].hotkey" >
+                <t t-esc="SCALES[scale].string"/>
+            </button>
+        </t>
+    </t>
+
+    <div t-name="GanttView" class="o_gantt_view">
+        <div class="o_gantt_view_container container-fluid p-0">
+            <div class="row g-0 o_gantt_header_container position-sticky bg-view">
+                <div class="col-md-2 col-3 position-relative o_gantt_row_sidebar text-center" t-if="widget.state.groupedBy.length">
+                    <span class="fw-bold" t-esc="widget.string"/>
+                </div>
+                <div class="col position-relative o_gantt_header_slots">
+                    <div class="row g-0">
+                        <div class="col text-center p-2 fw-bold">
+                            <t t-esc="widget._getFocusDateFormat()"/>
+                        </div>
+                    </div>
+                    <div class="row g-0 o_gantt_header_scale">
+                        <t t-set="formats" t-value="{'week': 'dddd, Do', 'month': 'DD', 'year': isMobile ? 'MMM' : 'MMMM'}"/>
+
+                        <t t-foreach="widget.viewInfo.slots" t-as="slot">
+                            <t t-set="isToday" t-value="slot.isSame(new Date(), 'day') &amp;&amp; widget.state.scale !== 'day'"/>
+                            <div t-attf-class="col position-relative o_gantt_header_cell text-center p-2 #{isToday? 'o_gantt_today' : ''} ">
+                                <t t-if="widget.state.scale in formats" t-esc="slot.format(formats[widget.state.scale])"/>
+                                <small t-else="">
+                                    <b t-esc="slot.format('k')"/>
+                                    <span class="d-block d-xl-inline-block" t-esc="slot.format('a')"/>
+                                </small>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-0">
+                <div class="col position-relative o_gantt_row_container">
+                </div>
+            </div>
+            <div class="row g-0 o_gantt_total position-relative" t-if="widget.totalRow">
+                <div class="col position-relative o_gantt_total_row_container">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div t-name="GanttView.Connector" t-attf-class="invisible o_connector_creator_wrapper o_connector_creator_wrapper_{{vertical_alignment}} {{!widget.options.isGroup ? pill.decorations.join(' ') : ''}} {{'_color' in pill ? 'o_gantt_color_' + pill._color : ''}}">
+        <div t-attf-class="o_connector_creator o_connector_creator_{{vertical_alignment}} o_connector_creator_{{horizontal_alignment}}">
+            <div t-att-data-id="pill.id" class="o_connector_creator_bullet">
+            </div>
+        </div>
+    </div>
+
+    <t t-name="GanttView.PillsConnectors">
+        <t t-call="GanttView.Connector" t-if="widget.dependencyEnabled">
+            <t t-set="vertical_alignment" t-value="'top'"></t>
+            <t t-set="horizontal_alignment" t-value="'left'"></t>
+        </t>
+        <t t-out="0"/>
+        <t t-call="GanttView.Connector" t-if="widget.dependencyEnabled">
+            <t t-set="vertical_alignment" t-value="'bottom'"></t>
+            <t t-set="horizontal_alignment" t-value="'right'"></t>
+        </t>
+    </t>
+
+    <div t-name="GanttView.Row" t-attf-class="row g-0 o_gantt_row bg-view #{widget.isTotal ? 'o_gantt_row_total' : widget.isGroup ? 'o_gantt_row_group' : 'o_gantt_row_nogroup'} #{widget.isOpen ? 'open' : ''}" t-att-data-from-server="widget.fromServer" t-att-data-row-id="widget.rowId">
+        <div t-if="!widget.options.hideSidebar" t-attf-class="col-md-2 col-3 o_gantt_row_sidebar position-relative #{!widget.name ? 'o_gantt_row_sidebar_empty' : '' }" t-attf-style="padding-left: #{widget.leftPadding}px;">
+            <t t-if="widget.progressBar">
+                <t t-if="widget.progressBar.max_value > 0">
+                    <span t-attf-class="position-absolute o_gantt_progressbar bg-opacity-25 {{ widget.progressBar.ratio > 100 ? 'o_gantt_group_danger text-bg-danger' : 'o_gantt_group_success text-bg-success' }}"
+                        t-att-style="'width: ' + Math.min(widget.progressBar.ratio, 100) + '%;'">
+                        &amp;nbsp;
+                    </span>
+                    <span t-attf-class="position-absolute o_gantt_text_hoverable z-index-1 {{widget.progressBar.ratio > 0 ? (widget.progressBar.ratio > 100 ? 'o_gantt_group_danger  text-bg-danger' : 'o_gantt_group_success text-bg-success') : 'o_gantt_group_none' }} {{ widget.isMobile ? 'o_gantt_text_mobile': 'o_gantt_text_hoverable'}}">
+                        <span class="o_gantt_group_hours px-1" t-att-style="widget.cellHeight ? 'line-height: ' + (widget.isMobile ? widget.cellHeight / 2 : widget.cellHeight) + 'px;' : ''">
+                            <t t-esc="widget.progressBar.value_formatted"/> / <t t-esc="widget.progressBar.max_value_formatted"/>
+                        </span>
+                    </span>
+                </t>
+                <t t-else="">
+                    <span name="progress_bar_no_max_value" class="position-absolute o_gantt_text_hoverable o_gantt_group_none">
+                        <span name="progress_bar_no_max_value_group" class="o_gantt_group_hours px-1"
+                              t-attf-title="#{widget.progressBar.warning} #{widget.progressBar.value_formatted}."
+                              t-att-style="widget.cellHeight ? 'line-height: ' + (widget.isMobile ? widget.cellHeight / 2 : widget.cellHeight) + 'px;' : ''">
+                            <i class="fa fa-exclamation-triangle"></i>
+                        </span>
+                    </span>
+                </t>
+            </t>
+            <div t-attf-class="o_gantt_row_title text-truncate pe-1 #{widget.isTotal ? 'text-end pe-3 h4 my-0 fw-bold' : ''}" t-att-title="widget.name or ''"
+                t-att-style="widget.cellHeight ? 'line-height: ' + widget.cellHeight + 'px;' : ''">
+                <i t-if="!widget.isTotal &amp; widget.isGroup"
+                    t-attf-class="fa small #{widget.isOpen ? 'fa-minus' : 'fa-plus'}"/>
+                <div t-if="widget.thumbnailUrl and widget.resId"
+                    t-attf-class="o_gantt_row_thumbnail_wrapper d-inline #{!widget.options.isGroup ? 'me-1' : ''}">
+                    <img t-att-src="widget.thumbnailUrl" class="rounded-circle o_gantt_row_thumbnail"/>
+                </div>
+                <t t-esc="widget.name"/>
+            </div>
+        </div>
+        <div class="o_gantt_slots_container col position-relative">
+            <div class="row g-0">
+                <div t-foreach="widget.slots" t-as="slot"
+                    t-attf-class="col position-relative o_gantt_cell #{slot.isToday ? 'o_gantt_today' : ''} #{slot.hasButtons ? 'o_gantt_hoverable' : ''}"
+                    t-att-data-date="slot.start.format('YYYY-MM-DD HH:mm:ss')"
+                    t-attf-style="height: #{widget.cellHeight}px;#{slot.style ? ' ' + slot.style : ''}">
+
+                    <!-- plan and add buttons -->
+                    <div t-if="slot.hasButtons" class="o_gantt_cell_buttons justify-content-center">
+                        <div class="position-absolute d-flex">
+                            <i t-if="widget.options.canCreate and widget.options.canCellCreate" title="Create" t-attf-class="o_gantt_cell_add fa fa-plus d-flex justify-content-center #{widget.options.canPlan ? 'pe-1' : ''}"/>
+                            <i t-if="widget.options.canPlan" title="Plan existing" class="o_gantt_cell_plan fa fa-search-plus d-flex justify-content-center"/>
+                        </div>
+                    </div>
+
+                    <!-- pills -->
+                    <t t-foreach="slot.pills" t-as="pill">
+                        <div t-if="widget.isTotal"
+                             class="o_gantt_pill_wrapper position-absolute d-flex justify-content-center"
+                             t-attf-style="width: #{pill.width}; #{widget.isRTL ? 'right' : 'left'}: #{pill.leftMargin}%;">
+                            <t t-call="GanttView.PillsConnectors">
+                                <div t-att-data-id="pill.id"
+                                     t-attf-class="o_gantt_pill o_gantt_consolidated_pill"
+                                     t-att-title="pill.display_name"
+                                     t-att-style="'height:' + pill.totalHeight + '%;'"/>
+                            </t>
+                            <span class="o_gantt_consolidated_pill_title position-absolute text-truncate px-1" t-esc="pill.display_name"/>
+                        </div>
+
+                        <div t-elif="pill.consolidated"
+                             t-attf-class="o_gantt_pill_wrapper position-absolute o_gantt_consolidated_wrapper #{widget.options.isGroup ? 'o_gantt_pill_wrapper_group' : ''}"
+                             t-attf-style="width: #{pill.width}; #{widget.isRTL ? 'right' : 'left'}: #{pill.leftMargin}%;">
+                            <t t-call="GanttView.PillsConnectors">
+                                <div
+                                    t-att-data-id="pill.id"
+                                    t-attf-class="o_gantt_pill o_gantt_consolidated_pill #{pill.status? 'bg-' + pill.status + ' border-' + pill.status : ''}  #{!widget.options.isGroup ? pill.decorations.join(' ') : ''}"
+                                    t-att-title="pill.display_name"
+                                    >
+                                    <span 
+                                        t-if="widget.progressField"
+                                        t-attf-class="position-absolute o_gantt_progress"
+                                        t-attf-data-progress="#{pill._progress}%;"
+                                        t-attf-style="width:#{pill._progress}%;"
+                                        >
+                                        &amp;nbsp;
+                                    </span>
+                                </div>
+                            </t>
+                            <span class="o_gantt_consolidated_pill_title position-relative text-truncate px-1" t-esc="pill.display_name"/>
+                        </div>
+
+                        <div t-else=""
+                             t-attf-class="o_gantt_pill_wrapper position-absolute #{widget.options.isGroup ? 'o_gantt_pill_wrapper_group' : ''}"
+                             t-attf-style="width: #{pill.width}; margin-top: #{pill.topPadding}px; #{widget.isRTL ? 'right' : 'left'}: #{pill.leftMargin}%;">
+                            <t t-call="GanttView.PillsConnectors">
+                                <div
+                                    t-att-data-id="pill.id"
+                                    t-attf-class="o_gantt_pill position-relative #{!widget.options.isGroup ? pill.decorations.join(' ') : ''}  #{'_color' in pill ? 'o_gantt_color_' + pill._color : ''}"
+                                    t-attf-style="#{widget.options.isGroup ? pill.style : ''}"
+                                    t-att-title="pill.display_name"
+                                    >
+                                    <span 
+                                        t-if="widget.progressField"
+                                        t-attf-class="position-absolute o_gantt_progress"
+                                        t-attf-data-progress="#{pill._progress}%;"
+                                        t-attf-style="width:#{pill._progress}%;"
+                                        >
+                                        &amp;nbsp;
+                                    </span>
+                                    <!-- README: be careful when modifying the DOM inside the pill ; @_onMouseMove is strongly dependant of it -->
+                                    <p class="text-truncate position-relative mb-0 o_gantt_pill_title" t-esc="pill.label ? pill.label : pill.display_name"/>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <t t-name="GanttView.ResizeBadge">
+        <span t-if="diff === 0" class="o_gantt_pill_resize_badge badge rounded-pill" t-attf-style="#{direction}: 0px;">
+            <t t-esc="_.str.sprintf('%s %s', diff, time)"/>
+        </span>
+        <span t-elif="diff &gt; 0" class="o_gantt_pill_resize_badge badge rounded-pill text-success" t-attf-style="#{direction}: 0px;">
+            <t t-esc="_.str.sprintf('+%s %s', diff, time)"/>
+        </span>
+        <span t-else="diff &lt; 0" class="o_gantt_pill_resize_badge badge rounded-pill text-danger" t-attf-style="#{direction}: 0px;">
+            <t t-esc="_.str.sprintf('%s %s', diff, time)"/>
+        </span>
+    </t>
+
+    <!-- Default popover template used if none is defined in the Gantt view arch -->
+    <div t-name="gantt-popover">
+        <ul class="p-0 mb-0 list-unstyled d-flex flex-row">
+            <li class="d-flex flex-column pe-2">
+                <strong>Name:</strong>
+                <strong>Start:</strong>
+                <strong>Stop:</strong>
+            </li>
+            <li class="d-flex flex-column">
+                <span t-esc="display_name"/>
+                <span t-esc="userTimezoneStartDate.format('DD MMM, LT')"/>
+                <span t-esc="userTimezoneStopDate.format('DD MMM, LT')"/>
+            </li>
+        </ul>
+    </div>
+
+</templates>

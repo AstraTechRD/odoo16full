@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="accountReports.search_bar">
+        <div class="o_cp_searchview" t-if="report_options.search_bar">
+            <div class="o_searchview">
+                <i class="o_searchview_icon oi oi-search" role="img" aria-label="Search..." title="Search..."></i>
+
+                <div class="o_searchview_input_container">
+                    <input class="o_searchview_input" type="text" placeholder="Search line"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="accountReports.footnote_dialog">
+        <form role="form">
+            <textarea name="note" rows='4' class="js_account_reports_footnote_note" t-att-data-line="id" placeholder="Insert foot note here"><t t-out="text"/></textarea>
+        </form>
+    </t>
+
+    <t t-name="accountReports.buttons">
+        <t t-foreach="report_options['buttons']" t-as="button">
+            <button t-if="button == report_options['buttons'][0]" type="button" class="btn btn-primary" t-att-action="button.action" t-att-action_param="button.action_param"><t t-out="button.name"/></button>
+            <button t-else="" type="button" class="btn btn-secondary" t-att-action="button.action" t-att-action_param="button.action_param"><t t-out="button.name"/></button>
+        </t>
+    </t>
+
+    <div t-name='paymentDateForm'>
+        <form role="form">
+            <label for="expectedDate">Expected Payment Date</label>
+            <div class='o_account_reports_payment_date_picker' />
+            <input type="hidden" id='target_id' t-att-value='target_id' />
+        </form>
+    </div>
+
+    <div t-name='m2mWidgetTable' class="o_form_view">
+        <table class="o_group o_inner_group">
+            <tr t-foreach="fields" t-as="field">
+                <td class="o_td_label"><label class="o_form_label" t-out="fields[field].label"/></td>
+                <td t-att-id="field + '_field'" style="min-width:200px;"/>
+            </tr>
+        </table>
+    </div>
+
+    <t t-name="accountReports.DebugPopupTemplate">
+        <table>
+            <t t-foreach="expressions_detail" t-as="engine_and_totals">
+                <t t-set="expression_engine" t-value="engine_and_totals[0]"/>
+                <t t-set="expression_totals" t-value="engine_and_totals[1]"/>
+
+                <tr>
+                    <td><strong t-out="expression_engine"/></td>
+                </tr>
+
+                <t t-foreach="expression_totals" t-as="label_and_infos">
+                    <t t-set="expression_label" t-value="label_and_infos[0]"/>
+                    <t t-set="expression_info" t-value="label_and_infos[1]"/>
+
+                    <tr>
+                        <td>
+                            <span t-out="expression_label"/>
+                        </td>
+
+                        <td>
+                            <span t-out="' = ' + expression_info['formula']"/>
+                        </td>
+                    </tr>
+
+                    <tr t-if="expression_info['subformula']">
+                        <td/>
+                        <td>
+                            <span>[<t t-out="expression_info['subformula']"/>]</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td/>
+                        <td>
+                            <span> = <strong t-out="expression_info['value']"/></span>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+
+            <tr t-if="expressions_detail.length == 0">
+                <td colspan="2"><span>Line without formula</span></td>
+            </tr>
+        </table>
+
+    </t>
+
+    <t t-name="accountReports.ColumnInfoPopupTemplate">
+        <table>
+            <t t-if="carryover or applied_carryover">
+                <tr>
+                    <td><strong>Carryover</strong></td>
+                    <td/>
+                </tr>
+
+                <tr t-if="applied_carryover">
+                    <td colspan="2">
+                        <span><strong t-out="applied_carryover"/> were carried over to this line from previous period.</span>
+                    </td>
+                </tr>
+
+                <tr t-if="carryover">
+                    <td colspan="2">
+                        <span t-if="carryover_target"><strong t-out="carryover"/> will be carried over to <t t-out="carryover_target"/> in the next period.</span>
+                        <span t-else=""><strong t-out="carryover"/> will be carried over to this line in the next period.</span>
+                    </td>
+                </tr>
+
+                <tr t-if="allow_carryover_audit">
+                    <td/>
+                    <td>
+                        <button t-att-data-expression-id="expression_id" class="btn btn-sm btn-secondary js_view_carryover_lines">View Carryover Lines</button>
+                    </td>
+                </tr>
+            </t>
+
+        </table>
+
+    </t>
+
+    <t t-name="accountReports.EditColumnTemplate">
+        <div>
+            <input id="account_reports_manual_value_input" class="account_reports_popup_no_hide"/>
+            <button
+                class="account_reports_submit_manual_value btn btn-primary btn-sm"
+                t-att-data-column-group-key="column_group_key"
+                t-att-data-target-expression-id="target_expression_id"
+                t-att-data-rounding="rounding">Post</button>
+        </div>
+    </t>
+
+</templates>

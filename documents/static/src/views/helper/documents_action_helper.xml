@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsActionHelper" owl="1">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <t t-out="props.noContentHelp"/>
+                <div t-if="state.mailTo">
+                    <p class="fw-normal">Or send emails to 
+                        <a t-attf-href="mailto:{{state.mailTo}}">
+                            <t t-esc="state.mailTo"/>
+                        </a>
+                    </p>
+                    <p class="fw-normal"><em>Tip: configure your scanner to send all documents to this address.</em></p>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

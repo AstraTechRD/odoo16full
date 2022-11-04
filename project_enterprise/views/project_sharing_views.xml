@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_sharing_project_task_view_form_inherited" model="ir.ui.view">
+        <field name="name">project.task.form.timesheet.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/field[@name='date_deadline']" position="before">
+                <label for="planned_date_begin" string="Planned Date"
+                    attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}"/>
+                <div class="o_row" attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}">
+                    <field name="planned_date_begin" widget="daterange" options="{'related_end_date': 'planned_date_end'}" attrs="{'required': [('planned_date_end', '!=', False)]}"/>
+                    <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                    <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}"/>
+                    <field name="planned_date_end" widget="daterange" options="{'related_start_date': 'planned_date_begin'}" attrs="{'required': [('planned_date_begin', '!=', False)]}"/>
+                </div>
+            </xpath>
+        </field>
+     </record>
+
+     <record id="project_sharing_project_task_view_kanban_inherited" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.kanban.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='date_deadline']" position="after">
+                <div class="o_row" t-if="record.planned_date_begin.raw_value">
+                    <field name="planned_date_begin" widget="daterange"/>
+                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                    <field name="planned_date_end" widget="daterange"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

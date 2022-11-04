@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="sale_subscription_order_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <page name="customer_signature" position="after">
+                <page string="Notes" name="notes">
+                    <field name="internal_note" nolabel="1" placeholder="Internal notes"/>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

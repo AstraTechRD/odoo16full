@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_workorder_iot.PedalStatusButton" owl="1">
+        <button class="btn w-100 border-end border-bottom"
+                t-att-class="{ 'btn-primary o_active': props.pedalConnected, 'btn-warning': !props.pedalConnected }"
+                data-tooltip="Pedal Status" aria-label="Pedal Status" t-on-click.stop="props.takeOwnership">
+            <i class="fa fa-clipboard" />
+        </button>
+    </t>
+
+    <t t-name="mrp_workorder_iot.Tablet" t-inherit="mrp_workorder.Tablet" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_tablet_timeline')]" position="attributes">
+            <attribute name="t-if">state.showPedalStatus or steps.length</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_tablet_timeline')]" position="inside">
+            <t t-if="state.showPedalStatus">
+                <PedalStatusButton pedalConnected="state.pedalConnected" takeOwnership.bind="takeOwnership" />
+            </t>
+        </xpath>
+    </t>
+
+</templates>

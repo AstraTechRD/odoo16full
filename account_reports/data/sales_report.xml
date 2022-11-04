@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- EC sales list report templates -->
+    <template id="sales_report_main_template" inherit_id="account_reports.main_template"
+              primary="True">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class">o_account_reports_table table-hover table-bold-unfold</attribute>
+        </xpath>
+        <xpath expr="//div[@id='warnings_div']" position="before">
+            <div class="no_print o_country_specific_report_label"
+                 t-if="options.get('country_specific_report_label')">
+                <i class="fa fa-globe"></i>
+                <t t-out="options.get('country_specific_report_label')"></t>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='warnings_div']" position="inside">
+            <div class="alert alert-info text-center mb-0 no_print" t-if="options.get('missing_vat_warning')">
+                <span>Some partners are missing a VAT number.</span>
+            </div>
+            <div class="alert alert-info text-center mb-0 no_print"
+                 t-if="options.get('unexpected_intrastat_tax_warning')">
+                <span>Intrastat taxes are applied on unexpected journal entries (international or between non intrastat countries).</span>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Sales report search template with filter on tax (for non-generic reports) -->
+   <template id="ec_sales_with_tax_filter_search_template" inherit_id="account_reports.search_template"
+              primary="True">
+        <xpath expr="//div[@id='variant_choice_option']" position="before">
+            <div class="btn-group dropdown o_filter_component">
+                <t t-set="codes" t-value="options.get('ec_tax_filter_selection', [])"/>
+                <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown">
+                    <t t-set="names" t-value="[c.get('name')[:1] for c in codes if c and c.get('selected')]"/>
+                    <span class="fa fa-filter"/>
+                    Codes:
+                    <t t-out="'All' if len(names)==3 else ', '.join(names)"/>
+                </button>
+                <div class="dropdown-menu o_filter_menu" role="menu">
+                    <t t-foreach="codes" t-as="tax_type">
+                        <a role="menuitem" class="dropdown-item js_account_report_choice_filter"
+                           data-filter="ec_tax_filter_selection" t-att-title="tax_type.get('name')"
+                           t-att-data-id="tax_type.get('id')">
+                            <t t-out="tax_type.get('name')"/>
+                        </a>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!--    Generic country (and root) report    -->
+    <record id="generic_ec_sales_report" model="account.report">
+        <field name="name">Generic EC Sales List</field>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">last_month</field>
+        <field name="load_more_limit" eval="80"/>
+        <field name="main_template">account_reports.sales_report_main_template</field>
+        <field name="search_template">account_reports.search_template</field>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_account_ec_sales_report_handler"/>
+        <field name="column_ids">
+            <record id="account_financial_report_ec_sales_country" model="account.report.column">
+                <field name="name">Country Code</field>
+                <field name="expression_label">country_code</field>
+                <field name="figure_type">none</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="account_financial_report_ec_sales_vat" model="account.report.column">
+                <field name="name">VAT Number</field>
+                <field name="expression_label">vat_number</field>
+                <field name="figure_type">none</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="account_financial_report_ec_sales_amount" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">balance</field>
+                <field name="figure_type">monetary</field>
+                <field name="sortable" eval="True"/>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="notify_approval">
+        <p t-if="approved">Approved as <em t-esc="group_name"/> <i class="fa fa-thumbs-up text-success"/></p>
+        <p t-else="">Rejected as <em t-esc="group_name"/> <i class="fa fa-thumbs-down text-danger"/></p>
+    </template>
+</odoo>

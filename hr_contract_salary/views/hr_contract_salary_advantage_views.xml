@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_advantage_action" model="ir.actions.act_window">
+        <field name="name">Advantages</field>
+        <field name="res_model">hr.contract.salary.advantage</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="context">{'search_default_groupby_structure_type': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hr_contract_advantage_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.salary.advantage.view.tree</field>
+        <field name="model">hr.contract.salary.advantage</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Package Advantage">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="res_field_id"/>
+                <field name="field" invisible="1"/>
+                <field name="structure_type_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_contract_advantage_view_search" model="ir.ui.view">
+        <field name="name">hr.contract.salary.advantage.view.search</field>
+        <field name="model">hr.contract.salary.advantage</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <group string="Group By">
+                    <filter string="Structure Type" name="groupby_structure_type" context="{'group_by':'structure_type_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_contract_advantage_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.salary.advantage.view.form</field>
+        <field name="model">hr.contract.salary.advantage</field>
+        <field name="arch" type="xml">
+            <form string="Salary Package Advantage">
+                <sheet>
+                    <label for="name" string="Advantage"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Meal Vouchers"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="res_field_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="cost_res_field_id" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="field" invisible="1"/>
+                            <field name="advantage_type_id"/>
+                            <field name="structure_type_id"/>
+                            <field name="icon"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="impacts_net_salary"/>
+                            <field name="uom"/>
+                        </group>
+                        <group>
+                            <field name="folded"/>
+                            <field name="fold_label" attrs="{'invisible': [('folded', '=', False)]}"/>
+                            <field name="fold_res_field_id" attrs="{'invisible': [('folded', '=', False)]}" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="fold_field" invisible="1"/>
+                            <field name="manual_res_field_id" attrs="{'invisible': [('display_type', '!=', 'manual')]}" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="manual_field" invisible="1"/>
+                            <field name="display_type"/>
+                            <field name="value_ids" attrs="{'invisible': [('display_type', 'not in', ['dropdown', 'radio', 'dropdown-group'])]}">
+                                <tree editable="bottom">
+                                    <control>
+                                        <create name="add_line_control" string="Add a line"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'section'}"/>
+                                    </control>
+                                    <field name="display_type" invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="value"
+                                        attrs="{'invisible': [('display_type', '=', 'section')], 'required': [('display_type', '!=', 'section')]}"/>
+                                    <field name="color"
+                                        attrs="{'invisible': [('display_type', '=', 'section')], 'required': [('display_type', '!=', 'section')]}"/>
+                                    <field name="hide_description" attrs="{'invisible': [('display_type', '=', 'section')]}"/>
+                                </tree>
+                            </field>
+                            <field name="slider_min" attrs="{'invisible': [('display_type', '!=', 'slider')]}"/>
+                            <field name="slider_max" attrs="{'invisible': [('display_type', '!=', 'slider')]}"/>
+                            <field name="requested_documents_field_ids" options="{'no_create': True, 'no_edit': True, 'no_open': True}" widget="many2many_tags"/>
+                            <field name="requested_documents" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="activity_type_id" options="{'no_create_edit': True}"/>
+                            <field name="activity_creation" widget="radio" attrs="{'invisible': [('activity_type_id', '=', False)], 'required': [('activity_type_id', '!=', False)]}"/>
+                            <field name="activity_creation_type" widget="radio" attrs="{'invisible': [('activity_type_id', '=', False)], 'required': [('activity_type_id', '!=', False)]}"/>
+                            <field name="activity_responsible_id" options="{'no_create_edit': True}" attrs="{'invisible': [('activity_type_id', '=', False)], 'required': [('activity_type_id', '!=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="sign_template_id"/>
+                            <field name="sign_copy_partner_id" attrs="{'invisible': [('sign_template_id', '=', False)]}" context="{'force_email':True, 'show_email': True}"/>
+                            <field name="sign_frenquency" attrs="{'invisible': [('sign_template_id', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="hide_description"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem
+        id="salary_package_menu"
+        name="Salary Package Configurator"
+        parent="hr.menu_human_resources_configuration"
+        sequence="100"/>
+
+    <menuitem
+        id="salary_package_advantage"
+        action="hr_contract_advantage_action"
+        parent="hr_contract_salary.salary_package_menu"
+        sequence="1"/>
+
+</odoo>

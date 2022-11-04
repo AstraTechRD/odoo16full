@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_employee_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.appraisal</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Appraisal" string="Appraisal" data-key="hr_appraisal" groups="hr.group_hr_manager">
+                    <h2>Feedback Templates</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-12 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Feedback Templates</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <div class="text-muted">
+                                    Configure General Feedback Template
+                                </div>
+
+                                <div class="row mt16">
+                                    <div class="col-lg-6">
+                                        <label for="appraisal_employee_feedback_template" class="fw-bold" string="Employee Feedback Template"/>
+                                        <field name="appraisal_employee_feedback_template" class="w-100 feedback-template" nolabel="1"/>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="appraisal_manager_feedback_template" class="fw-bold" string="Manager Feedback Template"/>
+                                        <field name="appraisal_manager_feedback_template" class="w-100 feedback-template" nolabel="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Appraisals</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="appraisal_plan"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Appraisals Plans</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <div class="text-muted">
+                                    Automatically generate appraisals
+                                </div>
+                                <div attrs="{'invisible': [('appraisal_plan','=',False)]}" class="mt8">
+                                    <div class="content-group">
+                                        <field name="duration_after_recruitment" class="text-center w-10" style="width: 10%; min-width: 4rem;"/>
+                                        <label for="duration_after_recruitment" string=" months after recruitment, then after" class="o_light_label"/>
+                                    </div>
+                                    <div class="content-group">
+                                        <field name="duration_first_appraisal" class="text-center" style="width: 10%; min-width: 4rem;"/>
+                                        <label for="duration_first_appraisal" string=" months, then every " class="o_light_label"/>
+                                        <field name="duration_next_appraisal" class="text-center" style="width: 10%; min-width: 4rem;"/>
+                                        <label for="duration_next_appraisal" string=" months." class="o_light_label"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_appraisal_survey"/>
+                            </div>
+                            <div class="o_setting_right_pane" name="360_feedback">
+                                <span class="o_form_label">360 Feedback</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                <div class="text-muted">
+                                    Ask to fill a survey to other employees
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'hr_appraisal', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="hr_appraisal_menu_configuration"
+        name="Settings"
+        parent="menu_hr_appraisal_configuration"
+        sequence="0"
+        action="hr_appraisal_config_settings_action"
+        groups="base.group_system"/>
+</odoo>

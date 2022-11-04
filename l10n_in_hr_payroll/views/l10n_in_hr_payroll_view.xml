@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="hr_contract_form_in_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.in.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='salary_info']" position="inside">
+                    <group string="Allowance" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                        <field name="driver_salay"/>
+                        <field name="house_rent_allowance_metro_nonmetro"/>
+                        <field name="supplementary_allowance"/>
+                    </group>
+                    <group string="Deduction" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                        <field name="tds"/>
+                        <field name="voluntary_provident_fund"/>
+                        <field name="medical_insurance"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_payslip_run_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.form.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='date_end']" position="after">
+                    <newline/>
+                    <field name="available_advice" attrs="{'invisible': [('country_code', '!=', 'IN')]}"/>
+                </xpath>
+                 <xpath expr="//button[@name='action_draft']" position="after">
+                    <button name="create_advice" string="Create Advice" type="object" states="close"
+                        attrs="{'invisible': [('country_code', '!=', 'IN')]}"/>
+                 </xpath>
+            </data>
+            </field>
+        </record>
+
+        <record id="hr_payslip_run_search_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.search.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_filter"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='name']" position="after">
+                    <separator orientation="vertical"/>
+                    <filter string="To Advice" name="toadvice" domain="[('available_advice','=', False)]" help="Payslip Batches ready to be Adviced"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+        <record id="view_hr_bank_advice_tree" model="ir.ui.view">
+            <field name="name">hr.payroll.advice.tree</field>
+            <field name="model">hr.payroll.advice</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Advice">
+                    <field name="date"/>
+                    <field name="number"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="bank_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_bank_advice_form" model="ir.ui.view">
+            <field name="name">hr.payroll.advice.form</field>
+            <field name="model">hr.payroll.advice</field>
+            <field name="arch" type="xml">
+                <form string="Bank Advice">
+                    <header>
+                        <button name="confirm_sheet"  string="Confirm Sheet" states="draft" type="object" class="oe_highlight"/>
+                        <button name="compute_advice" string="Compute Advice" states="draft" type="object" class="oe_highlight"/>
+                        <button name="cancel_sheet" string="Cancel Advice" states="draft"  type="object"/>
+                        <button name="set_to_draft" string="Set to Draft" states="cancel,confirm" type="object"/>
+                        <div class="oe_right">
+                            <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft"/>
+                        </div>
+                        <div class="clearfix"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <h2><field name="name" placeholder="Name"/></h2>
+                            <div><field name="date" placeholder="Date"/></div>
+                            <group colspan="3" col="6">
+                                <field name="bank_id"/>
+                                <field name="number"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Payment Lines" name="payment_lines">
+                                <field name="line_ids" colspan="4" nolabel="1">
+                                    <tree string="Payment Lines" editable="bottom">
+                                        <field name="employee_id"/>
+                                        <field name="name"/>
+                                        <field name="ifsc" invisible="1"/>
+                                        <field name="ifsc_code" attrs="{'invisible':[('ifsc','=', False)]}" />
+                                        <field name="bysal"/>
+                                        <field name="debit_credit"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Other Information" name="other_info">
+                                <group colspan="4" col="6">
+                                <field name="company_id"
+                                groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="chaque_nos"/>
+                                <newline/>
+                                <field name="neft"/>
+                                <field name="batch_id"/>
+                                </group>
+                                <separator colspan="4" string="Letter Details"/>
+                                <field name="note" colspan="4" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_payroll_advice_filter" model="ir.ui.view">
+            <field name="name">hr.payroll.advice.select</field>
+            <field name="model">hr.payroll.advice</field>
+            <field name="arch" type="xml">
+                <search string="Search Payment advice">
+                    <group>
+                        <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Advices"/>
+                        <filter string="Confirm" name="confirm" domain="[('state','=','confirm')]" help="Confirm Advices"/>
+                        <separator orientation="vertical"/>
+                        <field name="date"/>
+                        <field name="number"/>
+                        <field name="name"/>
+                        <field name="bank_id"/>
+                        <field name="batch_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By">
+                        <filter string="Bank" name="bank_id" context="{'group_by':'bank_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Status" name="state" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Company" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_hr_bank_advice_tree" model="ir.actions.act_window">
+            <field name="name">Payment Advices</field>
+            <field name="res_model">hr.payroll.advice</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hr_bank_advice_tree"/>
+            <field name="search_view_id" ref="view_hr_payroll_advice_filter"/>
+        </record>
+
+        <menuitem
+            action="action_view_hr_bank_advice_tree"
+            id="hr_menu_payment_advice"
+            parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+        />
+
+        <record id="view_advice_line_form" model="ir.ui.view">
+            <field name="name">advice.line.form</field>
+            <field name="model">hr.payroll.advice.line</field>
+            <field name="arch" type="xml">
+                <form string="Advice Lines">
+                    <sheet>
+                        <h1><field name="advice_id" placeholder="Bank Advice"/></h1>
+                        <group>
+                            <field name="employee_id" />
+                            <field name="name" />
+                            <field name="ifsc" invisible="1"/>
+                            <field name="ifsc_code" attrs="{'invisible':[('ifsc','=', False)]}" />
+                            <field name="bysal" />
+                            <field name="debit_credit" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_res_company_da" model="ir.ui.view">
+            <field name="name">res.company.form.l10n_in_hr_payroll.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//notebook" position="inside">
+                    <page name="indian_payroll" string="Indian Payroll" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                        <group>
+                            <field name="dearness_allowance"/>
+                        </group>
+                    </page>
+                 </xpath>
+            </data>
+            </field>
+        </record>
+
+        <!--  Shortcuts -->
+
+        <record id="act_hr_emp_payslip_list" model="ir.actions.act_window">
+            <field name="name">Payslips</field>
+            <field name="res_model">hr.payslip</field>
+            <field name="view_id" ref="hr_payroll.view_hr_payslip_tree"/>
+            <field name="domain">[('advice_id', '=', active_id)]</field>
+            <field name="binding_model_id" ref="model_hr_payroll_advice"/>
+            <field name="binding_view_types">form</field>
+        </record>
+</odoo>

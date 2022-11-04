@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_281_10_form_wizard" model="ir.ui.view">
+        <field name="name">l10n_be.281_10.form</field>
+        <field name="model">l10n_be.281_10</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.l10n_be_281_10_form_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//p[@name='save_warning']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <p name="save_warning" position="after">
+                <field name="documents_enabled" invisible="1"/>
+                <div>
+                    <div attrs="{'invisible': [('documents_enabled', '=', True)]}">
+                        <p><strong>Warning: </strong>In order to post the 281.10 sheets in the employee portal, you have to Enable "Human Resources" in the <a name="%(documents.configuration_action)d" type="action" class="oe_link">"Documents" app settings</a>.</p>
+                    </div>
+                </div>
+            </p>
+            <button name="action_generate_xml" position="after">
+                <button name="action_post_in_documents" string="Post in Documents" type="object" confirm="This will add all the sheets in the employee portal. Are you sure you want to proceed ?" attrs="{'invisible': [('documents_enabled', '=', False)]}"/>
+            </button>
+            <field name="pdf_to_generate" position="after">
+                <field name="pdf_to_post" groups="base.group_no_one"/>
+            </field>
+        </field>
+    </record>
+</odoo>

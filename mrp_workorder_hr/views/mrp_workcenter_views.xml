@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_workcenter_tree_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.workcenter.tree.view.inherit</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position='after'>
+                <field name="allow_employee" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="mrp_workcenter_form_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.workcenter.form.view.inherit</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='costing']" position='after'>
+                <group string="Operations" name="workorder_employee">
+                    <field name="allow_employee"/>
+                    <div attrs="{'invisible': [('allow_employee', '=', False)]}">
+                        <span class="o_form_label oe_edit_only">Allowed Employees </span>
+                        <field name="employee_ids" widget="many2many_tags"
+                            domain="[('company_id', '=', company_id)]"
+                            />
+                    </div>
+                </group>
+            </xpath>
+            <xpath expr="//div[@id='costs_hour']" position='after'>
+                <label for="employee_costs_hour" string=""/>
+                <div>
+                    <field name="employee_costs_hour" class="oe_inline"/> per employee
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

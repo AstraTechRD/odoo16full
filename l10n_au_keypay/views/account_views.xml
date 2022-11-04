@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_form_inherit" model="ir.ui.view">
+        <field name="name">account.account.form.inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="deprecated" position="after">
+                <field name="l10n_au_kp_enable" invisible="1"/>
+                <field name="l10n_au_kp_account_identifier" attrs="{'invisible': [('l10n_au_kp_enable', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

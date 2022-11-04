@@ -1,0 +1,31 @@
+<odoo>
+    <record id="view_shipping_method_sendcloud" model="ir.ui.view">
+        <field name="name">SendCloud Shipping Wizard</field>
+        <field name="model">sendcloud.shipping.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Shipping Product">
+                <div colspan="2" class="alert alert-info" role="status">
+                    <p><i class="fa fa-info-circle"/> Available shipping methods depend on enabled carriers in your account.</p>
+                </div>
+                <group string="Delivery">
+                    <field name="shipping_product"/>
+                    <field name="ship_carrier"  attrs="{'invisible': [('shipping_product', '=', False)]}"/>
+                    <field name="ship_min_weight" attrs="{'invisible': [('shipping_product', '=', False)]}"/>
+                    <field name="ship_max_weight" attrs="{'invisible': [('shipping_product', '=', False)]}"/>
+                    <field name="ship_country_ids" widget="many2many_tags" attrs="{'invisible': [('shipping_product', '=', False)]}"/>
+                </group>
+                <group string="Return">
+                    <field name="return_product" required="context.get('return_on_delivery')"/>
+                    <field name="return_carrier" attrs="{'invisible': [('return_product', '=', False)]}"/>
+                    <field name="return_min_weight" attrs="{'invisible': [('return_product', '=', False)]}"/>
+                    <field name="return_max_weight" attrs="{'invisible': [('return_product', '=', False)]}"/>
+                    <field name="return_country_ids" widget="many2many_tags" attrs="{'invisible': [('return_product', '=', False)]}"/>
+                </group>
+                <footer>
+                    <button name="action_validate" type="object" string="Select" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

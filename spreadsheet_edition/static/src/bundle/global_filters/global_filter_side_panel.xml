@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+     <div t-name="spreadsheet_edition.FilterComponent" class="o_filter_component" owl="1">
+        <div
+            t-attf-class="o_topbar_filter_icon fa fa-search {{activeFilter ? 'btn-link': ''}}"
+            title="Filters"
+            t-on-click="toggleDropdown"></div>
+    </div>
+
+    <div t-name="spreadsheet_edition.StandaloneMany2OneField"/>
+
+    <div t-name="spreadsheet_edition.GlobalFiltersSidePanel" class="o_spreadsheet_global_filters_side_panel" owl="1">
+        <div class="o_side_panel_section pivot_filter_section" t-foreach="filters" t-as="filter" t-key="'filter_' + filter_index">
+            <div class="pivot_filter">
+                <div class="o_side_panel_title">
+                    <span class="o_side_panel_filter_label" t-esc="env._t(filter.label)"/>
+                </div>
+                <div class="pivot_filter_input">
+                    <FilterValue filter="filter" model="env.model"/>
+                    <i t-if="!isReadonly"
+                        class="fa fa-cog btn btn-link text-muted o_side_panel_filter_icon"
+                        title="Edit"
+                        t-on-click="() => this.onEdit(filter.id)"/>
+                </div>
+            </div>
+        </div>
+        <div t-if="!isReadonly" class="o_side_panel_section">
+            <div class="o_add_filter">Add a new filter...</div>
+            <div class="o-sidePanelButtons">
+                <button t-on-click="newDate" class="o-sidePanelButton o_global_filter_new_time">
+                    <span>Date</span>
+                </button>
+                <button t-if="hasDataSources()" t-on-click="newRelation" class="o-sidePanelButton o_global_filter_new_relation">
+                    <span>Relation</span>
+                </button>
+                <button t-on-click="newText" class="o-sidePanelButton o_global_filter_new_text">
+                    <span>Text</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div t-name="spreadsheet_edition.FilterEditorSidePanel" class="o_spreadsheet_filter_editor_side_panel" owl="1">
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Label</div>
+            <div t-att-class="missingLabel ? 'o_field_invalid' : ''" class="o_required_modifier">
+                <input
+                    type="text"
+                    class="o_input o_global_filter_label"
+                    t-model="state.label"
+                    t-att-placeholder="placeholder"/>
+            </div>
+        </div>
+        <div class="o_side_panel_section o_side_panel_related_model" t-if="state.type === 'relation'">
+            <div class="o_side_panel_title">Related model</div>
+            <div t-att-class="missingModel ? 'o_field_invalid' : ''" class="o_required_modifier">
+                <ModelSelector
+                    value="state.relation.relatedModel.label"
+                    models="relatedModels"
+                    onModelSelected.bind="onModelSelected"
+                />
+            </div>
+        </div>
+        <div t-if="state.type === 'date'" class="o_side_panel_section">
+            <div class="o_side_panel_title">Time range</div>
+                <select
+                    t-model="state.date.type"
+                    t-on-change="onDateOptionChange"
+                    class="o_input">
+                    <t t-foreach="dateRangeTypes" t-as="range" t-key="range.type">
+                        <option t-att-selected="isDateTypeSelected(range.type) ? 1 : 0" t-att-value="range.type">
+                            <t t-esc="range.description"/>
+                        </option>
+                    </t>
+                </select>
+        </div>
+        <div class="o_side_panel_section" t-if="state.type !== 'relation' || state.relation.relatedModel.technical">
+            <div class="o_side_panel_title">Default value</div>
+            <div t-if="state.type === 'date' and state.date.type !== 'relative'" class="d-flex align-items-center mt-2">
+                <input
+                    type="checkbox"
+                    class="me-2"
+                    id="date_automatic_filter"
+                    t-att-checked="state.date.defaultsToCurrentPeriod"
+                    t-on-change="toggleDefaultsToCurrentPeriod"
+                />
+                <label for="date_automatic_filter"> Automatically filter on the current period </label>
+            </div>
+            <select
+                t-if="state.type === 'date'and state.date.type === 'relative'"
+                t-model="state.date.defaultValue"
+                class="o_input o_relative_date_selection">
+                <option value=""/>
+                <t t-foreach="relativeDateRangesTypes" t-as="range" t-key="range.type">
+                    <option t-att-selected="range.type === state.date.defaultValue ? 1 : 0" t-att-value="range.type">
+                        <t t-esc="range.description"/>
+                    </option>
+                </t>
+            </select>
+            <input t-if="state.type === 'text'"
+                type="text"
+                class="o_input o_global_filter_default_value"
+                t-model="state.text.defaultValue"/>
+            <RecordsSelector
+                t-if="state.type === 'relation' and state.relation.relatedModel.technical"
+                resModel="state.relation.relatedModel.technical"
+                resIds="state.relation.defaultValue"
+                t-key="state.relation.relatedModel.technical"
+                onValueChanged.bind="onValuesSelected"
+            />
+        </div>
+        <div class="o_side_panel_section" t-if="shouldDisplayFieldMatching()">
+            <div class="o_side_panel_title o_field_matching_title">Field matching</div>
+            <div class="text-muted">
+                Match this filter to a field for each data source
+            </div>
+
+            <div t-foreach="Object.values(state.fieldMatchings)"
+                    t-as="object"
+                    t-key="object_index"
+                    t-att-class="object.fieldMatch.chain ? '' : 'o_missing_field'"
+                    class="o_pivot_field_matching o_required_field">
+                <div>
+                    <span class="fw-medium" t-esc="object.name"/>
+                    <span class="o_pivot_model_technical_name text-muted"> (<t t-esc="object.tag"/>)</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div t-att-class="wrongFieldMatchings.includes(object_index) ? 'o_field_invalid' : ''"
+                        class="d-flex flex-column justify-content-end w-50 flex-grow-1"
+                    >
+                        <span class="text-muted" t-if="state.type === 'date'">Date field</span>
+                        <SpreadsheetModelFieldSelector
+                                fieldName="getModelField(object.fieldMatch)"
+                                resModel="object.model()"
+                                readonly="false"
+                                isDebugMode="!!env.debug"
+                                update="(chainString,chain) => this.selectedField(object_index, chainString, extractField(chain))"
+                                filter.bind="filterModelFieldSelectorField"
+                                t-key="object_index + (state.relation.relatedModel.technical or 'not_defined')"/>
+                    </div>
+                    <FilterFieldOffset
+                        t-if="state.type === 'date'"
+                        onOffsetSelected="(e) => this.onSetFieldOffset(object_index, e.target.value)"
+                        selectedOffset="object.fieldMatch and object.fieldMatch.offset || 0"
+                        />
+                </div>
+            </div>
+        </div>
+        <div class="o_side_panel_section o-sidePanelButtons">
+            <button t-if="props.id" t-on-click="onDelete" class="o-sidePanelButton o_global_filter_delete text-danger">Remove</button>
+            <button t-on-click="onCancel" class="o-sidePanelButton o_global_filter_cancel">Cancel</button>
+            <button t-on-click="onSave" class="o-sidePanelButton o_global_filter_save">Save</button>
+        </div>
+    </div>
+</templates>

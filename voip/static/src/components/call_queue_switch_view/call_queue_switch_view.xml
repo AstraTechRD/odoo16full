@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="voip.CallQueueSwitchView" owl="1">
+        <div class="o_CallQueueSwitchView" t-ref="root">
+            <button class="o_CallQueueSwitchView_button btn d-flex align-items-center fa-stack" t-att-title="callQueueSwitchView.title" t-on-click.stop="callQueueSwitchView.onClickHandler">
+                <i class="o_CallQueueSwitchView_phoneIcon fa fa-fw fa-lg fa-phone fa-stack-1x"/>
+                <i class="o_CallQueueSwitchView_operatorIcon fa fa-stack-1x fa-plus text-success" t-att-class="callQueueSwitchView.operatorIconClasses"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

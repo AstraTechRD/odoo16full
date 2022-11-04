@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template_sidebar" xml:space="preserve">
+    <div t-name="hr_contract_salary.salary_package_resume">
+        <t t-foreach="categories" t-as="category">
+            <h2><t t-esc="category"/></h2>
+            <t t-foreach="lines[category]" t-as="resume_code">
+                <t t-set="line" t-value="lines[category][resume_code]"/>
+                <t t-set="is_net" t-value="resume_code === 'NET'"/>
+                <div class="py-1 px-0 border-top">
+                    <div class="row">
+                        <t t-if="is_net">
+                            <label class="col-md-2 col-form-label text-odoo" t-att-for="line[0]"><t t-esc="line[0]"/></label>
+                            <div class="col-md-4 mt8">
+                                <a role="button" data-bs-toggle="modal" data-bs-target="#hr_cs_modal" name="details" data-bs-backdrop="false" data-bs-dismiss="modal">Details</a>
+                                <a role="button" name="recompute" title="Recompute" aria-label="Recompute" class="d-none"><i class="fa fa-refresh fa-spin"/></a>
+                            </div>
+                        </t>
+                        <t t-if="!is_net">
+                            <label class="col-md-6 col-form-label text-odoo" t-att-for="line[0]"><t t-esc="line[0]"/> <t t-if="line[3]"><i class="fa fa-question-circle text-info" t-att-title="line[3]"/></t></label>
+                        </t>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input class="form-control" type="text" t-att-value="line[1]" t-att-name="line[0]" disabled="disabled"/>
+                                <div class="input-group-text"><t t-esc="line[2]"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </div>
+</templates>

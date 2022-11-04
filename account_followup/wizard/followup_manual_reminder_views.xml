@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="manual_reminder_view_form" model="ir.ui.view">
+        <field name="name">account.followup.manual_reminder.view.form</field>
+        <field name="model">account_followup.manual_reminder</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="can_edit_body" invisible="1"/>
+
+                <group name="main" col="4">
+                    <group colspan="1">
+                        <group string="Actions" name="options" colspan="2" col="1">
+                            <group name="print" colspan="1">
+                                <field name="print" nolabel="1"/><label for="print" string="Print"/>
+                            </group>
+                            <group name="email" colspan="1">
+                                <field name="email" nolabel="1"/><label for="email"/>
+                            </group>
+                            <group name="sms" colspan="1">
+                                <field name="sms" nolabel="1"/><label for="sms"/>
+                            </group>
+                        </group>
+                    </group>
+
+                    <group colspan="3">
+                        <group string="SMS" name="sms" attrs="{'invisible':[('sms', '=', False)]}" colspan="2">
+                            <group colspan="2">
+                                <field name="sms_template_id" options="{'no_create': True}"
+                                       context="{'default_model': 'res.partner', 'default_body': sms_body}"/>
+                            </group>
+                            <group colspan="2">
+                                <label for="sms_body" colspan="2"/>
+                                <field name="sms_body" string="Sms Content" class="oe-bordered-editor" widget="text"
+                                       placeholder="Write your message here..." force_save="1" nolabel="1"
+                                       attrs="{'readonly': [('can_edit_body', '=', False)]}" colspan="2"/>
+                            </group>
+                        </group>
+                        <group string="Print" name="print_options" attrs="{'invisible':[('print', '=', False)]}" colspan="2">
+                            <group colspan="2">
+                                <field name="join_invoices" nolabel="1"/><label for="join_invoices"/>
+                            </group>
+                        </group>
+                    </group>
+                </group>
+
+                <group name="email_header" attrs="{'invisible':[('email','=',False)]}">
+                    <group colspan="1">
+                        <field name="email_recipient_ids" string="Email Recipients" widget="many2many_tags_email"
+                               placeholder="Add contacts to notify..."
+                               context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
+                    </group>
+                    <group colspan="2">
+                        <field name="subject" string="Email Subject" placeholder="Kind reminder!"
+                               attrs="{'required': [('email', '=', True)]}"/>
+                    </group>
+                </group>
+
+                <group name="email_content" attrs="{'invisible':[('email','=',False), ('print','=',False)]}">
+                    <group colspan="2">
+                        <label for="body_html" colspan="2"/>
+                        <field name="body_html" string="Letter/Email Content" class="oe-bordered-editor"
+                               placeholder="Write your message here..." force_save="1" nolabel="1"
+                               options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)]}" colspan="2"/>
+                    </group>
+                </group>
+
+                <group name="attachments" col="4">
+                    <group colspan="2">
+                        <field name="attachment_ids" widget="many2many_binary" nolabel="1"
+                               colspan="2" attrs="{'invisible':[('email','=',False)]}"/>
+                    </group>
+                    <group colspan="2">
+                        <field name="template_id" string="Content Template" options="{'no_create': True}"
+                               context="{'default_model': 'res.partner', 'default_body': body_html, 'default_subject': subject}"
+                               attrs="{'invisible':[('email','=',False), ('print','=',False)]}"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button string="Send &amp; Print"
+                            attrs="{'invisible':['|',('print', '=', False), '&amp;', ('email','=',False),('sms', '=', False)]}"
+                            name="process_followup" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Send"
+                            attrs="{'invisible':['|',('print', '=', True),'&amp;',('email','=',False),('sms', '=', False)]}"
+                            name="process_followup" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Print"
+                            attrs="{'invisible': ['|','|',('print', '=', False),('email','=',True),('sms', '=', True)]}"
+                            name="process_followup"
+                            type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="manual_reminder_action" model="ir.actions.act_window">
+        <field name="name">Send and Print</field>
+        <field name="res_model">account_followup.manual_reminder</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

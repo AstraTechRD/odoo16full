@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_pe.partner_demo_company_pe" model="res.partner">
+            <field name="l10n_pe_district" ref="l10n_pe.district_pe_030101"/>
+        </record>
+        <record id="l10n_pe.l10n_pe_partner_1" model="res.partner">
+            <field name="street_name">CONDESA DE ROCAFORT</field>
+            <field name="l10n_pe_district" ref="l10n_pe.district_pe_030101"/>
+        </record>
+        <record id="partner_pe_transporte_operador" model="res.partner">
+            <field name="name">Luigys Toro</field>
+            <field name="vat">20100030595</field>
+            <field name="street_number">728</field>
+            <field name="street_name">JESUS VALDES SANCHEZ</field>
+            <field name="city">Chorrillos</field>
+            <field name="country_id" ref="base.pe"/>
+            <field name="state_id" ref="base.state_pe_15"/>
+            <field name="l10n_pe_district" ref="l10n_pe.district_pe_030101"/>
+            <field name="l10n_latam_identification_type_id" ref="l10n_pe.it_RUC"/>
+            <field name="zip">25350</field>
+            <field name="phone">+51 912 345 677</field>
+            <field name="email">operador@company.peexample.com</field>
+            <field name="website">www.peoperador.com</field>
+        </record>
+    </data>
+</odoo>

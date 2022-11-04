@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsAttachmentViewer" owl="1">
+        <div t-if="previewState.documentList and previewState.documentList.exists()" t-ref="root"
+            t-attf-style="top: {{state.topOffset}}px !important; z-index: 990; background-color: rgba(0, 0, 0, 0.7);"
+            class="position-absolute w-100 h-100 start-0 d-flex justify-content-center align-items-center"
+            t-on-keydown="onGlobalKeydown">
+            <AttachmentViewer record="previewState.documentList.attachmentViewer"/>
+        </div>
+    </t>
+</templates>

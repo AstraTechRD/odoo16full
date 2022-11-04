@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form"</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <field name="transport_mode_car" position="replace">
+                <field name="transport_mode_car" invisible="1"/>
+                <div name="car_id_div" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}"
+                    colspan="2" class="o_checkbox_optional_field"
+                    groups="fleet.fleet_group_manager">
+                    <label for="transport_mode_car" string="Catalog Company Car"/>
+                    <field name="transport_mode_car" attrs="{'invisible': [('wage_type', '=', 'hourly')]}" nolabel="1"/>
+                    <field name="car_id" nolabel="1" attrs="{'invisible': [('transport_mode_car', '=', False)]}"/>
+                </div>
+            </field>
+            <xpath expr="//label[@for='fuel_card']" position="before">
+                <field name="new_car" invisible="1"/>
+                <div name="new_car_model_id_div"
+                    colspan="2" class="o_checkbox_optional_field"
+                    groups="fleet.fleet_group_manager"
+                    attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}">
+                    <label for="new_car" string="New Company Car"/>
+                    <field name="new_car" attrs="{'invisible': [('wage_type', '=', 'hourly')]}" nolabel="1"/>
+                    <field name="new_car_model_id" attrs="{'invisible': [('new_car', '=', False)]}" nolabel="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='fuel_card']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_car', '=', False), ('new_car', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='fuel_card_div']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('wage_type', '=', 'hourly'), ('transport_mode_car', '=', False), ('new_car', '=', False)]}</attribute>
+            </xpath>
+            <field name="car_atn" position="attributes">
+                <attribute name="attrs">{'invisible': [('transport_mode_car', '=', False), ('new_car', '=', False)]}</attribute>
+            </field>
+            <field name="car_atn" position="after">
+                <div name="bike_id_div" attrs="{'invisible': ['|', ('wage_type', '=', 'hourly'), ('country_code', '!=', 'BE')]}"
+                    colspan="2" class="o_checkbox_optional_field"
+                    groups="fleet.fleet_group_manager">
+                    <label for="transport_mode_bike" string="Catalog Company Bike"/>
+                    <field name="transport_mode_bike" nolabel="1"/>
+                    <field name="bike_id" nolabel="1" attrs="{'invisible': [('transport_mode_bike', '=', False)]}"/>
+                </div>
+                <div name="new_bike_model_id_div"
+                    colspan="2" class="o_checkbox_optional_field"
+                    groups="fleet.fleet_group_manager"
+                    attrs="{'invisible': [('country_code', '!=', 'BE')]}">
+                    <label for="new_bike" string="New Company Bike"/>
+                    <field name="new_bike" attrs="{'invisible': [('wage_type', '=', 'hourly')]}" nolabel="1"/>
+                    <field name="new_bike_model_id" attrs="{'invisible': [('new_bike', '=', False)]}" nolabel="1"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.tree</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="car_id" optional="hide"/>
+                <field name="car_model_name" optional="hide"/>
+                <field name="fuel_type" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

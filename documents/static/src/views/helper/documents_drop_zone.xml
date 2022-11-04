@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsDropZone" owl="1">
+        <t t-if="state.dragOver">
+            <div class="h-100 w-100 start-0 position-absolute o_documents_drop_over_zone"
+                t-attf-style="top: {{state.topOffset}}px !important; z-index: 10;"
+                t-on-drop.stop.prevent="onDrop">
+                <div class="h-100 w-100 position-sticky">
+                    <div class="o_documents_upload_text text-center text-white">
+                        <i class="d-block fa fa-upload fa-9x mb-4"/>
+                        <span>Drop files here to upload</span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

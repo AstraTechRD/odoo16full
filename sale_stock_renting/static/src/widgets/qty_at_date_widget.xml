@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template id="template" xml:space="preserve">
+    <!-- TODO: rename this to QtyAtDatePopup in master version -->
+    <t t-name="sale_stock_renting.QtyDetailPopOver" t-inherit="sale_stock.QtyDetailPopOver" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div" position="attributes">
+            <attribute name="t-if">!props.record.data.is_rental || !props.record.data.return_date || !props.record.data.start_date</attribute>
+        </xpath>
+        <xpath expr="//div" position="after">
+            <div t-else="">
+            <h6>Availability</h6>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Available for Rent</strong><br/>
+                            <small> <span t-out="props.calcData.stock_start_date"/></small>
+                            <small> to <span t-out="props.calcData.stock_end_date"/></small>
+                        </td>
+                        <td>
+                            <t t-out="props.record.data.virtual_available_at_date"/> <t t-out="props.record.data.product_uom[1]"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="text-start btn btn-link" type="button" t-on-click="openRentalGanttView">
+                <i class="fa fa-fw o_button_icon fa-arrow-right"/>
+                View Rentals
+            </button>
+            </div>
+        </xpath>
+    </t>
+</template>

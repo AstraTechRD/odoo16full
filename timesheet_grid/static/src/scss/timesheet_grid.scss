@@ -1,0 +1,13 @@
+@include media-breakpoint-down(sm) {
+    .timesheet-timer .o_timer_discard {
+        @include o-position-absolute($top: 0.5rem, $right: 2rem);
+    }
+}
+
+.o_grid_timer_header {
+    width: $o-horizontal-padding * 2 !important;
+    
+    @include media-breakpoint-up(md) {
+        width: 2% !important;
+    }
+}

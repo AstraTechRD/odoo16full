@@ -1,0 +1,78 @@
+$knowledge-bg--active: #1ba1e4;
+.o_knowledge_form_view {
+    --knowledge-article-sidebar-size: 300px;
+
+    background-color: var(--knowledge-view-bg, $o-white);
+    .o_knowledge_aside {
+        width: clamp(200px, var(--knowledge-article-sidebar-size), 576px);;
+        transition: width 0.15s linear;
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 0.2em 0;
+            position: relative;
+            &.o_article_has_children,
+            &.mjs-nestedSortable-branch {
+                > div > .o_article_caret {
+                    // Make caret visible when dragging an article under a childless article.
+                    visibility: visible !important;
+                }
+            }
+        }
+        li > ul > li{
+            &:not(.ui-sortable-helper) {
+                margin-left: 1.28571429em * 0.5; // Workaround to get half .fa-fw icon's width.
+                padding-left: 0.8em;
+
+                &:before, &:after {
+                    content: '';
+                    background-color: $border-color;
+                }
+
+                &:before {
+                    @include o-position-absolute($top: 1em, $left: 0);
+                    width: 1.8em;
+                    height: 1px;
+                    margin: auto;
+                }
+
+                &:after {
+                    @include o-position-absolute(0, auto, 0, 0);
+                    width: 1px;
+                    height: 100%;
+                }
+
+                &:last-child {
+                    padding-bottom: 0;
+
+                    &:after {
+                        height: 1em;
+                    }
+                }
+            }
+            &.o_article_has_children:before,
+            &.mjs-nestedSortable-branch:before {
+                @include o-position-absolute($top: 1em, $left: 0);
+                width: .6em;
+                height: 1px;
+            }
+        }
+    }
+    // = Resizer
+    // --------------------------------------------------------------------------
+    .o_knowledge_article_form_resizer {
+        // Use '$spacers' measures to match surrounding elements padding
+        $-resizer-spacing: map-get($spacers, 1);
+        $-resizer-line-width: map-get($spacers, 1);
+
+        @include o-position-absolute(0, auto, 0, $-resizer-spacing * -1);
+        cursor: col-resize;
+        touch-action: none;
+
+        span {
+            @include o-position-absolute(0, auto, 0, $-resizer-spacing + ($-resizer-line-width * -0.5));
+        }
+    }
+}

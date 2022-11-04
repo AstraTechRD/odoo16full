@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_pe_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.pe.edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invoicing_settings']" position="after">
+                <!-- TODO: <t attrs="{'invisible': [('country_code', '!=', 'PE')]}" ??? -->
+                <h2>Peruvian Electronic Invoicing</h2>
+                <div class="row mt16 o_settings_container" id="invoicing_peruvian_settings">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="l10n_pe_edi_provider"/>
+                            <div class="text-muted">
+                                Operator that will sign your invoices (by default IAP, Odoo take care of this
+                                process and give you for free the first 1000 declarations) as part of
+                                the enterprise licence.<br/>
+                                <!--TODO: (problem that the action would not exist <button string="-> Buy more credits" type="object"
+                                        attrs="{'invisible': [('l10n_pe_edi_provider', '!=', 'iap')]}" name="buy_credits"
+                                        class="btn btn-sm btn-link mb8"/>-->
+                            </div>
+                            <div class="text-muted">
+                                <field name="l10n_pe_edi_provider" widget="radio"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="l10n_pe_edi_test_env" widget="upgrade_boolean"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="l10n_pe_edi_test_env"/>
+                            <div class="text-muted">
+                                In order to avoid sign invoices on your test environment set as true when you do not
+                                need the invoices to be really signed (it is blocked after several attempts to avoid
+                                abuse, please ensure just use it for testing purposes).
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('l10n_pe_edi_provider', '=', 'iap')]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label mt16">SOL Credentials</span>
+                            <div class="text-muted">
+                                This login and password is given by the SUNAT it means by its spanish acronym
+                                <b>"SUNAT Operaciones en Línea - SOL"</b><br/>
+                                Official definition is: <a href="https://www.sunat.gob.pe/menu/ayuda/claveSOL.htm">here</a><br/>
+                                How do you get it?: <a href="http://www.sunat.gob.pe/operacLinea/comoObtener.htm">here</a><br/>
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt32">
+                                    <label for="l10n_pe_edi_provider_username" class="col-md-5 o_light_label"/>
+                                    <field name="l10n_pe_edi_provider_username"/>
+                                    <label for="l10n_pe_edi_provider_password" class="col-md-5 o_light_label"/>
+                                    <field name="l10n_pe_edi_provider_password" password="True"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('l10n_pe_edi_provider', '=', 'iap')]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="l10n_pe_edi_certificate_id"/>
+                            <div class="text-muted">
+                                You will need to buy a normal electronic certificate following, you can find a list
+                                of official peruvian companies that can provide to you this service
+                                <a href="https://www.indecopi.gob.pe/web/firmas-digitales/lista-de-servicios-de-confianza-trusted-services-list-tsl-"
+                                   target="_NEW">here.</a>
+                            </div>
+                            <div class="content-group">
+                                <field name="l10n_pe_edi_certificate_id" style="width: 100%"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

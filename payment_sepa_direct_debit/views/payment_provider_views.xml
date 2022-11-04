@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">SEPA Direct Debit Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_config" position="after">
+                <group attrs="{'invisible': [('code', '!=', 'sepa_direct_debit')]}">
+                    <field name="sdd_signature_required"/>
+                    <field name="sdd_sms_verification_required"/>
+                    <field name="sdd_sms_credits"
+                           attrs="{'invisible': [('sdd_sms_verification_required', '=', False)]}"/>
+                    <field name="main_currency_id" invisible="1"/>
+                </group>
+                <group attrs="{'invisible': [('code', '!=', 'sepa_direct_debit')]}">
+                    <widget name="iap_buy_more_credits"
+                            service_name="sms"
+                            attrs="{'invisible': [('sdd_sms_verification_required', '=', False)]}"/>
+                </group>
+            </group>
+
+            <field name="image_128" position="before">
+                <div class="alert alert-warning mb16"
+                     role="status"
+                     attrs="{'invisible': ['|', ('code', '!=', 'sepa_direct_debit'), '|', ('sdd_sms_verification_required', '=', False), ('sdd_sms_credits', '>', 0)]}">
+                    You don't have enough credit to send SMS. You can buy new credits here:
+                    <button string="Buy credits"
+                            type="object"
+                            name="action_buy_sms_credits"
+                            class="btn btn-sm btn-primary float-end mb0"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <!-- Hide environment (test/prod) label -->
+    <record id="payment_provider_kanban" model="ir.ui.view">
+        <field name="name">SEPA Direct Debit Provider Kanban</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_payment_provider_desc')]//field[@name='state']"
+                   position="attributes">
+                <attribute name="attrs">{'invisible': [('code', '=', 'sepa_direct_debit')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.stock.barcode</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='stock_barcode']" position="after">
+                <field name="show_barcode_nomenclature" invisible="1"/>
+                <div class="content-group row mt16" attrs="{'invisible': [('show_barcode_nomenclature', '=', False)]}">
+                    <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
+                    <field name="barcode_nomenclature_id" attrs="{'required': [('module_stock_barcode', '=', True)]}" options="{'no_open': 1}"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='use_product_barcode']" position="replace">
+                <div class="mt8" attrs="{'invisible': [('module_stock_barcode', '=', False)]}">
+                    <button class="btn-link" type="action" string="Configure Product Barcodes" name="%(stock_barcode.product_action_barcodes)d" icon="fa-arrow-right"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='barcode_settings']" position="inside">
+                <div>
+                    <a href="stock_barcode/print_inventory_commands" class="oe_link" target="_blank">
+                        <i class="fa fa-print"/> Print barcode commands
+                    </a>
+                </div>
+                <field name="stock_barcode_demo_active" invisible="1"/>
+                <div attrs="{'invisible': [('stock_barcode_demo_active', '!=', True)]}">
+                    <a href="stock_barcode/static/img/barcodes_demo.pdf" class="oe_link" target="_blank">
+                        <i class="fa fa-print"/> Print barcode demo sheet
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

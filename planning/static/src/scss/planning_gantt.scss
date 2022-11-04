@@ -1,0 +1,18 @@
+.o_planning_gantt {
+    .o_gantt_pill {
+        &:not(.decoration-danger):not(.decoration-warning).decoration-info::before {
+            // Removes the "triangle" if .decoration-info is the only .decoration-* class set
+            content: none !important; 
+        }
+        &.o_gantt_color_0.decoration-info {
+            @include gantt-gradient-decorations(nth($o-colors-complete, 1));
+        }
+    }
+}
+
+.o_gantt_row_title, .o_m2o_avatar {
+    >.o_material_resource {
+        width: 19px;
+        height: 19px;
+    }
+}

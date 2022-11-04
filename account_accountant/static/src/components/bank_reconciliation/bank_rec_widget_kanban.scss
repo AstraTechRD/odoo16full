@@ -1,0 +1,134 @@
+.o_bank_rec_main_div {
+    display: flex;
+    flex-flow: row wrap;
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .o_bank_rec_kanban_div{
+        width: 30%;
+        height: 100%;
+        position: relative;
+        overflow: auto;
+        padding: 0;
+        margin: 0;
+
+        .o_bank_rec_st_line{
+            margin: 0px !important;
+            border-right: thick solid transparent;
+
+            &.o_bank_rec_selected_st_line{
+                border-right: thick solid mix(map-get($theme-colors, 'primary'), map-get($grays, '400'));
+            }
+
+            .statement_separator {
+                position: absolute;
+                height: 4px;
+                margin: 0;
+                padding: 2px 0 0 0;
+                border: 0;
+                z-index: 2;
+                background-color: transparent;
+
+                .btn-sm {
+                    position: relative;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    top: -12px;
+                    display: none;
+                }
+            }
+
+            .statement_separator:hover {
+                 .btn-sm {
+                    display: inline-block;
+                }
+            }
+
+            &:first-child {
+                .statement_separator {
+                    .btn-sm{
+                        top: -4px;
+                    }
+                }
+            }
+
+            .o_bank_rec_st_line_kanban_card{
+                margin: 0px !important;
+                padding-top: 12px !important;
+                padding-bottom: 12px !important;
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+                border-left: 0px !important;
+                border-right: 0px !important;
+                border-top: 0px !important;
+
+                .flex_column{
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+
+                    .flex_row{
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        width: 100%;
+
+                        #row1_col1{
+                            flex: 1 20%;
+                            width: 20%;
+                            overflow-wrap: break-word;
+                        }
+
+                        #row1_col2{
+                            flex: 1 60%;
+                            width: 60%;
+                        }
+                        #row1_col2_statement{
+                            flex: 1 30%;
+                            width: 30%;
+                        }
+                        #row1_statement{
+                            flex: 1 30%;
+                            width: 30%;
+                        }
+
+                        #row1_col3{
+                            flex: 1 20%;
+                            width: 20%;
+                            text-align: right;
+                        }
+
+                        #row2_col1{
+                            flex: 1 100%;
+                            width: 100%;
+                        }
+
+                        #row2_col2{
+                            text-align: right;
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    .o_bank_rec_right_div {
+        flex: 1 1 70%;
+        width: 70%;
+        border-left: 1px solid $border-color;
+        height: 100%;
+        position: relative;
+        overflow: auto;
+        overflow-x: hidden;
+
+        .o_form_view.o_xxl_form_view {
+            flex-direction: column !important;
+        }
+    }
+
+}
+

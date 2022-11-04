@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crossovered_budget_view_form_dialog" model="ir.ui.view">
+        <field name="name">crossovered.budget.form.inherit</field>
+        <field name="model">crossovered.budget</field>
+        <field name="inherit_id" ref="account_budget.crossovered_budget_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_budget_confirm']" position="replace"/>
+            <xpath expr="//page[@name='budget_lines']/field[@name='crossovered_budget_line']/tree/field[@name='analytic_account_id']" position="attributes">
+                <attribute name="required">context.get('project_update', False)</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crossovered_budget_lines_view_tree_inherit" model="ir.ui.view">
+        <field name="name">crossovered.budget.lines.view.tree.inherit</field>
+        <field name="model">crossovered.budget.lines</field>
+        <field name="inherit_id" ref="account_budget.view_crossovered_budget_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <xpath expr="/tree" position="inside">
+                <button type="object" name="action_open_budget_entries" string="Entries..."
+                        icon="fa-arrow-circle-o-right"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

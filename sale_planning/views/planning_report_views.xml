@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_analysis_report_view_search" model="ir.ui.view">
+        <field name="name">planning.slot.report.search</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="inherit_id" ref="planning.planning_analysis_report_view_search"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="before">
+                <field name="sale_order_id" string="Sales Order"/>
+                <field name="role_product_ids" string="Service"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_role']" position="after">
+                <filter string="My Sales Orders" name="my_sale_orders" domain="[('sale_order_id.user_id','=', uid)]" groups="sales_team.group_sale_salesman"/>
+            </xpath>
+            <xpath expr="//filter[@name='material']" position="after">
+                <separator/>
+                <filter name="billable" string="Billable" domain="[('sale_line_id', '!=', False)]"/>
+                <filter name="non_billable" string="Non Billable" domain="[('sale_line_id', '=', False)]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_role']" position="after">
+                <filter name="group_by_sale_order" string="Sales Order" context="{'group_by': 'sale_order_id'}"/>
+                <filter name="group_by_sale_order_line" string="Sales Order Item" context="{'group_by': 'sale_line_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

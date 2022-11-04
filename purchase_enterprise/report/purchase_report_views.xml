@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Add dashboard to purchase reporting -->
+        <record id="purchase.action_purchase_order_report_all" model="ir.actions.act_window">
+            <field name="view_mode">graph,pivot</field>
+            <field name="context" eval="{
+                'search_default_orders': 1,
+                'search_default_filter_date_approve': 1}"/>
+        </record>
+
+        <!-- Dashboard reporting view -->
+        <menuitem id="purchase.purchase_report" name="Purchase" parent="purchase.purchase_report_main" sequence="0" groups="purchase.group_purchase_manager" action="purchase.action_purchase_order_report_all"/>
+
+    </data>
+</odoo>

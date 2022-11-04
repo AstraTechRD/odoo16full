@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_cohort.CohortView.Buttons" owl="1">
+        <div class="btn-group" role="toolbar" aria-label="Main actions">
+            <t t-call="web.ReportViewMeasures">
+                <t t-set="measures" t-value="model.metaData.measures"/>
+                <t t-set="activeMeasures" t-value="[model.metaData.measure]"/>
+            </t>
+        </div>
+        <div class="btn-group" t-if="env.isSmall">
+            <Dropdown togglerClass="'btn btn-link dropdown-toggle'" menuClass="'dropdown-menu'">
+                <t t-set-slot="toggler">
+                    <t t-esc="model.intervals[model.metaData.interval]"/>
+                </t>
+                <t t-foreach="model.intervals" t-as="interval" t-key="interval">
+                    <DropdownItem class="`o_menu_item ${interval === model.metaData.interval ? 'selected' : ''}`"
+                        parentClosingMode="'none'"
+                        onSelected="() => this.onDropDownSelected({ interval })"
+                    >
+                        <t t-esc="interval_value"/>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+        </div>
+        <div class="btn-group" t-else="">
+            <button t-foreach="model.intervals" t-as="interval" t-key="interval"
+                    class="btn btn-secondary o_cohort_interval_button"
+                    t-att-class="{ active: interval === model.metaData.interval }"
+                    t-on-click="() => model.updateMetaData({ interval: interval})">
+                <t t-esc="model.intervals[interval]" />
+            </button>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-secondary fa fa-download o_cohort_download_button"
+                    title="Download as Excel file"
+                    t-on-click="downloadExcel"></button>
+        </div>
+    </t>
+
+    <t t-name="web_cohort.CohortView" owl="1">
+        <div t-att-class="props.className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set="displayNoContent" t-value="
+                    props.info.noContentHelp !== false and (
+                        !model.hasData() or model.useSampleModel
+                    )"
+                />
+                <t t-if="displayNoContent">
+                    <t t-if="props.info.noContentHelp" t-call="web.ActionHelper">
+                        <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
+                    </t>
+                    <t t-else="" t-call="web.NoContentHelper"/>
+                </t>
+                <t t-if="model.hasData()">
+                    <t t-component="props.Renderer" class="'o_renderer'" model="model" onRowClicked="(row) => this.onRowClicked(row)"/>
+                </t>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

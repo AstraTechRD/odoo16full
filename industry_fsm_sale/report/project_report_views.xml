@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="report_project_task_user_fsm_view_search_inherit_sale" model="ir.ui.view">
+        <field name="name">report.project.task.user.fsm.search</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="inherit_id" ref="industry_fsm.report_project_task_user_fsm_view_search"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="sale_order_id"/>
+                <field name="sale_line_id"/>
+            </field>
+            <field name="parent_id" position="after">
+                <field name="invoice_status"/>
+            </field>
+            <xpath expr="//filter[@name='in_progress']" position='after'>
+                <filter string="To Invoice" domain="[('invoice_status', '=', 'to invoice')]" name="to_invoice"/>
+            </xpath>
+            <xpath expr="//filter[@name='late']" position="after">
+                <filter string="Tasks in Overtime" name="overtime" domain="['|', ('remaining_hours', '&lt;', 0), ('remaining_hours_so', '&lt;', 0)]"/>
+            </xpath>
+            <filter name="groupby_customer" position="after">
+                <filter name="group_sale_order" context="{'group_by':'sale_order_id'}"/>
+                <filter name="sale_line_id" context="{'group_by':'sale_line_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

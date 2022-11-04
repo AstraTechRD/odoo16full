@@ -1,0 +1,375 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="appointment_type_view_search" model="ir.ui.view">
+        <field name="name">appointment.type.search</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <search string="Appointment Types">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="staff_user_ids"/>
+                <field name="category"/>
+                <filter string="My Appointments" name="my_appointments" domain="[('staff_user_ids', 'in', [uid])]"/>
+                <separator/>
+                <filter name="filter_active" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Timezone" name="group_by_timezone" context="{'group_by': 'appointment_tz'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_kanban" model="ir.ui.view">
+        <field name="name">appointment.type.kanban</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard o_appointment_kanban" banner_route="/onboarding/appointment">
+                <field name="appointment_tz"/>
+                <templates>
+                    <div t-name="kanban-box" class="oe_kanban_global_click oe_kanban_card o_appointment_kanban_card">
+                        <div class="o_appointment_kanban_card_ungrouped row mx-0">
+                            <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
+                                <span class="bg-danger">Archived</span>
+                            </div>
+                            <div class="col-lg-2 col-sm-6 col-11 py-0 my-auto">
+                                <div class="d-flex text-large">
+                                    <span class="d-inline-block text-truncate fw-normal text-large o_appointment_kanban_ungrouped_name"
+                                          t-att-title="record.name.value">
+                                        <field name="name"/>
+                                    </span>
+                                </div>
+                                <div class="d-flex">
+                                    <field name="location_id" invisible="1"/>
+                                    <div class="d-inline-block text-truncate text-large mt-1">
+                                        <i class="fa fa-map-marker me-2" title="Location"/>
+                                        <span t-if="record.location_id.value" t-esc="record.location_id.value"></span>
+                                        <span t-else="">Online</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-12 py-0 my-3 my-sm-auto d-flex">
+                                <div class="me-sm-0 me-3 text-large w-50">
+                                    <span class="fw-normal">
+                                        <field name="appointment_duration_formatted"/>
+                                    </span><br/>
+                                    <span>Duration</span>
+                                </div>
+                                <div class="my-sm-auto w-50">
+                                    <field name="staff_user_ids" widget="many2many_avatar_user"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-8 col-12 p-0 my-auto">
+                                <div class="d-sm-flex o_kanban_record_meetings_button">
+                                    <div class="d-flex col-sm-5 px-3 px-lg-1">
+                                        <div class="my-auto p-0">
+                                            <button name="action_calendar_meetings" type="object"
+                                                    class="o_appointment_text_button o_appointment_text_big_nb text-primary fw-bold">
+                                                <field name="appointment_count"/>
+                                            </button>
+                                       </div>
+                                        <div class="my-auto px-0">
+                                            <button name="action_calendar_meetings" type="object"
+                                                    class="o_appointment_text_button text-large text-start ms-2">
+                                                Meetings<br/>scheduled</button>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex col-sm-7 ms-auto px-3 ps-lg-3">
+                                        <div class="my-auto p-0">
+                                            <button name="action_calendar_events_reporting" type="object"
+                                                    class="o_appointment_text_button o_appointment_text_big_nb text-primary fw-bold">
+                                                <field name="appointment_count_report"/>
+                                            </button>
+                                        </div>
+                                        <div class="my-auto px-0">
+                                            <button name="action_calendar_events_reporting" type="object"
+                                                    class="text-large o_appointment_text_button text-start ms-2">
+                                                Total Meetings<br/>(Last 30 Days)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_ungrouped_action_buttons col-12 col-lg-3 py-0 pe-2 ps-md-2 my-md-auto my-2 d-none d-md-flex flex-wrap justify-content-lg-end"> <!--justify-content-lg-end-->
+                                <field name="active" invisible="1"/>
+                                <button name="action_customer_preview" string="Preview" type="object"
+                                        class="btn btn-secondary border me-3 text-nowrap" attrs="{'invisible': [('active', '=', False)]}">
+                                    Preview
+                                </button>
+                                <button name="action_share_invite" string="Share" type="object" class="btn btn-secondary border"
+                                        attrs="{'invisible': [('active', '=', False)]}">
+                                    Share
+                                </button>
+                            </div>
+                        </div>
+                        <div class="o_appointment_kanban_card_grouped oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
+                                    <span class="bg-danger">Archived</span>
+                                </div>
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary col-12 p-0 w-75 text-truncate" t-att-title="record.name.value">
+                                        <field name="name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content mt-3">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <button class="btn btn-primary me-2" name="action_calendar_meetings" type="object">
+                                            <field name="appointment_count"/> SCHEDULED
+                                        </button>
+                                    </div>
+                                    <div class="col-7">
+                                        <span t-if="record.appointment_tz.value" title="Timezone">
+                                            <i class="fa fa-clock-o small me-2"/><span t-esc="record.appointment_tz.value" class="align-middle"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row d-flex o_appointment_kanban_boxes">
+                                    <div class="o_appointment_kanban_box o_kanban_primary_bottom bottom_block d-flex position-relative justify-content-center px-0">
+                                        <div class="col-6"/>
+                                        <div class="col-6">
+                                            <button class="btn btn-link btn-sm py-0 fa fa-lg fa-link" name="action_share_invite" type="object" title="Share"
+                                                    attrs="{'invisible': [('active', '=', False)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_tree" model="ir.ui.view">
+        <field name="name">appointment.type.tree</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <tree string="Appointment Type" class="o_appointment_type_view_list" multi_edit="1" banner_route="/onboarding/appointment">
+                <header>
+                    <button name="action_share_invite" type="object" string="Share"/>
+                </header>
+                <field name="sequence" widget="handle"/>
+                <field name="name" readonly="1"/>
+                <field name="location_id"/>
+                <field name="appointment_tz"/>
+                <field name="staff_user_ids" widget="many2many_avatar_user" optional="hide"/>
+                <field name="country_ids" widget="many2many_tags" groups="base.group_no_one" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_tree_invitation" model="ir.ui.view">
+        <field name="name">appointment.type.tree.invitation</field>
+        <field name="model">appointment.type</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Appointment Invitations" multi_edit="1" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" readonly="1"/>
+                <field name="appointment_tz"/>
+                <field name="staff_user_ids" widget="many2many_tags" optional="hide"/>
+                <field name="category" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.form</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <form string="Appointment Type">
+                <field name="active" invisible="1"/>
+                <field name="is_published" invisible="1"/>
+                <header>
+                    <button name="action_customer_preview" string="Preview" type="object" class="btn btn-primary"
+                        attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_share_invite" string="Share" type="object" class="btn btn-secondary"
+                        attrs="{'invisible': [('active', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_button_box" name="button_box" groups="base.group_user">
+                        <button class="oe_stat_button" type="object"
+                            name="action_calendar_meetings"
+                            icon="fa-calendar">
+                            <field string="Appointments" name="appointment_count" widget="statinfo"/>
+                        </button>
+                        <button string="Customer Preview" class="oe_stat_button" type="object"
+                            name="action_customer_preview"
+                            icon="fa-globe"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "Technical Demo"'/></h1>
+                    </div>
+                    <group>
+                        <group name="left_details">
+                            <label for="appointment_duration" attrs="{'invisible': [('category', '=', 'custom')]}"/>
+                            <div attrs="{'invisible': [('category', '=', 'custom')]}">
+                                <field name="appointment_duration" class="oe_inline" widget="float_time"/><span> hours</span>
+                            </div>
+                            <label for="min_schedule_hours" string="Scheduling"/>
+                            <div>
+                                <span>at least <field name="min_schedule_hours" class="oe_inline" widget="float_time"/> hours before</span><br/>
+                                <div class="my-2" attrs="{'invisible': [('category', '=', 'custom')]}">
+                                    <span>and not after <field name="max_schedule_days" class="oe_inline mx-1"/> days</span>
+                                </div>
+                            </div>
+                            <label for="min_cancellation_hours" string="Allow Cancelling"/>
+                            <div>
+                                <span>until <field name="min_cancellation_hours" class="oe_inline mx-1" widget="float_time"/> hours before</span>
+                            </div>
+                        </group>
+                        <group name="right_details">
+                            <field name="staff_user_count" invisible="1"/>
+                            <field name="staff_user_ids" widget="many2many_tags_avatar" attrs="{'readonly': [('category', '!=', 'website')]}" options="{'no_open': False}"/>
+                            <field name="assign_method" attrs="{'invisible': ['|', ('category', '!=', 'website'), ('staff_user_count', '&lt;=', 1)]}" widget="radio" options="{'horizontal': true}"/>
+                            <field name="avatars_display" widget="radio" options="{'horizontal': true}" required="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Availability" name="slots">
+                            <field name="category" invisible="1"/>
+                            <field name="slot_ids">
+                                <tree editable="bottom" class="o_appointment_slots_list">
+                                    <field name="weekday" string="Every"
+                                        attrs="{'column_invisible': [('parent.category', '=', 'custom')]}"/>
+                                    <field name="start_hour" string="From" widget="float_time"
+                                        attrs="{'column_invisible': [('parent.category', '=', 'custom')]}"/>
+                                    <button name="durationArrow" class="fa fa-long-arrow-right text-center" title="Until (max)"
+                                        attrs="{'column_invisible': [('parent.category', '=', 'custom')]}"/>
+                                    <field name="end_hour" string="To" widget="float_time"
+                                        attrs="{'column_invisible': [('parent.category', '=', 'custom')]}"/>
+                                    <field name="start_datetime" attrs="{'column_invisible': [('parent.category', '!=', 'custom')]}"/>
+                                    <field name="end_datetime" attrs="{'column_invisible': [('parent.category', '!=', 'custom')]}"/>
+                                    <field name="restrict_to_user_ids" widget="many2many_avatar_user" domain="[('id', 'in', parent.staff_user_ids)]"
+                                        attrs="{'column_invisible': [('parent.category', 'in', ['custom', 'anytime'])]}"
+                                        options="{'no_create': True}" optional="hide"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Options" name="options">
+                            <group>
+                                <group name="options_left_details">
+                                    <field name="appointment_tz"/>
+                                    <field name="location_id" context="{'show_address': 1}" options='{"always_reload": True}'
+                                           placeholder="Keep it empty if the meeting takes place online"/>
+                                </group>
+                                <group name="options_right_details">
+                                    <field name="reminder_ids" widget="many2many_tags"/>
+                                    <field name="message_partner_ids" widget="many2many_tags_email" domain="[('type', '!=', 'private')]"/>
+                                    <field name="country_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Questions" name="questions">
+                            <field name="question_ids">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="question_type"/>
+                                    <field name="answer_ids" widget="many2many_tags"/>
+                                    <field name="question_required"/>
+                                    <button name="action_view_question_answer_inputs" type="object" class="fa fa-bar-chart p-0" title="Answer Breakdown" />
+                                </tree>
+                                <form string="Questions" name="question_form">
+                                    <group>
+                                        <group name="question_form_left">
+                                            <field name="name" placeholder='e.g. "What are your symptoms ?"'/>
+                                            <field name="question_type" widget="radio"/>
+                                        </group>
+                                        <group name="question_form_right">
+                                            <field name="placeholder" placeholder='e.g. "I feel nauseous..."'
+                                                attrs="{'invisible': [('question_type', 'in', ('select', 'radio', 'checkbox'))]}"/>
+                                            <field name="question_required"/>
+                                        </group>
+                                    </group>
+                                    <notebook attrs="{'invisible': [('question_type', 'in', ('char', 'text'))]}">
+                                        <page string="Answers" name="answers">
+                                            <field name="answer_ids">
+                                                <tree editable="bottom">
+                                                    <!-- 'display_name' is necessary for the many2many_tags to work on the appointment view -->
+                                                    <field name="display_name" invisible="1"/>
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="name"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Messages" name="messages">
+                            <label for="message_intro" string="Introduction Message"/>
+                            <field name="message_intro" class="oe-bordered-editor"
+                                   placeholder="e.g. &quot;During this meeting, we will...&quot;"/>
+                            <label for="message_confirmation" string="Extra Message on Confirmation"/>
+                            <field name="message_confirmation" class="oe-bordered-editor"
+                                   placeholder="e.g. &quot;Thank you for your trust, we look forward to meeting you!&quot;"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form_add_simplified" model="ir.ui.view">
+        <field name="name">appointment.type.view.form.add.simplified</field>
+        <field name="model">appointment.type</field>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="replace"/>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="replace"/>
+            <xpath expr="//field[@name='message_partner_ids']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form_appointment_onboarding" model="ir.ui.view">
+        <field name="name">appointment.type.form.appointment.onboarding</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment_type_view_form_add_simplified"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">appointment_onboarding_create_appointment_type_form</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="appointment_type_action" model="ir.actions.act_window">
+        <field name="name">Online Appointments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">appointment.type</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('category', '=', 'website')]</field>
+        <field name="help" type="html">
+            <p class="o_view_no_content_appointment_type">
+                No Appointment Configured
+            </p><p>
+                Share calendar link allowing people to book meetings with you or a team.
+            </p>
+        </field>
+    </record>
+
+    <record id="appointment_type_action_custom_and_anytime" model="ir.actions.act_window">
+        <field name="name">Appointment Invitations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">appointment.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="appointment_type_view_tree_invitation"/>
+        <field name="domain">[('category', '!=', 'website')]</field>
+        <field name="context">{
+            'default_category': 'custom',
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No custom appointment type has been created !
+            </p>
+        </field>
+    </record>
+</odoo>

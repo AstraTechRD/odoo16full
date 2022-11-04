@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail_enterprise.NotificationList" t-inherit="mail.NotificationList" t-inherit-mode="extension" owl="1">
+        <xpath expr="//NotificationGroup" position="replace">
+            <t t-if="notificationView and notificationView.swiperView">
+                <SwiperView record="notificationView.swiperView"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//ThreadNeedactionPreview" position="replace">
+            <t t-if="notificationView and notificationView.swiperView">
+                <SwiperView record="notificationView.swiperView"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//ChannelPreviewView" position="replace">
+            <t t-if="notificationView and notificationView.swiperView">
+                <SwiperView record="notificationView.swiperView"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

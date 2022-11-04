@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sign_send_request_view_form" model="ir.ui.view">
+        <field name="name">sign.send.request.view.form</field>
+        <field name="model">sign.send.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="set_sign_order" invisible="1"/>
+                <field name="template_id" kanban_view_ref="%(sign.sign_template_view_kanban_mobile)s" attrs="{'invisible': [('has_default_template', '=', True)]}" options="{'no_create_edit': True}"/>
+                <field colspan="2" name="signer_ids" placeholder="Write email or search contact..." attrs="{'invisible': [('signers_count', '=', 0)]}"  nolabel="1" class="o_sign_flat_o2m pe-none">
+                    <tree editable="bottom" create="false" delete="false">
+                        <field name="role_id" force_save="1" options="{'no_open': True}" class="pe-auto"/>
+                        <field name="partner_id" placeholder="Name or email..." context="{'force_email': True, 'show_email': True}" class="pe-auto"/>
+                        <field name="mail_sent_order" attrs="{'column_invisible': [('parent.set_sign_order', '=', False)]}" class="pe-auto"/>
+                    </tree>
+                </field>
+                <field name="signer_id" attrs="{'invisible': ['|', ('signers_count', '!=', 0), ('template_id', '=', False)], 'required': [('signers_count', '=', 0)]}" context="{'force_email':True, 'show_email': True}"/>
+                <field name="activity_id" invisible="1"/>
+                <field name="signers_count" invisible="1"/>
+                <field name="has_default_template" invisible="1"/>
+                <field name="is_user_signer" invisible="1"/>
+                <group invisible="not context.get('sign_directly_without_mail',False)" >
+                    <field name="subject" placeholder="Signature Request"/>
+                    <field name="filename" placeholder="Name for the file"  colspan="2"/>
+                    <field name="cc_partner_ids" widget="many2many_tags" string="Contacts in copy" placeholder="Write email or search contact..." context="{'show_email': True}"/>
+                </group>
+
+                <div invisible="not context.get('sign_directly_without_mail',False)">
+                    <div attrs="{'invisible' :[('cc_partner_ids', '=', [])]}">
+                        <field name="message_cc" placeholder="Optional Message..."/>
+                        <group>
+                                <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" class="o_sign_attachments"/>
+                        </group>
+                    </div>
+                </div>
+
+                <notebook invisible="context.get('sign_directly_without_mail',False)">
+                    <page name="signature_request" string="Signature Request">
+                        <group>
+                            <field name="subject" placeholder="Signature Request"/>
+                        </group>
+                        <div>
+                            <field name="message" class="oe-bordered-editor" placeholder="Optional Message..."/>
+                        </div>
+                    </page>
+                    <page name="signature_options" string="Options">
+                        <group string="Signature Options">
+                            <field name="filename" placeholder="Name for the file"  colspan="2"/>
+                            <field name="set_sign_order" attrs="{'invisible': [('signers_count', '&lt;', 2)]}" groups="sign.show_sign_order"/>
+                            <field name="refusal_allowed"/>
+                        </group>
+                        <group string="Contacts in copy">
+                            <field name="cc_partner_ids" string="Contacts" widget="many2many_tags" placeholder="Write email or search contact..." context="{'show_email': True}"/>
+                        </group>
+                        <field name="message_cc" placeholder="Optional Message..."/>
+                    </page>
+                </notebook>
+
+                <group invisible="context.get('sign_directly_without_mail',False)">
+                    <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" class="o_sign_attachments"/>
+                </group>
+
+                <footer>
+                    <button string="Sign Now" name="sign_directly" type="object" class="btn-primary" invisible="context.get('sign_directly_without_mail',False)" attrs="{'invisible': [('is_user_signer', '=', False)]}" data-hotkey="q"/>
+                    <button string="Send" name="send_request" type="object" class="btn-primary" invisible="context.get('sign_directly_without_mail',False)" data-hotkey="w"/>
+                    <button string="Sign Now" name="sign_directly" context="{'no_sign_mail': True, 'sign_all': True}" type="object" class="btn-primary" invisible="not context.get('sign_directly_without_mail',False)" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sign_send_request" model="ir.actions.act_window">
+        <field name="name">Signature Request</field>
+        <field name="res_model">sign.send.request</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_payroll.ActionBox" owl="1">
+        <div class="o_hr_payroll_dashboard_block card h-100">
+            <div class="card-header bg-view border-0">
+                <h2 class="card-title">
+                    Warnings
+                </h2>
+            </div>
+             <div class="list-group list-group-flush">
+                    <t t-foreach="props.actions" t-as="action" t-key="action_index">
+                        <a t-if="action.count > 0" class="list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0" href="#" t-on-click="() => this.actionService.doAction(action.action)">
+                            <span class="col-1 text-end" t-out="action.count"></span>
+                            <div class="col-10">
+                                <t t-esc="action.string"/>
+                            </div>
+                        </a>
+                    </t>
+                </div>
+        </div>
+    </t>
+</templates>

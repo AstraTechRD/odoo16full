@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="azure_interior_demo_entry" model="account.move">
+        <field name="journal_id" model="account.journal" search="[('type', '=', 'bank'), ('company_id', '=', obj().env.company.id)]"/>
+        <field name="date" eval="datetime(datetime.today().year - 1, 1, 1).date()"/>
+        <field name="ref">Payment to Azure</field>
+        <field name="move_type">entry</field>
+        <field name="line_ids" model="account.move.line" eval="[
+            (0, 0, {'name': 'Payment to Azure', 'partner_id': ref('base.res_partner_12'), 'credit': 100.0,
+                    'account_id': obj().env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', obj().env.company.id)], limit=1).default_account_id.id}),
+            (0, 0, {'name': 'Payment to Azure', 'partner_id': ref('base.res_partner_12'), 'debit': 100.0,
+                    'account_id': obj().env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', obj().env.company.id)], limit=1).suspense_account_id.id}),
+        ]"/>
+    </record>
+
+    <function name="action_post" model="account.move">
+        <value eval="[ref('l10n_us_1099.azure_interior_demo_entry')]"/>
+    </function>
+</odoo>

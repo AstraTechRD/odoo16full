@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_edi_form_comex" model="ir.ui.view">
+        <field name="model">stock.picking</field>
+        <field name="name">stock.picking.edi.form</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <field name="l10n_mx_edi_vehicle_id" position="after">
+                <field name="l10n_mx_edi_customs_no" attrs="{'invisible': [('l10n_mx_edi_is_export', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

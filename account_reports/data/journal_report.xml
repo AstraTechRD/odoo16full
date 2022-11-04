@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- remove the headers from above the table. It will be added back after each journal lines -->
+    <template id="main_table_header_journal_audit_report" inherit_id="account_reports.main_table_header" primary="True">
+        <xpath expr="//thead[hasclass('o_account_reports_header_hierarchy')]" position="replace">
+
+        </xpath>
+    </template>
+
+    <!-- In case we add the partner to the account line, we want to show it in bold. As css doesn't come with a ::firt-word selector, we need to touch the template -->
+    <template id="cell_template_journal_audit_report" inherit_id="account_reports.cell_template" primary="True">
+        <xpath expr="//span[@t-out=&quot;cell.get('name')&quot;]" position="replace">
+            <t t-if="cell.get('name_right')">
+                <span class="o_account_report_column_value"><t t-esc="cell.get('name')"/> <strong t-esc="cell.get('name_right')"/></span>
+            </t>
+            <t t-else="">
+                <span class="o_account_report_column_value" t-esc="cell.get('name')"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Line template to allow opening the group by tree views of journal entries -->
+    <template id="line_template_journal_audit_report" inherit_id="account_reports.line_template" primary="True">
+        <xpath expr="//span[hasclass('account_report_line_name')]/parent::t" position="replace">  <!-- Targets the parent of this line so that we can update the ellipsis width -->
+            <t t-if="not line.get('caret_options')">
+                <!-- Make the line name -->
+                <t t-set="line_name">
+                    <t t-if="not context.get('print_mode')">
+                        <t t-if="'move_id' in line and 'date' in line">
+                            <a t-att-data-line_id="line.get('id')" action="journal_report_action_open_business_doc">
+                                <t t-esc="line.get('name')"/>
+                            </a>
+                            <t t-if="'date' in line">
+                                - <t t-esc="line.get('date')"/>
+                            </t>
+                        </t>
+                        <t t-else="" t-esc="line.get('name')"/>
+                    </t>
+                    <t t-else="">
+                        <t t-esc="line.get('name')"/> <br/>
+                        <t t-esc="line.get('date')"/>
+                    </t>
+                </t>
+                <!-- Update the ellipsis so that id match the complete line name -->
+                <span class="account_report_line_name" t-att-title="line.get('title_hover')">
+                    <t t-esc="line_name"/>
+                    <span class="js_account_report_line_footnote" t-att-data-id="line['id']">
+                        <sup t-if="line.get('footnote')"><b class="o_account_reports_footnote_sup"><a t-att-href="'#footnote'+line['footnote']"></a><t t-esc="line['footnote']"/></b></sup>
+                    </span>
+                    &amp;nbsp;<a t-if="'journal_id' in line" t-att-data-line_id="line.get('id')" t-att-data-journal_id="line.get('journal_id')" t-att-data-name="line.get('name')" t-att-data-journal_type="line.get('journal_type')" action="open_journal_items" class="no_print oe_link_reports" groups="account.group_account_user"> => Journal Items </a>
+                </span>
+            </t>
+        </xpath>
+<!--        Make the normal line generation optional. We can then override it with a custom line used for displaying the tax sections-->
+        <xpath expr="//tr[@tabindex=&quot;0&quot;]" position="attributes">
+            <attribute name="t-if">not line.get('is_tax_section_line')</attribute>
+        </xpath>
+<!--        Add a new t-else after the line rendering, to render our custom line -->
+        <xpath expr="//tr[@tabindex=&quot;0&quot;]" position="after">
+            <tr t-else="" t-attf-class="#{trclass} #{line.get('class', '')} #{'o_js_account_report_parent_row_unfolded' if line.get('unfolded', False) else ''}"
+                tabindex="0"
+                t-att-data-parent-id="line.get('parent_id', False)"
+                t-att="{k: v for k, v in line.items() if k.startswith('data-')}"
+                t-att-style="line.get('style', '')">
+                <td t-att-data-id="line['id']" t-att-class="'o_account_report_line o_account_report_line_indent ' + (line.get('unfoldable') and 'js_account_report_foldable o_foldable_total' or '') + ' ' + line.get('name_class', '')"
+                    t-att-colspan="2"
+                    t-att-style="'padding-top: 3rem; padding-left: 8px;'"
+                >
+                    <t t-set="taxes" t-value="line.get('tax_report_lines')"/>
+                    <table t-if="taxes" class="o_account_reports_subtable table table-sm table-striped">
+                        <thead>
+                            <tr><th class="o_account_report_column_header account_report_line_name" t-att-colspan="3 if len(taxes) > 1 else 4">Taxes Applied
+                            &amp;nbsp;<a t-att-data-date_from="line.get('date_from')" t-att-data-date_to="line.get('date_to')" t-att-data-journal_id="line.get('journal_id')" t-att-data-tax_type="'tax'" t-att-data-name="'Taxes Applied'" t-att-data-journal_type="line.get('journal_type')" action="journal_report_action_open_tax_journal_items" class="no_print" groups="account.group_account_user"> => Audit </a>
+                            </th></tr>
+                            <tr>
+                                <th t-if="len(taxes) > 1">Country</th>
+                                <th>Name</th>
+                                <th class="o_account_report_column_header text-end">Base Amount</th>
+                                <th class="o_account_report_column_header text-end">Tax Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="taxes" t-as="country_name">
+                                <tr t-foreach="taxes[country_name]" t-as="tax">
+                                    <t t-if="country_name_size > 1">
+                                        <t t-if="tax_index == 0">
+                                            <td><span t-esc="country_name"/></td>
+                                        </t>
+                                        <t t-else="">
+                                            <td/>
+                                        </t>
+                                    </t>
+
+                                    <td class="account_report_line_name"><a t-att-data-date_from="line.get('date_from')" t-att-data-date_to="line.get('date_to')"  t-att-data-line_id="tax['line_id']" t-esc="tax['name']" action="journal_report_action_dropdown_audit_default_tax_report"/></td>
+                                    <td class="text-end font-monospace">
+                                        <span t-esc="tax['base_amount']"/>
+                                    </td>
+                                    <td class="text-end font-monospace">
+                                        <span t-esc="tax['tax_amount']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </td>
+                <t t-set="grids" t-value="line.get('tax_grid_summary_lines')"/>
+                <td t-att-colspan="5"
+                    t-att-style="'padding-top: 3rem;'">
+                    <table t-if="grids" class="o_account_reports_subtable table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <t t-if="len(grids) > 1">
+                                    <th class="o_account_report_column_header account_report_line_name" colspan="5">Impacted Tax Grids
+                                        &amp;nbsp;<a t-att-data-date_from="line.get('date_from')" t-att-data-date_to="line.get('date_to')" t-att-data-journal_id="line.get('journal_id')" t-att-data-tax_type="'tag'" t-att-data-name="'Impacted Tax Grids'" t-att-data-journal_type="line.get('journal_type')" action="journal_report_action_open_tax_journal_items" class="no_print" groups="account.group_account_user"> => Audit </a>
+                                    </th>
+                                </t>
+                                <t t-else="">
+                                    <th class="o_account_report_column_header account_report_line_name" colspan="4">Impacted Tax Grids
+                                        &amp;nbsp;<a t-att-data-date_from="line.get('date_from')" t-att-data-date_to="line.get('date_to')" t-att-data-journal_id="line.get('journal_id')" t-att-data-tax_type="'tag'" t-att-data-name="'Impacted Tax Grids'" t-att-data-journal_type="line.get('journal_type')" action="journal_report_action_open_tax_journal_items" class="no_print" groups="account.group_account_user"> => Audit </a>
+                                    </th>
+                                </t>
+                            </tr>
+                            <tr>
+                                <th class="o_account_report_column_header" t-if="len(grids) > 1">Country</th>
+                                <th>Grid</th>
+                                <th class="o_account_report_column_header text-end">+</th>
+                                <th class="o_account_report_column_header text-end">-</th>
+                                <th class="o_account_report_column_header text-end">Impact On Grid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="grids" t-as="country_name">
+                                <tr t-foreach="grids[country_name]" t-as="grid_name">
+                                    <t t-if="country_name_size > 1">
+                                        <t t-if="grid_name_index == 0">
+                                            <td><span t-esc="country_name"/></td>
+                                        </t>
+                                        <t t-else="">
+                                            <td/>
+                                        </t>
+                                    </t>
+                                    <td class="account_report_line_name"><a t-esc="grid_name" t-att-data-date_from="line.get('date_from')" t-att-data-date_to="line.get('date_to')"  t-att-data-tag_id="grids[country_name][grid_name]['tag_id']" action="journal_report_tax_tag_template_open_aml"/></td>
+                                    <td class="text-end font-monospace">
+                                        <span t-esc="grids[country_name][grid_name].get('+', 0)"/>
+                                    </td>
+                                    <td class="text-end font-monospace">
+                                        <span t-esc="grids[country_name][grid_name].get('-', 0)"/>
+                                    </td>
+                                    <td class="text-end font-monospace">
+                                        <span t-esc="grids[country_name][grid_name]['impact']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <!-- Extra options template to add the new filters -->
+    <template id="search_template_extra_options_journal_audit_report" inherit_id="account_reports.search_template_extra_options" primary="True">
+        <xpath expr="//button" position="inside">
+            <t t-if="options.get('group_by_months') == True">
+                <t t-if="options.get('all_entries') != None">,</t>
+                Grouped by month
+            </t>
+            <t t-if="options.get('sort_by_date') != None">
+                <t t-if="options.get('all_entries') != None">,</t>
+                <t t-if="options.get('sort_by_date') == True">
+                    Sorted by date
+                </t>
+                <t t-else="">
+                    Sorted by number
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_filter_menu')]" position="replace">
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <a role="menuitem" class="dropdown-item js_account_report_bool_filter" t-if="report.filter_show_draft" title="Include unposted entries" data-filter="all_entries" groups="account.group_account_readonly">Include Unposted Entries</a>
+                <a role="menuitem" class="dropdown-item js_account_report_bool_filter" title="Show payment lines" data-filter="show_payment_lines">Include Payments</a>
+                <div role="separator" class="dropdown-divider"/>
+                <a role="menuitem" class="dropdown-item js_account_report_bool_filter" title="Sort by date" data-filter="sort_by_date">Sort By Date</a>
+                <div role="separator" class="dropdown-divider"/>
+                <a role="menuitem" class="dropdown-item js_account_report_bool_filter" title="Group by months" data-filter="group_by_months">Group By Months</a>
+                <div role="separator" class="dropdown-divider"/>
+                <a role="menuitem" class="dropdown-item js_account_report_bool_filter" t-if="report.filter_unfold_all" title="Unfold" data-filter="unfold_all">Unfold All</a>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Enable the search options for the new filters -->
+    <template id="search_template_journal_audit_report" inherit_id="account_reports.search_template" primary="True">
+        <xpath expr="//div[@id='extra_options_dropdown']/t" position="replace">
+            <t t-call="account_reports.search_template_extra_options_journal_audit_report"/>
+        </xpath>
+    </template>
+
+    <template id="main_template_journal_audit_report" inherit_id="main_template" primary="True">
+        <xpath expr="//t[@t-call=&quot;account_reports.filter_info_template&quot;]" position="replace">
+            <t t-call="account_reports.filter_info_template_journal_audit_report"/>
+        </xpath>
+    </template>
+
+    <template id="filter_info_template_journal_audit_report" inherit_id="account_reports.filter_info_template" primary="True">
+        <xpath expr="//div[@name=&quot;filter_info_template_journals&quot;]" position="after">
+            <div class="col-12">
+                <t t-if="options.get('all_entries')">
+                    Posted and Draft Entries
+                </t>
+                <t t-else="">
+                    Posted Entries only
+                </t>
+                <t t-if="options.get('group_by_months') == True">
+                    , Grouped by month
+                </t>
+                <t t-if="options.get('sort_by_date') == True">
+                    , Sorted by date
+                </t>
+                <t t-else="">
+                    , Sorted by number
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+    <record id="journal_report" model="account.report">
+        <field name="name">Journal Report</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="load_more_limit" eval="80"/>
+        <field name="main_template">account_reports.main_template_journal_audit_report</field>
+        <field name="line_template">account_reports.line_template_journal_audit_report</field>
+        <field name="search_template">account_reports.search_template_journal_audit_report</field>
+        <field name="main_table_header_template">account_reports.main_table_header_journal_audit_report</field>
+        <field name="custom_handler_model_id" ref="model_account_journal_report_handler"/>
+        <field name="column_ids">
+            <record id="journal_report_communication" model="account.report.column">
+                <field name="name">Account</field>
+                <field name="expression_label">account</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="journal_report_partner_name" model="account.report.column">
+                <field name="name">Label</field>
+                <field name="expression_label">label</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="journal_report_amount_currency" model="account.report.column">
+                <field name="name">Debit</field>
+                <field name="expression_label">debit</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="journal_report_debit" model="account.report.column">
+                <field name="name">Credit</field>
+                <field name="expression_label">credit</field>
+                <field name="figure_type">monetary</field>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+            <record id="journal_report_credit" model="account.report.column">
+                <field name="name"/>
+                <field name="expression_label">additional_col_1</field>
+                <field name="figure_type">none</field>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+            <record id="journal_report_balance" model="account.report.column">
+                <field name="name"/>
+                <field name="expression_label">additional_col_2</field>
+                <field name="figure_type">none</field>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+        </field>
+    </record>
+</odoo>

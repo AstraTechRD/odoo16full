@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx.partner_demo_company_mx" model="res.partner">
+        <field name="state_id" ref="base.state_mx_ags"/>
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_agu_005"/>
+        <field name="l10n_mx_edi_colony_code">0027</field>
+    </record>
+
+    <record id="l10n_mx_edi_40.partner_demo_company_2_mx" model="res.partner">
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_roo_004"/>
+        <field name="l10n_mx_edi_colony_code">0057</field>
+    </record>
+
+    <record id="l10n_mx_edi_40.demo_partner" model="res.partner">
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_que_013"/>
+    </record>
+
+    <record id="l10n_mx_edi_40.demo_partner_2" model="res.partner">
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_chh_032"/>
+    </record>
+
+</odoo>

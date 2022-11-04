@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsKanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary" owl="1">
+        <xpath expr="//Layout" position="attributes">
+            <attribute name="className">(model.useSampleModel ? 'o_view_sample_data' : '') + ' o_documents_content o_documents_kanban'</attribute>
+        </xpath>
+    </t>
+</templates>

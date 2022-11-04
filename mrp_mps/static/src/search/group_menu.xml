@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_mps.GroupMenu" owl="1">
+        <Dropdown togglerClass="'btn btn-light'">
+            <t t-set-slot="toggler">
+                <i class="me-1" t-att-class="icon"/>
+                <span class="dropdown-toggle o_dropdown_title">Rows</span>
+            </t>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_starting_inventory }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_starting_inventory')">
+                    Starting Inventory
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_demand_forecast }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_demand_forecast')">
+                    Demand Forecast
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_actual_demand }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_actual_demand')">
+                    Actual Demand
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_actual_demand_year_minus_1 }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_actual_demand_year_minus_1')">
+                    Actual Demand Y-1
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_actual_demand_year_minus_2 }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_actual_demand_year_minus_2')">
+                    Actual Demand Y-2
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_indirect_demand }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_indirect_demand')">
+                    Indirect Demand Forecast
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_to_replenish }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_to_replenish')">
+                    To Replenish
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_actual_replenishment }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_actual_replenishment')">
+                    Actual Replenishment
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_safety_stock }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_safety_stock')">
+                    Forecasted Stock
+            </DropdownItem>
+            <DropdownItem
+                class="{ o_menu_item: true, selected: items.mrp_mps_show_available_to_promise }"
+                parentClosingMode="'none'"
+                onSelected="() => this._toggle_group('mrp_mps_show_available_to_promise')">
+                    Available to Promise
+            </DropdownItem>
+        </Dropdown>
+    </t>
+
+</templates>

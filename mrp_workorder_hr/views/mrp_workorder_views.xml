@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="mrp_workorder_view_tablet_form_inherit_workorder_hr" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.tablet.form.inherit.workorder.hr</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_workorder_bar_right')]" position="inside">
+                <field name="allow_employee" invisible="1"/>
+                <span style="width:auto; display:block;">
+                    <button class="btn-secondary btn-link o_unblock" type="workorder_event" attrs="{'invisible': [('allow_employee', '=', False)]}" name="popupEmployeeManagement">
+                        <span attrs="{'invisible': [('employee_name', '!=', False)]}">Log In </span>
+                        <field name="employee_name" attrs="{'invisible': [('employee_name', '=', False)]}" readonly="1" class="me-2"/>
+                        <field name="employee_ids" widget="kanban.many2many_avatar_employee" readonly="1" options="{'no_create': True}"/>
+                    </button>
+                </span>
+            </xpath>
+            <xpath expr="//button[@name='button_start']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '|', ('allow_employee', '=', True), ('is_user_working', '=', True), ('working_state', '=', 'blocked'), ('state', '=', ('done', 'cancel'))]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_pending']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('allow_employee', '=', True), ('is_user_working', '=', False), ('working_state', '=', 'blocked')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_view_form_inherit_workorder_hr" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.form.inherit.workorder.hr</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <field name="production_state" position="after">
+                <field name="allow_employee" invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='time_ids']/tree/field[@name='user_id']" position="after">
+                <field name="employee_id" attrs="{'column_invisible': [('parent.allow_employee', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='time_ids']/tree/field[@name='user_id']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.allow_employee', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='check_ids']/tree/field[@name='user_id']" position="after">
+                <field name="employee_id" attrs="{'column_invisible': [('parent.allow_employee', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='check_ids']/tree/field[@name='user_id']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.allow_employee', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='time_ids']/tree/field[@name='employee_id']" position="after">
+                <field name="employee_cost" attrs="{
+                    'column_invisible': [('parent.allow_employee', '=', False)],
+                    'invisible': [('employee_id', '=', False)]}"/>
+                <field name="total_cost" attrs="{
+                    'column_invisible': [('parent.allow_employee', '=', False)],
+                    'invisible': [('employee_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_view_kanban" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.kanban.inherit.mrp.workorder.hr</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.workcenter_line_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@name='user_avatar']" position="after">
+                <t t-if="record.employee_ids.raw_value"><field name="employee_ids" widget="many2many_avatar_employee"/></t>
+            </xpath>
+            <xpath expr="//t[@name='user_avatar']" position='attributes'>
+                <attribute name="t-if">record.last_working_user_id.raw_value &amp; ! allow_employee</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

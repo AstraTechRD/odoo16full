@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsListController" t-inherit="web.ListView" t-inherit-mode="primary" owl="1">
+        <xpath expr="//Layout" position="attributes">
+            <attribute name="className">(model.useSampleModel ? 'o_view_sample_data' : '') + ' o_documents_content'</attribute>
+        </xpath>
+        <div class="o_cp_buttons" position="replace">
+            <t t-call="{{ props.buttonTemplate }}"/>
+        </div>
+    </t>
+</templates>

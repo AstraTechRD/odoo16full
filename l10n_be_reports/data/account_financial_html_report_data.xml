@@ -1,0 +1,1394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_be_balancesheet0" model="account.report">
+        <field name="name">Bilan</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_be_balancesheet0_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_be_actif_title0" model="account.report.line">
+                <field name="name">ACTIF</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_actif_imm0" model="account.report.line">
+                        <field name="name">20/28 - Actifs immobilisés</field>
+                        <field name="code">BE_20_28</field>
+                        <field name="aggregation_formula">BE_20.balance + BE_21.balance + BE_22_27.balance + BE_28.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_be_etablissement0" model="account.report.line">
+                                <field name="name">20 - Frais d'établissement</field>
+                                <field name="code">BE_20</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">20</field>
+                            </record>
+                            <record id="account_financial_report_be_imm_incorporelles0" model="account.report.line">
+                                <field name="name">21 - Immobilisations incorporelles</field>
+                                <field name="code">BE_21</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">21</field>
+                            </record>
+                            <record id="account_financial_report_be_actif_imm_corporelles0" model="account.report.line">
+                                <field name="name">22/27 - Immobilisations corporelles</field>
+                                <field name="code">BE_22_27</field>
+                                <field name="aggregation_formula">BE_22.balance + BE_23.balance + BE_24.balance + BE_25.balance + BE_26.balance + BE_27.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_terrains0" model="account.report.line">
+                                        <field name="name">22 - Terrains et constructions</field>
+                                        <field name="code">BE_22</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">22</field>
+                                    </record>
+                                    <record id="account_financial_report_be_machines0" model="account.report.line">
+                                        <field name="name">23 - Installations, machines et outillage</field>
+                                        <field name="code">BE_23</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">23</field>
+                                    </record>
+                                    <record id="account_financial_report_be_mobilier0" model="account.report.line">
+                                        <field name="name">24 - Mobilier et matériel roulant</field>
+                                        <field name="code">BE_24</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">24</field>
+                                    </record>
+                                    <record id="account_financial_report_be_location_financement0" model="account.report.line">
+                                        <field name="name">25 - Location-financement et droits similaires</field>
+                                        <field name="code">BE_25</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">25</field>
+                                    </record>
+                                    <record id="account_financial_report_be_autres_corp0" model="account.report.line">
+                                        <field name="name">26 - Autres immobilisations corporelles</field>
+                                        <field name="code">BE_26</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">26</field>
+                                    </record>
+                                    <record id="account_financial_report_be_imm_en_cours0" model="account.report.line">
+                                        <field name="name">27 - Immobilisations en cours et acomptes versés</field>
+                                        <field name="code">BE_27</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">27</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_imm_financieres0" model="account.report.line">
+                                <field name="name">28 - Immobilisations financières</field>
+                                <field name="code">BE_28</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">28</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_actif_circ0" model="account.report.line">
+                        <field name="name">29/58 - Actif circulants</field>
+                        <field name="code">BE_29_58</field>
+                        <field name="aggregation_formula">BE_29.balance + BE_3.balance + BE_40_41.balance + BE_50_53.balance + BE_54_58.balance + BE_49.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_be_creances_plus_d_un_an0" model="account.report.line">
+                                <field name="name">29 - Créances à plus d'un an</field>
+                                <field name="code">BE_29</field>
+                                <field name="aggregation_formula">BE_290.balance + BE_291.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_creances_plus_d_un_an_commerciales0" model="account.report.line">
+                                        <field name="name">290 - Créances commerciales</field>
+                                        <field name="code">BE_290</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">290</field>
+                                    </record>
+                                    <record id="account_financial_report_be_creances_plus_d_un_an_autres0" model="account.report.line">
+                                        <field name="name">291 - Autres créances</field>
+                                        <field name="code">BE_291</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">291</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_stocks_commandes0" model="account.report.line">
+                                <field name="name">3 - Stocks et commandes en cours d'exécution</field>
+                                <field name="code">BE_3</field>
+                                <field name="aggregation_formula">BE_30_36.balance + BE_37.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_stocks0" model="account.report.line">
+                                        <field name="name">30/36 - Stocks</field>
+                                        <field name="code">BE_30_36</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">35 + 33 + 36 + 30 + 32 + 34 + 31</field>
+                                    </record>
+                                    <record id="account_financial_report_be_commandes0" model="account.report.line">
+                                        <field name="name">37 - Commandes en cours d'exécution</field>
+                                        <field name="code">BE_37</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">37</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_creances_au_plus_un_an0" model="account.report.line">
+                                <field name="name">40/41 - Créances à un an au plus</field>
+                                <field name="code">BE_40_41</field>
+                                <field name="aggregation_formula">BE_40.balance + BE_41.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_creances_au_plus_un_an_commerciales0" model="account.report.line">
+                                        <field name="name">40 - Créances commerciales</field>
+                                        <field name="code">BE_40</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">40</field>
+                                    </record>
+                                    <record id="account_financial_report_be_creances_au_plus_un_an_autres0" model="account.report.line">
+                                        <field name="name">41 - Autres créances</field>
+                                        <field name="code">BE_41</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">41</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_tresorerie0" model="account.report.line">
+                                <field name="name">50/53 - Placements de trésorerie</field>
+                                <field name="code">BE_50_53</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">51 + 52 + 53 + 50</field>
+                            </record>
+                            <record id="account_financial_report_be_valeurs_disponibles0" model="account.report.line">
+                                <field name="name">54/58 - Valeurs disponibles</field>
+                                <field name="code">BE_54_58</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">57 + 58 + 54 + 56 + 55</field>
+                            </record>
+                            <record id="account_financial_report_be_regularisation_attente0" model="account.report.line">
+                                <field name="name">49 - Comptes de régularisation et d'attente</field>
+                                <field name="code">BE_49</field>
+                                <field name="aggregation_formula">BE_490_1_6.balance + BE_499.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_regularisation0" model="account.report.line">
+                                        <field name="name">490/1/6 - Comptes de régularisation</field>
+                                        <field name="code">BE_490_1_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">496 + 491 + 490</field>
+                                    </record>
+                                    <record id="account_financial_report_be_attente0" model="account.report.line">
+                                        <field name="name">499 - Comptes d'attente</field>
+                                        <field name="code">BE_499</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">499</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_actif0" model="account.report.line">
+                        <field name="name">TOTAL DE L'ACTIF</field>
+                        <field name="code">BE_ACTIF</field>
+                        <field name="aggregation_formula">BE_20_28.balance + BE_29_58.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_passif_title0" model="account.report.line">
+                <field name="name">PASSIF</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_capitaux_propres0" model="account.report.line">
+                        <field name="name">10/15 - Capitaux propres</field>
+                        <field name="code">BE_10_15</field>
+                        <field name="aggregation_formula">BE_UNAFFECTED_EARNINGS.balance + BE_10.balance + BE_11.balance + BE_12.balance + BE_13.balance + BE_14.balance + BE_15.balance + BE_19.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_be_capital0" model="account.report.line">
+                                <field name="name">10 - Capital</field>
+                                <field name="code">BE_10</field>
+                                <field name="aggregation_formula">BE_100.balance + BE_101.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_capital_souscrit0" model="account.report.line">
+                                        <field name="name">100 - Capital souscrit</field>
+                                        <field name="code">BE_100</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-100</field>
+                                    </record>
+                                    <record id="account_financial_report_be_capital_appele0" model="account.report.line">
+                                        <field name="name">101 - Capital non appelé</field>
+                                        <field name="code">BE_101</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-101</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_primes_demission0" model="account.report.line">
+                                <field name="name">11 - Primes d'émission</field>
+                                <field name="code">BE_11</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-11</field>
+                            </record>
+                            <record id="account_financial_report_be_reevaluation0" model="account.report.line">
+                                <field name="name">12 - Plus-values de réévaluation</field>
+                                <field name="code">BE_12</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-12</field>
+                            </record>
+                            <record id="account_financial_report_be_reserves0" model="account.report.line">
+                                <field name="name">13 - Réserves</field>
+                                <field name="code">BE_13</field>
+                                <field name="aggregation_formula">BE_130.balance + BE_131.balance + BE_132.balance + BE_133.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_reserve_legale0" model="account.report.line">
+                                        <field name="name">130 - Réserve légale</field>
+                                        <field name="code">BE_130</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-130</field>
+                                    </record>
+                                    <record id="account_financial_report_be_reserves_indisponibles0" model="account.report.line">
+                                        <field name="name">131 - Réserves indisponibles</field>
+                                        <field name="code">BE_131</field>
+                                        <field name="aggregation_formula">BE_1310.balance + BE_1311.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_be_reserve_actions0" model="account.report.line">
+                                                <field name="name">1310 - Pour actions propres</field>
+                                                <field name="code">BE_1310</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1310</field>
+                                            </record>
+                                            <record id="account_financial_report_be_reserve_autres0" model="account.report.line">
+                                                <field name="name">1311 - Autres</field>
+                                                <field name="code">BE_1311</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1311</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_be_reserves_immunisees0" model="account.report.line">
+                                        <field name="name">132 - Réserves immunisées</field>
+                                        <field name="code">BE_132</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-132</field>
+                                    </record>
+                                    <record id="account_financial_report_be_reserves_disponibles0" model="account.report.line">
+                                        <field name="name">133 - Réserves disponibles</field>
+                                        <field name="code">BE_133</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-133</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_benefice_reporte0" model="account.report.line">
+                                <field name="name">14 - Bénéfice (Perte) reporté(e)</field>
+                                <field name="code">BE_14</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('account_id.code', '=like', '14%'), ('account_id.account_type', '!=', 'equity_unaffected')])</field>
+                            </record>
+                            <record id="account_financial_be_current_year_earnings0" model="account.report.line">
+                                <field name="name">149 - Bénéfice (Perte) en cours</field>
+                                <field name="code">BE_UNAFFECTED_EARNINGS</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_be_current_year_earnings0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-6 - 7</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_subsides_capital0" model="account.report.line">
+                                <field name="name">15 - Subsides en capital</field>
+                                <field name="code">BE_15</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-15</field>
+                            </record>
+                            <record id="account_financial_report_be_subsides_avance_aux_associes0" model="account.report.line">
+                                <field name="name">19 - Avance aux associés sur répartition de l'actif net</field>
+                                <field name="code">BE_19</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-19</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_provisions0" model="account.report.line">
+                        <field name="name">16 - Provisions et impôts différés</field>
+                        <field name="code">BE_16</field>
+                        <field name="aggregation_formula">BE_160_5.balance + BE_168.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_be_provisions_risques_charges0" model="account.report.line">
+                                <field name="name">160/5 - Provisions pour risques et charges</field>
+                                <field name="code">BE_160_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-161 - 162 - 164 - 163 - 165 - 160</field>
+                            </record>
+                            <record id="account_financial_report_be_impots_differes0" model="account.report.line">
+                                <field name="name">168 - Impôts différés</field>
+                                <field name="code">BE_168</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-168</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_dettes0" model="account.report.line">
+                        <field name="name">17/49 - Dettes</field>
+                        <field name="code">BE_17_49</field>
+                        <field name="aggregation_formula">BE_17.balance + BE_42_48.balance + BE_492_3.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_be_dettes_plus_un_an0" model="account.report.line">
+                                <field name="name">17 - Dettes à plus d'un an</field>
+                                <field name="code">BE_17</field>
+                                <field name="aggregation_formula">BE_170_4.balance + BE_175.balance + BE_176.balance + BE_178_9.balance + BE_171.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_dettes_financieres0" model="account.report.line">
+                                        <field name="name">170/4 - Dettes financières</field>
+                                        <field name="code">BE_170_4</field>
+                                        <field name="aggregation_formula">BE_172_3.balance + BE_174_0.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_be_dettes_financieres1" model="account.report.line">
+                                                <field name="name">172/3 - Etablissements de crédit, dettes de location-financement et assmilisées</field>
+                                                <field name="code">BE_172_3</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-173 - 172</field>
+                                            </record>
+                                            <record id="account_financial_report_be_dettes_financieres2" model="account.report.line">
+                                                <field name="name">174/0 - Autres emprunts</field>
+                                                <field name="code">BE_174_0</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-170 - 174</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_be_emprunts_obligataires_non_subordones0" model="account.report.line">
+                                        <field name="name">171 - Emprunts obligataires non subordonnés</field>
+                                        <field name="code">BE_171</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-171</field>
+                                    </record>
+                                    <record id="account_financial_report_be_dettes_commerciales0" model="account.report.line">
+                                        <field name="name">175 - Dettes commerciales</field>
+                                        <field name="code">BE_175</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-175</field>
+                                    </record>
+                                    <record id="account_financial_report_be_acomptes_recus0" model="account.report.line">
+                                        <field name="name">176 - Acomptes recus sur commandes</field>
+                                        <field name="code">BE_176</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-176</field>
+                                    </record>
+                                    <record id="account_financial_report_be_autres_dettes0" model="account.report.line">
+                                        <field name="name">178/9 - Autres dettes</field>
+                                        <field name="code">BE_178_9</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-179 - 178</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_dettes_un_an_au_plus0" model="account.report.line">
+                                <field name="name">42/48 - Dettes à un an au plus</field>
+                                <field name="code">BE_42_48</field>
+                                <field name="aggregation_formula">BE_42.balance + BE_43.balance + BE_44.balance + BE_46.balance + BE_45.balance + BE_47_8.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_be_dettes_plus_dun_an_dans_lannee0" model="account.report.line">
+                                        <field name="name">42 - Dettes à plus d'un an échéant dans l'année</field>
+                                        <field name="code">BE_42</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-42</field>
+                                    </record>
+                                    <record id="account_financial_report_be_dettes_financieres0b" model="account.report.line">
+                                        <field name="name">43 - Dettes financières</field>
+                                        <field name="code">BE_43</field>
+                                        <field name="aggregation_formula">BE_430_8.balance + BE_439.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_be_dettes_financieres1b" model="account.report.line">
+                                                <field name="name">430/8 - Etablissements de crédit</field>
+                                                <field name="code">BE_430_8</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-431 - 438 - 436 - 435 - 433 - 434 - 432 - 430 - 437</field>
+                                            </record>
+                                            <record id="account_financial_report_be_dettes_financieres2b" model="account.report.line">
+                                                <field name="name">439 - Autres emprunts</field>
+                                                <field name="code">BE_439</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-439</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_be_dettes_commerciales0b" model="account.report.line">
+                                        <field name="name">44 - Dettes commerciales</field>
+                                        <field name="code">BE_44</field>
+                                        <field name="aggregation_formula">BE_440_4.balance + BE_441.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_be_dettes_commerciales_fournisseurs0" model="account.report.line">
+                                                <field name="name">440/4 - Fournisseurs</field>
+                                                <field name="code">BE_440_4</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-444 - 443 - 440 - 442</field>
+                                            </record>
+                                            <record id="account_financial_report_be_effets_a_payer0" model="account.report.line">
+                                                <field name="name">441 - Effets à payer</field>
+                                                <field name="code">BE_441</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-441</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_be_acomptes_recus0b" model="account.report.line">
+                                        <field name="name">46 - Acomptes recus sur commandes</field>
+                                        <field name="code">BE_46</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-46</field>
+                                    </record>
+                                    <record id="account_financial_report_be_dettes_fiscales0" model="account.report.line">
+                                        <field name="name">45 - Dettes fiscales, salariales et sociales</field>
+                                        <field name="code">BE_45</field>
+                                        <field name="aggregation_formula">BE_450_3.balance + BE_454_9.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_be_dettes_fiscales_impots0" model="account.report.line">
+                                                <field name="name">450/3 - Impôts</field>
+                                                <field name="code">BE_450_3</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-453 - 452 - 450 - 451</field>
+                                            </record>
+                                            <record id="account_financial_report_be_remuneration_charges_sociales" model="account.report.line">
+                                                <field name="name">454/9 - Rémunérations et charges sociales</field>
+                                                <field name="code">BE_454_9</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-454 - 455 - 458 - 459 - 457 - 456</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_be_autres_dettes1" model="account.report.line">
+                                        <field name="name">47/8 - Autres dettes</field>
+                                        <field name="code">BE_47_8</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-48 - 47</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_be_regularisation1" model="account.report.line">
+                                <field name="name">492/3 - Comptes de régularisation</field>
+                                <field name="code">BE_492_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-493 - 492</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_passif0" model="account.report.line">
+                        <field name="name">TOTAL DU PASSIF</field>
+                        <field name="code">BE_PASSIF</field>
+                        <field name="aggregation_formula">BE_10_15.balance + BE_16.balance + BE_17_49.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="account_financial_report_be_profitandloss0" model="account.report">
+        <field name="name">Compte de résultats</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_be_profitandloss0_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_be_produits0" model="account.report.line">
+                <field name="name">Ventes et prestations</field>
+                <field name="code">BE_PRODUITS</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_produits0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_70.balance + BE_71.balance + BE_72.balance + BE_73.balance + BE_74.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_chiffre_daffaires0" model="account.report.line">
+                        <field name="name">70 - Chiffre d'affaires</field>
+                        <field name="code">BE_70</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_chiffre_daffaires0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-70</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_chiffre_daffaires71" model="account.report.line">
+                        <field name="name">71 - En-cours de fabrication, produits finis et commandes</field>
+                        <field name="code">BE_71</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_chiffre_daffaires71_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-71</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_chiffre_daffaires72" model="account.report.line">
+                        <field name="name">72 - Production immobilisée</field>
+                        <field name="code">BE_72</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_chiffre_daffaires72_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-72</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_chiffre_daffaires73" model="account.report.line">
+                        <field name="name">73 - Cotisations, dons, legs et subsides</field>
+                        <field name="code">BE_73</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_chiffre_daffaires73_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-73</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_chiffre_daffaires74" model="account.report.line">
+                        <field name="name">74 - Autres produits d'exploitation</field>
+                        <field name="code">BE_74</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_chiffre_daffaires74_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-74</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_charges0" model="account.report.line">
+                <field name="name">Coûts des ventes et prestations</field>
+                <field name="code">BE_CHARGES</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_charges0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_60_61.balance + BE_62.balance + BE_630.balance + BE_631_4.balance + BE_635_8.balance + BE_640_8.balance + BE_649.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_approvisionnements0" model="account.report.line">
+                        <field name="name">60/61 - Approvisionnements, marchandises, services et biens divers</field>
+                        <field name="code">BE_60_61</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_approvisionnements0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">61 + 60</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_remunerations0" model="account.report.line">
+                        <field name="name">62 - Rémunérations, charges sociales et pensions</field>
+                        <field name="code">BE_62</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_remunerations0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">62</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_amortissements0" model="account.report.line">
+                        <field name="name">630 - Amortissements et réductions de valeur sur frais d'établissement, sur immobilisations incorporelles et corporelles</field>
+                        <field name="code">BE_630</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_amortissements0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">630</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_reduction_de_valeur0" model="account.report.line">
+                        <field name="name">631/4 - Réductions de valeur sur stocks, sur commandes en cours d'exécution et sur créances commerciales: dotations (reprises)</field>
+                        <field name="code">BE_631_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_reduction_de_valeur0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">633 + 634 + 632 + 631</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_provisions_pour_risques_et_charges0" model="account.report.line">
+                        <field name="name">635/8 - Provisions pour risques et charges: dotations (utilisations et reprises)</field>
+                        <field name="code">BE_635_8</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_provisions_pour_risques_et_charges0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">637 + 635 + 636 + 638</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_autres_charges0" model="account.report.line">
+                        <field name="name">640/8 - Autres charges d'exploitation</field>
+                        <field name="code">BE_640_8</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_autres_charges0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">645 + 641 + 640 + 647 + 644 + 642 + 643 + 646 + 648</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_restructuration0" model="account.report.line">
+                        <field name="name">649 - Charges d'exploitation portées à l'actif au titre de frais de restructuration</field>
+                        <field name="code">BE_649</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_restructuration0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">649</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_benefices_dexploitation0" model="account.report.line">
+                <field name="name">9901 - Bénéfice (Perte) d'exploitation</field>
+                <field name="code">BE_9901</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_benefices_dexploitation0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_PRODUITS.balance - BE_CHARGES.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_empty" model="account.report.line">
+                <field name="name"/>
+                <field name="code">BE_EMPTY</field>
+            </record>
+            <record id="account_financial_report_be_produits_financiers0" model="account.report.line">
+                <field name="name">75 - Produits financiers</field>
+                <field name="code">BE_75</field>
+                <field name="aggregation_formula">BE_750.balance + BE_751.balance + BE_752_9.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_750" model="account.report.line">
+                        <field name="name">750 - Produits des immobilisations financières</field>
+                        <field name="code">BE_750</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_750_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-750</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_751" model="account.report.line">
+                        <field name="name">751 - Produits des actifs circulants</field>
+                        <field name="code">BE_751</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_751_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-751</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_752_9" model="account.report.line">
+                        <field name="name">752/9 - Autres produits financiers</field>
+                        <field name="code">BE_752_9</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_752_9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-753 - 754 - 756 - 752 - 759 - 758 - 755 - 757</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_charges_financieres0" model="account.report.line">
+                <field name="name">65 - Charges financières</field>
+                <field name="code">BE_65</field>
+                <field name="aggregation_formula">BE_650.balance + BE_651.balance + BE_652_9.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_650" model="account.report.line">
+                        <field name="name">650 - Charges des dettes</field>
+                        <field name="code">BE_650</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_650_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">650</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_651" model="account.report.line">
+                        <field name="name">651 - Réductions de valeur sur actifs circulants autres que stocks, commandes en cours et créances</field>
+                        <field name="code">BE_651</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_651_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">651</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_652_9" model="account.report.line">
+                        <field name="name">652/9 - Autres charges financières</field>
+                        <field name="code">BE_652_9</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_652_9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">654 + 659 + 655 + 657 + 658 + 653 + 652 + 656</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_benefices_courant_avant_impots0" model="account.report.line">
+                <field name="name">9902 - Bénéfice (Perte) courant(e) avant impôts</field>
+                <field name="code">BE_9902</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_benefices_courant_avant_impots0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_9901.balance + BE_75.balance - BE_65.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_empty2" model="account.report.line">
+                <field name="name"/>
+                <field name="code">BE_EMPTY2</field>
+            </record>
+            <record id="account_financial_report_be_produits_exceptionnels0" model="account.report.line">
+                <field name="name">76 - Produits exceptionnels</field>
+                <field name="code">BE_76</field>
+                <field name="aggregation_formula">BE_760.balance + BE_761.balance + BE_762.balance + BE_763.balance + BE_764_9.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_760" model="account.report.line">
+                        <field name="name">760 - Reprise d'amortissements et de réductions de valeur sur immobilisations incorporelles et corporelles</field>
+                        <field name="code">BE_760</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_760_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-760</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_761" model="account.report.line">
+                        <field name="name">761 - Reprise de réducitons de valeur sur immobilisations financières</field>
+                        <field name="code">BE_761</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_761_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-761</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_762" model="account.report.line">
+                        <field name="name">762 - Reprise de provisions pour risques et charges exceptionnels</field>
+                        <field name="code">BE_762</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_762_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-762</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_730" model="account.report.line">
+                        <field name="name">763 - Plus-values sur réalisation d'actifs immobilisés</field>
+                        <field name="code">BE_763</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_730_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-763</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_764_9" model="account.report.line">
+                        <field name="name">764/9 - Autres produits exceptionnels</field>
+                        <field name="code">BE_764_9</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_764_9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-765 - 768 - 764 - 767 - 769 - 766</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_charges_exceptionnelles0" model="account.report.line">
+                <field name="name">66 - Charges exceptionnelles</field>
+                <field name="code">BE_66</field>
+                <field name="aggregation_formula">BE_660.balance + BE_661.balance + BE_662.balance + BE_663.balance + BE_664_8.balance + BE_669.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_660" model="account.report.line">
+                        <field name="name">660 - Amortissements et réductions de valeur exceptionnels sur frais d'établissement, sur immobilisations incorporelles et corporelles</field>
+                        <field name="code">BE_660</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_660_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">660</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_661" model="account.report.line">
+                        <field name="name">661 - Réductions de valeur sur immobilisations financières</field>
+                        <field name="code">BE_661</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_661_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">661</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_662" model="account.report.line">
+                        <field name="name">662 - Provisions pour risques et charges exceptionnels: dotations (utilisations)</field>
+                        <field name="code">BE_662</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_662_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">662</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_663" model="account.report.line">
+                        <field name="name">663 - Moins-values sur réalisation d'actifs immobilisés</field>
+                        <field name="code">BE_663</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_663_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">663</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_664_8" model="account.report.line">
+                        <field name="name">664/8 - Autres charges exceptionnelles</field>
+                        <field name="code">BE_664_8</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_664_8_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">664 + 665 + 668 + 667 + 666</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_669" model="account.report.line">
+                        <field name="name">669 - Charges exceptionnelles portées à l'actif au titre de frais de restructuration</field>
+                        <field name="code">BE_669</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_669_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">669</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_benefices_de_lexercice_avant_impots0" model="account.report.line">
+                <field name="name">9903 - Bénéfice (Perte) de l'excercice avant impôts</field>
+                <field name="code">BE_9903</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_benefices_de_lexercice_avant_impots0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_9902.balance + BE_76.balance - BE_66.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_empty3" model="account.report.line">
+                <field name="name"/>
+                <field name="code">BE_EMPTY3</field>
+            </record>
+            <record id="account_financial_report_be_prelevements_impots_differes0" model="account.report.line">
+                <field name="name">780 - Prélèvements sur les impôts différés</field>
+                <field name="code">BE_780</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_prelevements_impots_differes0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-780</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_transfert_aux_impots_differes0" model="account.report.line">
+                <field name="name">680 - Transfert sur les impôts différés</field>
+                <field name="code">BE_680</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_transfert_aux_impots_differes0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">680</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_impots_sur_le_resultat0" model="account.report.line">
+                <field name="name">67/77 - Impôts sur le résultat</field>
+                <field name="code">BE_67_77</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_impots_sur_le_resultat0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">77 + 67</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_670_3" model="account.report.line">
+                        <field name="name">670/3 - Impôts</field>
+                        <field name="code">BE_670_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_670_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">672 + 673 + 670 + 671</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_77" model="account.report.line">
+                        <field name="name">77 - Régularisations d'impôts et reprises de provisions fiscales</field>
+                        <field name="code">BE_77</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_77_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">77</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_benefices_de_lexercice0" model="account.report.line">
+                <field name="name">9904 - Bénéfice (Perte) de l'exercice</field>
+                <field name="code">BE_9904</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_benefices_de_lexercice0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_9903.balance + BE_780.balance - BE_680.balance - BE_67_77.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_empty4" model="account.report.line">
+                <field name="name"/>
+                <field name="code">BE_EMPTY4</field>
+            </record>
+            <record id="account_financial_report_be_prelevements_reserves_immunisees0" model="account.report.line">
+                <field name="name">789 - Prélèvements sur les réserves immunisées</field>
+                <field name="code">BE_789</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_prelevements_reserves_immunisees0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-789</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_transferts_aux_reserves_immunisees0" model="account.report.line">
+                <field name="name">689 - Transfert aux réserves immunisées</field>
+                <field name="code">BE_689</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_transferts_aux_reserves_immunisees0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">689</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_benefices_de_lexercice_a_affecter0" model="account.report.line">
+                <field name="name">9905 - Bénéfice (Perte) de l'exercice à affecter</field>
+                <field name="code">BE_9905</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_benefices_de_lexercice_a_affecter0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_9904.balance + BE_789.balance - BE_689.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_empty5" model="account.report.line">
+                <field name="name"/>
+                <field name="code">BE_EMPTY5</field>
+            </record>
+            <record id="account_financial_report_be_empty6" model="account.report.line">
+                <field name="name"/>
+                <field name="code">BE_EMPTY6</field>
+            </record>
+            <record id="account_financial_report_be_affectation" model="account.report.line">
+                <field name="name">Affectations et prélèvements</field>
+                <field name="code">BE_AFF</field>
+            </record>
+            <record id="account_financial_report_be_benefice_perte_a_affecter0" model="account.report.line">
+                <field name="name">9906 - Bénéfice (Perte) à affecter</field>
+                <field name="code">BE_9906</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_benefice_perte_a_affecter0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_9905bis.balance + BE_14P.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_9905bis" model="account.report.line">
+                        <field name="name">9905 - Bénéfice (Perte) de l'exercice à affecter</field>
+                        <field name="code">BE_9905bis</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_9905bis_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BE_9905.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_14P" model="account.report.line">
+                        <field name="name">14P - Bénéfice (Perte) reporté(e) de l'exercice précédent</field>
+                        <field name="code">BE_14P</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_14P_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code', '=like', '14%'), ('account_id.account_type', '!=', 'equity_unaffected')]"/>
+                                <field name="date_scope">to_beginning_of_period</field>
+                                <field name="subformula">-sum</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_791_792" model="account.report.line">
+                <field name="name">791/2 - Prélèvement sur les capitaux propres</field>
+                <field name="code">BE_791</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_791_792_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-792 - 791</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_691_692" model="account.report.line">
+                <field name="name">691/2 - Affectation aux capitaux propres</field>
+                <field name="code">BE_691_2</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_691_692_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">692 + 691</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_691" model="account.report.line">
+                        <field name="name">691 - au capital et aux primes d'émission</field>
+                        <field name="code">BE_691</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_691_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">691</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_6920" model="account.report.line">
+                        <field name="name">6920 - à la réserve légale</field>
+                        <field name="code">BE_6920</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_6920_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6920</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_6921" model="account.report.line">
+                        <field name="name">6921 - aux autres réserves</field>
+                        <field name="code">BE_6921</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_6921_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6921</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_PL_14" model="account.report.line">
+                <field name="name">14 - Bénéfice (Perte) à reporter</field>
+                <field name="code">BE_PL_14</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_PL_14_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BE_9906.balance + BE_791.balance - BE_691_2.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_794" model="account.report.line">
+                <field name="name">794 - Intervention d'associés dans la perte</field>
+                <field name="code">BE_794</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_794_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-794</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_be_694_696" model="account.report.line">
+                <field name="name">694/6 - Bénéfice à distribuer</field>
+                <field name="code">BE_694_6</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_be_694_696_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">694 + 695 + 696</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_be_694" model="account.report.line">
+                        <field name="name">694 - Rémunération du capital</field>
+                        <field name="code">BE_694</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_694_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">694</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_695" model="account.report.line">
+                        <field name="name">695 - Administrateurs ou gérants</field>
+                        <field name="code">BE_695</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_695_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">695</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_be_696" model="account.report.line">
+                        <field name="name">696 - Autres allocataires</field>
+                        <field name="code">BE_696</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_be_696_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">696</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="action_account_report_bepnl" model="ir.actions.client">
+        <!--Kept as a separate action to force opening of the Belgian P&L, whatever the previous options.-->
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_financial_report_be_profitandloss0')}"/>
+    </record>
+    <record id="account_financial_be_current_year_earnings0" model="account.report.line">
+        <field name="action_id" ref="action_account_report_bepnl"/>
+    </record>
+    <record model="ir.ui.menu" id="account_reports.menu_action_account_report_sales">
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

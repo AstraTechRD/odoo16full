@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.module.category" id="module_category_subscription_management">
+        <field name="name">Subscriptions</field>
+        <field name="description">Helps you handle subscriptions and recurring invoicing.</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('product.group_discount_per_so_line'))]"/>
+    </record>
+
+    <data noupdate="1">
+
+    <record model="ir.rule" id="sale_subscription_log_multicompany">
+        <field name="name">Subscription log multi-company</field>
+        <field name="model_id" ref="model_sale_order_log"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+
+    <!-- Reporting -->
+    <record model="ir.rule" id="sale_subscription_report_comp_rule">
+        <field name="name">Subscription Analysis multi-company</field>
+        <field name="model_id" ref="model_sale_subscription_report"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="sale_subscription_report_personal_rule" model="ir.rule">
+        <field name="name">Personal Subscription Analysis</field>
+        <field ref="model_sale_subscription_report" name="model_id"/>
+        <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="sale_order_report_see_all" model="ir.rule">
+        <field name="name">All Orders Analysis</field>
+        <field ref="model_sale_subscription_report" name="model_id"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    </data>
+</odoo>

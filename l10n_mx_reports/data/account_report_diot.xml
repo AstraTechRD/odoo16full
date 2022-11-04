@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="diot_report" model="account.report">
+            <field name="name">DIOT</field>
+            <field name="filter_show_draft" eval="False"/>
+            <field name="filter_period_comparison" eval="False"/>
+            <field name="custom_handler_model_id" ref="model_l10n_mx_report_handler"/>
+            <field name="load_more_limit" eval="80"/>
+
+            <field name="filter_unfold_all" eval="False"/>
+            <field name="default_opening_date_filter">this_month</field>
+            <field name="filter_date_range" eval="True"/>
+            <field name="filter_partner" eval="True"/>
+            <field name="filter_multi_company">selector</field>
+
+            <field name="column_ids">
+                <record id="diot_third_party" model="account.report.column">
+                    <field name="name">Type of Third</field>
+                    <field name="expression_label">third_party_code</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="diot_operation_type" model="account.report.column">
+                    <field name="name">Type of Operation</field>
+                    <field name="expression_label">operation_type_code</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="diot_report_partner_vat_number" model="account.report.column">
+                    <field name="name">VAT</field>
+                    <field name="expression_label">partner_vat_number</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="diot_report_country" model="account.report.column">
+                    <field name="name">Country</field>
+                    <field name="expression_label">country_code</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="diot_report_partner_nationality" model="account.report.column">
+                    <field name="name">Nationality</field>
+                    <field name="expression_label">partner_nationality</field>
+                    <field name="figure_type">none</field>
+                </record>
+                <record id="diot_report_paid_16" model="account.report.column">
+                    <field name="name">Paid 16%</field>
+                    <field name="expression_label">paid_16</field>
+                </record>
+                <record id="diot_report_paid_16_non_cred" model="account.report.column">
+                    <field name="name">Paid 16% - Non-Creditable</field>
+                    <field name="expression_label">paid_16_non_cred</field>
+                </record>
+                <record id="diot_report_paid_8" model="account.report.column">
+                    <field name="name">Paid 8 %</field>
+                    <field name="expression_label">paid_8</field>
+                </record>
+                <record id="diot_report_paid_8_non_cred" model="account.report.column">
+                    <field name="name">Paid 8 % - Non-Creditable</field>
+                    <field name="expression_label">paid_8_non_cred</field>
+                </record>
+                <record id="diot_report_importation_16" model="account.report.column">
+                    <field name="name">Importation 16%</field>
+                    <field name="expression_label">importation_16</field>
+                </record>
+                <record id="diot_report_paid_0" model="account.report.column">
+                    <field name="name">Paid 0%</field>
+                    <field name="expression_label">paid_0</field>
+                </record>
+                <record id="diot_report_exempt" model="account.report.column">
+                    <field name="name">Exempt</field>
+                    <field name="expression_label">exempt</field>
+                </record>
+                <record id="diot_report_withheld" model="account.report.column">
+                    <field name="name">Withheld</field>
+                    <field name="expression_label">withheld</field>
+                </record>
+                <record id="diot_report_refunds" model="account.report.column">
+                    <field name="name">Refunds</field>
+                    <field name="expression_label">refunds</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="diot_report_line" model="account.report.line">
+                    <field name="name">DIOT</field>
+                    <field name="groupby">partner_id, id</field>
+                    <field name="expression_ids">
+                        <record id="diot_report_line_counter" model="account.report.expression">
+                            <field name="label">counter</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">counter</field>
+                        </record>
+                        <record id="diot_report_line_third_party_code" model="account.report.expression">
+                            <field name="label">third_party_code</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">third_party_code</field>
+                        </record>
+                        <record id="diot_report_line_operation_type_code" model="account.report.expression">
+                            <field name="label">operation_type_code</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">operation_type_code</field>
+                        </record>
+                        <record id="diot_report_line_partner_vat_number" model="account.report.expression">
+                            <field name="label">partner_vat_number</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">partner_vat_number</field>
+                        </record>
+                        <record id="diot_report_line_country_code" model="account.report.expression">
+                            <field name="label">country_code</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">country_code</field>
+                        </record>
+                        <record id="diot_report_line_partner_nationality" model="account.report.expression">
+                            <field name="label">partner_nationality</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">partner_nationality</field>
+                        </record>
+                        <record id="diot_report_line_paid_16" model="account.report.expression">
+                            <field name="label">paid_16</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">paid_16</field>
+                        </record>
+                        <record id="diot_report_line_paid_16_non_cred" model="account.report.expression">
+                            <field name="label">paid_16_non_cred</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">paid_16_non_cred</field>
+                        </record>
+                        <record id="diot_report_line_paid_8" model="account.report.expression">
+                            <field name="label">paid_8</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">paid_8</field>
+                        </record>
+                        <record id="diot_report_line_paid_8_non_cred" model="account.report.expression">
+                            <field name="label">paid_8_non_cred</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">paid_8_non_cred</field>
+                        </record>
+                        <record id="diot_report_line_importation_16" model="account.report.expression">
+                            <field name="label">importation_16</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">importation_16</field>
+                        </record>
+                        <record id="diot_report_line_paid_0" model="account.report.expression">
+                            <field name="label">paid_0</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">paid_0</field>
+                        </record>
+                        <record id="diot_report_line_exempt" model="account.report.expression">
+                            <field name="label">exempt</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">exempt</field>
+                        </record>
+                        <record id="diot_report_line_withheld" model="account.report.expression">
+                            <field name="label">withheld</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">withheld</field>
+                        </record>
+                        <record id="diot_report_line_refunds" model="account.report.expression">
+                            <field name="label">refunds</field>
+                            <field name="engine">custom</field>
+                            <field name="formula">_report_custom_engine_diot_report</field>
+                            <field name="subformula">refunds</field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

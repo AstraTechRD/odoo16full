@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- QWeb Reports -->
+    <template id="report_invoice_document_mx" inherit_id="account.report_invoice_document">
+        <xpath expr="//h2[1]" position="before">
+            <!-- Global variables -->
+            <t t-set="cfdi_vals" t-value="o._l10n_mx_edi_decode_cfdi()"/>
+            <t t-set="is_cfdi_signed" t-value="bool(o._get_l10n_mx_edi_signed_edi_document())"/>
+
+            <t t-if="o.l10n_mx_edi_cfdi_request in ('on_invoice', 'on_refund') and not is_cfdi_signed and o.edi_state != 'cancelled'">
+                <!-- due to HTML preview for device responsive -->
+                <button t-attf-class="btn-danger #{'btn' if report_type != 'html' else ''}">
+                    <strong>A signature of this invoice is required, but it is not signed.</strong>
+                </button>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('row')]//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="after">
+            <span t-if="is_cfdi_signed and o.company_id.vat != o.l10n_mx_edi_cfdi_supplier_rfc">
+                <span>XML VAT: </span>
+                <span t-esc="o.l10n_mx_edi_cfdi_supplier_rfc"/>
+            </span>
+        </xpath>
+        <xpath expr="//div[hasclass('row')]//div[@name='address_same_as_shipping']//t[@t-set='address']" position="after">
+            <span t-if="is_cfdi_signed and o.company_id.vat != o.l10n_mx_edi_cfdi_supplier_rfc">
+                <span>XML VAT: </span>
+                <span t-esc="o.l10n_mx_edi_cfdi_supplier_rfc"/>
+            </span>
+        </xpath>
+        <xpath expr="//div[hasclass('row')]//div[@name='no_shipping']//t[@t-set='address']" position="after">
+            <span t-if="is_cfdi_signed and o.company_id.vat != o.l10n_mx_edi_cfdi_supplier_rfc">
+                <span>XML VAT: </span>
+                <span t-esc="o.l10n_mx_edi_cfdi_supplier_rfc"/>
+            </span>
+        </xpath>
+
+        <xpath expr="//div[@name='customer_code']" position="after">
+            <t t-if="is_cfdi_signed">
+                <t t-set="original_o_grid_layout" t-value="o_grid_layout"/>
+                <t t-set="o_grid_layout" t-value="'col-auto col-3 mw-100 mb-2'"/>
+                <t t-if="cfdi_vals.get('usage')">
+                    <div name="cfdi_vals['usage']" t-att-class="o_grid_layout">
+                        <strong>Usage:</strong>
+                        <p><span t-esc="cfdi_vals['usage']"/><span> - </span><span t-field="o.l10n_mx_edi_usage"/></p>
+                    </div>
+                </t>
+                <t t-if="o.l10n_mx_edi_payment_method_id">
+                    <div t-att-class="o_grid_layout">
+                        <strong>Payment Way:</strong>
+                        <p t-esc="'%s - %s' % (o.l10n_mx_edi_payment_method_id.code, o.l10n_mx_edi_payment_method_id.name)"/>
+                    </div>
+                </t>
+                <div t-att-class="o_grid_layout">
+                    <strong>Payment Method:</strong>
+                    <p t-esc="cfdi_vals.get('payment_method')"/>
+                </div>
+                <div t-if="cfdi_vals.get('bank_account')" t-att-class="o_grid_layout">
+                    <strong>Bank Account:</strong>
+                    <p t-esc="cfdi_vals['bank_account']"/>
+                </div>
+                <t t-set="o_grid_layout" t-value="original_o_grid_layout"/>
+            </t>
+        </xpath>
+
+        <!-- Add new column on invoice lines: Product Code -->
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="before">
+            <th t-if="is_cfdi_signed">
+                <span>Product code</span>
+            </th>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody//tr[1]//td[1]" position="before">
+            <td t-if="is_cfdi_signed"><span t-field="line.product_id.unspsc_code_id.code"/></td>
+        </xpath>
+
+        <!-- Add new column on invoice lines: Unit Code -->
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[4]" position="after">
+            <th t-if="is_cfdi_signed" class="text-end">
+                <span>Unit code</span>
+            </th>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody//tr[1]//td[4]" position="after">
+            <td t-if="is_cfdi_signed" class="text-end"><span t-field="line.product_uom_id.unspsc_code_id.code"/></td>
+        </xpath>
+
+        <xpath expr="//div[@t-if='not is_html_empty(o.narration)']" position="before">
+            <t t-if="is_cfdi_signed">
+                <p>
+                    <span t-esc="o._l10n_mx_edi_cfdi_amount_to_text()"/>
+                </p>
+            </t>
+        </xpath>
+
+        <xpath expr="//p[@name='note']" position="after">
+            <t t-if="is_cfdi_signed">
+                <div class="row" id='complement'>
+                    <div t-if="cfdi_vals.get('sello')" class="barcode col-3">
+                        <img alt="Barcode" t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=180&amp;height=180' % quote_plus(
+                            'https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?' + keep_query(
+                                re=o.l10n_mx_edi_cfdi_supplier_rfc, rr=o.l10n_mx_edi_cfdi_customer_rfc,
+                                tt='%.*f' % (o.currency_id.decimal_places, o.l10n_mx_edi_cfdi_amount), id=o.l10n_mx_edi_cfdi_uuid)
+                                + '&amp;fe=%s' % quote_plus(
+                                    cfdi_vals['sello'][-8:], 'utf-8', 'strict', '=/').replace('%2B', '+'))"/>
+                    </div>
+                    <div class="complement-details col-9">
+                        <div class="digital-stamp">
+                            <span>Digital stamp of the emitter</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-esc="cfdi_vals.get('sello')"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Digital stamp SAT</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-esc="cfdi_vals.get('sello_sat')"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Original chain complement of digital certification SAT</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span class="nowrap" t-esc="cfdi_vals.get('cadena')"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Extra Info</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span>Emitter certificate:</span> <span t-esc="cfdi_vals.get('certificate_number')"/>
+                            <span> | SAT Certificate:</span> <span t-esc="cfdi_vals.get('certificate_sat_number')"/>
+                            <span> | Expedition place:</span> <span t-esc="cfdi_vals.get('expedition')"/>
+                            <span> | Fiscal Regime:</span><span t-esc="cfdi_vals.get('fiscal_regime')"/>
+                            <span> | Emission Date:</span> <span t-esc="cfdi_vals.get('emission_date_str')"/>
+                            <span> | Certification Date:</span> <span t-esc="cfdi_vals.get('stamp_date')"/>
+                            <span> | Fiscal Folio:</span> <span t-esc="cfdi_vals.get('uuid')"/>
+                        </div>
+                        <div class="digital-stamp-content text-center">
+                            <strong>This document is a printed representation of a CFDI</strong>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.ModelConfigurator" owl="1">
+    <div class="container o_web_studio_model_configurator" t-att-class="{ embed: props.embed }">
+        <div class="row" t-if="!props.embed">
+            <h1>Suggested features for your new model</h1>
+        </div>
+        <div class="row">
+            <t t-foreach="state.options" t-as="option_name" t-key="option_name">
+                <ModelConfiguratorOption t-if="!state.options[option_name].debug and (option_name !== 'use_company' || multiCompany)"
+                    name="option_name"
+                    option="state.options[option_name]"
+                />
+            </t>
+        </div>
+        <div class="o_web_studio_model_configurator_buttons">
+            <button type="button"
+                class="btn fa fa-chevron-left o_web_studio_model_configurator_previous"
+                t-att-class="{ disabled: state.saving }"
+                aria-label="Previous"
+                title="Previous"
+                t-on-click="props.onPrevious"
+            />
+            <button type="button"
+                class="btn o_web_studio_model_configurator_next btn-primary"
+                t-att-class="{ disabled: state.saving }"
+                aria-label="Next"
+                title="Next"
+                t-on-click="onConfirm"
+                t-att-disabled="state.saving"
+            >
+                <span t-esc="props.label"/>
+                <i
+                    class="fa"
+                    t-att-class="{'fa-chevron-right': !state.saving, 'fa-circle-o-notch': state.saving, 'fa-spin': state.saving}"
+                />
+            </button>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_studio.ModelConfiguratorOption" owl="1">
+    <div class="col-6">
+        <div class="form-check my-3 o_web_studio_model_configurator_option">
+            <input type="checkbox" class="form-check-input" t-att-id="props.name" t-att-name="props.name" t-model="props.option.value"/>
+            <label t-att-for="props.name" class="form-check-label">
+                <strong t-esc="props.option.label"/>
+                <div class="form-text text-muted" t-esc="props.option.help"/>
+            </label>
+        </div>
+    </div>
+</t>
+
+</templates>

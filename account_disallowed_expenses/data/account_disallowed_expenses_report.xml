@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="disallowed_expenses_main_template" inherit_id="account_reports.main_template">
+        <xpath expr="//div[hasclass('o_account_reports_page')]" position="before">
+            <div class="alert alert-info text-center mb-0 no_print" t-if="options.get('multi_rate_in_period')">
+                <span>There are multiple disallowed expenses rates in this period</span>
+            </div>
+        </xpath>
+    </template>
+
+    <record id="disallowed_expenses_report" model="account.report">
+        <field name="name">Disallowed Expenses Report</field>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_unfold_all" eval="False"/>
+        <field name="main_template">account_disallowed_expenses.disallowed_expenses_main_template</field>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_account_disallowed_expenses_report_handler"/>
+        <field name="column_ids">
+            <record id="disallowed_expenses_report_total_amount" model="account.report.column">
+                <field name="name">Total Amount</field>
+                <field name="expression_label">total_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="disallowed_expenses_report_rate" model="account.report.column">
+                <field name="name">Rate</field>
+                <field name="expression_label">rate</field>
+                <field name="figure_type">percentage</field>
+            </record>
+            <record id="disallowed_expenses_report_disallowed_amount" model="account.report.column">
+                <field name="name">Disallowed Amount</field>
+                <field name="expression_label">disallowed_amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

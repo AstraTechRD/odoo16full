@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_workorder_hr.PinPopup" owl="1">
+        <div role="dialog">
+            <div class="popup centered text-black">
+                <header class="title">
+                    Password ?
+                </header>
+                <div class="popup-input">
+                    <span class="highlight"><t t-esc="inputBuffer"/></span>
+                </div>
+                <div class="popup-numpad centered">
+                    <button t-on-mousedown.prevent="() => this.sendInput('1')">1</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('2')">2</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('3')">3</button>
+                    <br/>
+                    <button t-on-mousedown.prevent="() => this.sendInput('4')">4</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('5')">5</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('6')">6</button>
+                    <br/>
+                    <button t-on-mousedown.prevent="() => this.sendInput('7')">7</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('8')">8</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('9')">9</button>
+                    <br/>
+                    <button t-on-mousedown.prevent="() => this.sendInput('Delete')">C</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('0')">0</button>
+                    <button t-on-mousedown.prevent="() => this.sendInput('Backspace')"><span class="fa fa-long-arrow-left"/></button>
+                    <br/>
+                </div>
+                <footer class="footer">
+                    <button class="btn cancel text-black" t-on-click="cancel">Cancel</button>
+                    <button class="btn confirm text-black" t-on-click="confirm">Ok</button>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

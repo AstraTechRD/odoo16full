@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_online_sales_graph" model="ir.ui.view">
+             <field name="name">sale.report.graph</field>
+             <field name="model">sale.report</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales Analysis" type="line" sample="1" banner_route="/website_sale_dashboard/website_sale_dashboard_onboarding">
+                     <field name="date" interval="day"/>
+                     <field name="price_subtotal" type="measure"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="view_online_sales_pivot" model="ir.ui.view">
+            <field name="name">sale.report.pivot</field>
+            <field name="model">sale.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Sales Analysis" display_quantity="1" sample="1">
+                    <field name="categ_id" type="row"/>
+                    <field name="order_id" type="measure"/>
+                    <field name="price_subtotal" type="measure"/>
+                    <field name="price_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="sale_report_view_search_website_inherit" model="ir.ui.view">
+            <field name="name">sale.report.view.search.inherit</field>
+            <field name="model">sale.report</field>
+            <field name="inherit_id" ref="website_sale.sale_report_view_search_website"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="before">
+                    <field name="order_id"/>
+                </xpath>
+
+                <xpath expr="//filter[@name='confirmed']" position="after">
+                    <filter string="Unpaid Orders" name="unpaid" domain="[('state', '=', 'sent')]"/>
+                    <filter string="Abandoned Carts" name="abandoned" domain="[('is_abandoned_cart', '=', True)]" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_dashboard" model="ir.actions.act_window">
+            <field name="name">eCommerce Dashboard</field>
+            <field name="res_model">sale.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="domain">[('team_id.website_ids', '!=', False)]</field>
+            <field name="search_view_id" ref="website_sale.sale_report_view_search_website"/>
+            <field name="context">{
+                'search_default_confirmed': 1,
+                'search_default_filter_date': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
+        </record>
+
+            <record id="sale_dashboard_view_graph" model="ir.actions.act_window.view">
+                <field name="sequence" eval="10"/>
+                <field name="view_mode">graph</field>
+                <field name="view_id" ref="view_online_sales_graph"/>
+                <field name="act_window_id" ref="sale_dashboard"/>
+            </record>
+
+            <record id="sale_dashboard_view_pivot" model="ir.actions.act_window.view">
+                <field name="sequence" eval="20"/>
+                <field name="view_mode">pivot</field>
+                <field name="view_id" ref="view_online_sales_pivot"/>
+                <field name="act_window_id" ref="sale_dashboard"/>
+            </record>
+
+        <record id="website.menu_website_dashboard" model="ir.ui.menu">
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- ONBOARDING -->
+        <template id="website_sale_onboarding_payment_provider_step">
+            <t t-call="base.onboarding_step">
+                <t t-set="title">Online Payments</t>
+                <t t-set="description">Enable credit &amp; debit card payments supported by Stripe</t>
+                <t t-set="btn_text">Activate Stripe</t>
+                <t t-set="done_text">Online payments enabled</t>
+                <t t-set="model" t-value="'res.company'" />
+                <t t-set="method" t-value="'action_open_website_sale_onboarding_payment_provider'" />
+                <t t-set="state" t-value="state.get('payment_provider_onboarding_state')" />
+            </t>
+        </template>
+
+        <template id="website_sale_dashboard_onboarding_panel" name="website.sale.dashboard.onboarding.panel">
+            <t t-call="base.onboarding_container">
+                <t t-set="classes" t-valuef="o_onboarding_orange"/>
+                <t t-set="bg_image" t-translation="off">/website_sale_dashboard/static/src/img/website_sale_dashboard_onboarding_bg.jpg</t>
+                <t t-set="close_method" t-valuef="action_close_website_sale_dashboard_onboarding"/>
+                <t t-set="close_model" t-valuef="res.company"/>
+                <t t-set="text_completed">The configuration is done. Happy selling!</t>
+                <t t-call="base.onboarding_company_step" name="company_step" />
+                <t t-call="website_sale_dashboard.website_sale_onboarding_payment_provider_step" name="payment_provider_step" />
+                <t t-call="account.onboarding_sale_tax_step" name="sale_tax_step" />
+            </t>
+        </template>
+    </data>
+</odoo>

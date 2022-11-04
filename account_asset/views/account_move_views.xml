@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_asset_inherit" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="asset_id" invisible="1"/>
+                <field name="asset_asset_type" invisible="1"/>
+                <field name="linked_asset_type" invisible="1"/>
+                <field name="number_asset_ids" invisible="1"/>
+                <field name="draft_asset_ids" invisible="1"/>
+                <button name="open_asset_view"
+                    attrs="{'invisible': ['|', ('asset_id', '=', False), ('asset_asset_type', '=', 'sale')]}"
+                    class="oe_stat_button"
+                    icon="fa-cube"
+                    type="object">
+                    <field name="asset_id_display_name" nolabel="1"/>
+                </button>
+                <button name="action_open_asset_ids"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-id-card-o"
+                    attrs="{'invisible': ['|', ('number_asset_ids', '=', 0), ('draft_asset_ids', '=', True)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <field name="number_asset_ids" nolabel="1" help=""/>
+                        <span class="o_stat_text">
+                        <label for="number_asset_ids" string="Assets" attrs="{'invisible': [('linked_asset_type', '!=', 'purchase')]}"/>
+                        <label for="number_asset_ids" string="Def. Expenses" attrs="{'invisible': [('linked_asset_type', '!=', 'expense')]}"/>
+                        <label for="number_asset_ids" string="Def. Revenues" attrs="{'invisible': [('linked_asset_type', '!=', 'sale')]}"/>
+                        </span>
+                    </div>
+                </button>
+                <button name="action_open_asset_ids"
+                    type="object"
+                    class="oe_stat_button text-danger"
+                    icon="fa-id-card-o"
+                    attrs="{'invisible': ['|', ('number_asset_ids', '=', 0), ('draft_asset_ids', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <field name="number_asset_ids" nolabel="1" help=""/>
+                        <span class="o_stat_text">
+                        <label for="number_asset_ids" string="Assets" attrs="{'invisible': [('linked_asset_type', '!=', 'purchase')]}"/>
+                        <label for="number_asset_ids" string="Def. Expenses" attrs="{'invisible': [('linked_asset_type', '!=', 'expense')]}"/>
+                        <label for="number_asset_ids" string="Def. Revenues" attrs="{'invisible': [('linked_asset_type', '!=', 'sale')]}"/>
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_form_asset_inherit" model="ir.ui.view">
+        <field name="name">account.move.line.form</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <field name="move_id" position="after">
+                <field name="asset_ids" attrs="{'invisible': [('asset_ids','=',[])]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_account_aml_to_asset">
+        <field name="name">Create Asset</field>
+        <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="model_id" ref="account.model_account_move_line"/>
+        <field name="binding_model_id" ref="account.model_account_move_line" />
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.turn_as_asset()
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_view_kanban_inherit_project_forecast" model="ir.ui.view">
+        <field name="name">project.kanban.inherit.project.forecast</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="/kanban" position="inside">
+                <field name="allow_forecast" groups="planning.group_planning_user"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+                <div groups="planning.group_planning_user" role="menuitem" t-if="record.allow_forecast.raw_value">
+                    <a name="action_project_forecast_from_project" type="object">
+                        Planning
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_form_simplified_inherit_forecast" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit.forecast</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
+                <div class="col-lg-6 o_setting_box" groups="planning.group_planning_user">
+                    <div class="o_setting_left_pane">
+                        <field name="allow_forecast"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_forecast"/>
+                        <div class="text-muted" id="allow_forecast_setting">
+                            Plan your resources on project tasks
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_view_form_inherit_project_forecast" model="ir.ui.view">
+        <field name="name">project.view.form.inherit.project.forecast</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_time_managment']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group_time_managment']" position="inside">
+                <div class="o_setting_box mt-4" groups="planning.group_planning_user" colspan="2">
+                    <div class="o_setting_left_pane">
+                        <field name="allow_forecast"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_forecast"/>
+                        <div class="text-muted" id="allow_forecast_setting">
+                            Plan your resources for this project
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="knowledge_base_articles_card" inherit_id="website_helpdesk.knowledge_base">
+        <xpath expr="//div[@id='o_knowledge_base_sections']" position="inside">
+            <div class="col-lg-4 pt32 pb32 text-center o_colored_level" t-if="team.show_knowledge_base_article">
+                <i class="fa fa-3x rounded bg-secondary m-3 fa-book fa-3x rounded bg-secondary m-3">​</i>
+                <h3>
+                    <span style="font-weight: bolder; font-size: 18px;">Articles</span>
+                </h3>
+                <p>
+                    <span style="font-size: 18px;">Search our documentation for answers<br/>to common questions</span>
+                </p>
+                <a t-attf-href="/helpdesk/{{ slug(team) }}/knowledge/home?auto_unfold=1" t-att-target="target" class="btn btn-outline-primary" data-bs-original-title="" title="">Browse Articles</a>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="search_result" name="Knowledge Base: Knowledge Search Result">
+        <div class="website_forum d-flex w-100 mb-0 py-4 border-top">
+            <p class="mt-1 text-400">
+                <i class="fa fa-fw fa-2x fa-book" title="Knowledge Article"/>
+            </p>
+            <div class="w-100 ms-3">
+                <h5>
+                    <a t-att-href="url" t-out="record.display_name" class="fw-bold"/>
+                </h5>
+                <small>
+                    <time t-field="record.create_date" class="ps-2 border-start" t-options='{"format": "d MMM yyyy"}'/>, by <a t-attf-href="/profile/user/{{record.create_uid.id}}" class="fw-bold" t-out="record.create_uid.name"/>
+                    <t t-if="record.parent_id">
+                    | <t t-out="record.parent_id.sudo().display_name"/>
+                    </t>
+                    <t t-if="record.is_user_favorite">
+                    | <div class="fa fa-star text-warning"/>
+                    </t>
+                </small>
+            </div>
+        </div>
+    </template>
+</odoo>

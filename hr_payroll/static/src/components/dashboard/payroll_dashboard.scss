@@ -1,0 +1,21 @@
+@include media-breakpoint-up(md) {
+    .o_payroll_dashboard_panel {
+        max-height: 46vh;
+        min-height: 46vh;
+        .o_hr_payroll_dashboard_block {
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        .o_hr_payroll_dashboard_block::-webkit-scrollbar {
+            width: 5px;
+        }
+        .o_hr_payroll_dashboard_block::-webkit-scrollbar-thumb {
+            background: #ccc;
+            transition: all 0.4s;
+            &:hover {
+                background: #aaa;
+                cursor: pointer;
+            }
+        }
+    }
+}

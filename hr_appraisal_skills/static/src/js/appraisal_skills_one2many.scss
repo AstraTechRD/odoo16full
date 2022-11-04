@@ -1,0 +1,29 @@
+.o_field_appraisal_skills_one2many {
+    width: 100%;
+
+    .o_appraisal_overlay {
+        z-index: 100;
+    }
+
+    .o_appraisal_blur {
+        margin-top: unset;
+        overflow: hidden;
+    }
+
+    .o_skill_sample_row {
+        opacity: 0.5;
+        overflow: hidden;
+
+        .o_skill_sample_text {
+            display: inline-block;
+            background-color: #ccc;
+            height: 1em;
+        }
+
+        .o_skill_sample_progress {
+            display: inline-block;
+            background-color: $o-enterprise-primary-color;
+            height: 1em;
+        }
+    }
+}

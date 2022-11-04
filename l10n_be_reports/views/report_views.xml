@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sales_report_main_template" inherit_id="account_reports.sales_report_main_template">
+        <xpath expr="//div[@id='warnings_div']" position="inside">
+            <div class="alert alert-warning text-center mb-0 no_print" t-if="options.get('be_tax_cross_check_warning')">
+                <span>EC Sales taxes report total does not match Tax Report lines 44 + 46L + 46T - 48s44 - 48s46L - 48s46T.</span>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

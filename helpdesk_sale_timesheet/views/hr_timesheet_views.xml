@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="timesheet_view_search_inherit_helpdesk_sale_timesheet" model="ir.ui.view">
+        <field name="name">account.analytic.line.search.timesheet</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_id']" position="before">
+                <field name="helpdesk_ticket_id" position="move"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="timesheet_view_form_inherit_helpdesk_sale_timesheet" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.timesheet</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="sale_timesheet_enterprise.timesheet_view_form_so_line_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_id']" position="after">
+                <field name="display_sol" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='so_line']" position="attributes">
+                <attribute name="attrs">{'invisible': [('display_sol', '!=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="timesheet_view_search_inherit_timesheet_report_search" model="ir.ui.view">
+        <field name="name">timesheets.analysis.report.search</field>
+        <field name="model">timesheets.analysis.report</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_report_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_id']" position="before">
+                <field name="helpdesk_ticket_id" position="move"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

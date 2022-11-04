@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.CustomFavoriteItem" t-inherit-mode="extension" owl="1">
+        <!-- When the user opens the embedded view, applies some filters and clicks
+        on the "use by default" checkbox of the "Favorites" dropdown menu (below
+        the search bar), the selected filter was applied to the main view.
+        To prevent the user from messing around with the global filter, we will
+        simply hide the "use by default" from the menu. -->
+        <xpath expr="//CheckBox[@value='state.isDefault']" position="before">
+            <t t-set="hideUseFiltersByDefault" t-value="!!(
+                this.env.searchModel &amp;&amp; (this.env.searchModel._context &amp;&amp;
+                    this.env.searchModel._context.knowledge_embedded_view_framework)
+            )"/>
+        </xpath>
+        <xpath expr="//CheckBox[@value='state.isDefault']" position="attributes">
+            <attribute name="t-if">!hideUseFiltersByDefault</attribute>
+        </xpath>
+    </t>
+</templates>

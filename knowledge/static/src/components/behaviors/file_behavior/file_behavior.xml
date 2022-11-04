@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- /file template -->
+    <t t-name="knowledge.FileBehavior" owl="1">
+        <div class="o_knowledge_file_image" t-on-click="onClickDownload"
+            data-prop-name="fileImage" t-out="props.fileImage"/>
+        <div class="o_knowledge_file_description">
+            <div class="o_knowledge_file_name"
+                data-prop-name="fileName" t-out="props.fileName"/>
+            <div class="o_knowledge_file_extension"
+                data-prop-name="fileExtension" t-out="props.fileExtension"/>
+        </div>
+        <div class="o_knowledge_toolbar mt-auto ms-auto o_knowledge_clean_for_save">
+            <div class="btn-group">
+                <button t-if="targetRecordInfo and targetRecordInfo.withChatter" t-on-click="onClickAttachToMessage" title="Send as Message" class="btn btn-primary btn-link btn-sm border-0">
+                    <i class="fa fa-envelope" t-on-dblclick.stop=""/> <span class="o_knowledge_toolbar_button_text">Send as Message</span>
+                </button>
+                <button t-if="targetRecordInfo and targetRecordInfo.withChatter" t-on-click="onClickUseAsAttachment" title="Use as Attachment" class="btn btn-primary btn-link btn-sm border-0">
+                    <i class="fa fa-paperclip" t-on-dblclick.stop=""/> <span class="o_knowledge_toolbar_button_text">Use as Attachment</span>
+                </button>
+                <button t-on-click="onClickDownload" title="Download" class="btn btn-primary btn-link btn-sm border-0">
+                    <i class="fa fa-download" t-on-dblclick.stop=""/> <span class="o_knowledge_toolbar_button_text">Download</span>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

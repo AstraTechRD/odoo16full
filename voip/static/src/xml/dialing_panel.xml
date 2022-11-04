@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="voip.SystrayItem" owl="1">
+    <div>
+        <a href="#" title="Display Dialing Panel" t-on-click.prevent="onClick">
+            <i aria-label="Display Dialing Panel" class="oi oi-large oi-voip" role="img"/>
+        </a>
+    </div>
+</t>
+
+<!--
+    @param {voip.dialingPanel} widget
+-->
+<div class="o_dial o_in_home_menu position-absolute w-100 h-100 flex-column ms-md-2 bottom-0 bg-white shadow d-print-none" t-name="voip.DialingPanel">
+    <div class="o_dial_fold position-relative bottom-0">
+        <div class="o_dial_window_title d-flex align-items-center cursor-pointer overflow-auto">
+            <t t-call="voip.DialingPanel.HeaderContent">
+                <a t-set="title" t-value="widget.title"/>
+            </t>
+        </div>
+    </div>
+    <div class="o_dial_panel o_form_view flex-column border-start border-end overflow-hidden flex-grow-1">
+        <div class="o_dial_searchbar input-group justify-content-between px-3">
+            <input class="o_dial_search_input o_input form-control-lg flex-grow-1 border-0" placeholder="Search"/>
+            <button aria-label="Refresh the Panel" class="oi_searchview_icon input-group-text p-0 border-0 bg-transparent oi oi-search" role="img" title="Refresh the Panel"/>
+        </div>
+        <div class="o_notebook m-0">
+            <div class="o_notebook_headers mx-0">
+                <!-- Nav tabs -->
+                <ul class="o_dial_tabs nav nav-tabs px-0" role="tablist">
+                    <li class="nav-item o_dial_recent_tab flex-grow-1 text-center">
+                        <a aria-controls="recent" class="o_dial_tab nav-link border-start-0" data-bs-toggle="tab" href="#recent" role="tab">Recent</a>
+                    </li>
+                    <li class="nav-item o_dial_activities_tab flex-grow-1 text-center">
+                        <a aria-controls="nextActivities" class="o_dial_tab nav-link active" data-bs-toggle="tab" href="#nextActivities" role="tab">Next activities</a>
+                    </li>
+                    <li class="nav-item flex-grow-1 text-center">
+                        <a aria-controls="contacts" class="o_dial_tab nav-link border-end-0" data-bs-toggle="tab" href="#contacts" role="tab">Contacts</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Tab panes -->
+        <div class="tab-content overflow-auto flex-grow-1">
+            <div class="o_dial_recent tab-pane" role="tabpanel" id="recent"/>
+            <div class=" o_dial_next_activities tab-pane active" id="nextActivities" role="tabpanel"/>
+            <div class="o_dial_contacts tab-pane" id="contacts" role="tabpanel"/>
+        </div>
+    </div>
+    <div class="o_dial_keypad border-start border-end flex-grow-1">
+        <div class="o_dial_keypad_input_div input-group justify-content-between">
+            <input class="o_dial_keypad_input o_input form-control-lg flex-grow-1 ps-3" type="tel" placeholder="Enter the number..."/>
+            <button aria-label="Backspace" class="o_dial_keypad_backspace input-group-text position-absolute mt-1 pe-3 border-0 end-0 bg-transparent fa fa-long-arrow-left" role="img" title="Backspace"/>
+        </div>
+        <div class="container">
+            <div t-attrf-class="{{ widget._isMobileDevice ? 'o_hidden' : '' }} o_dial_keypad_buttons row row-cols-3 clearfix">
+                <button t-foreach="[1, 2, 3, 4, 5, 6, 7, 8, 9, '*', 0, '#']" t-as="i" 
+                        class="o_dial_keypad_button o_dial_number col btn btn-light py-3 fw-normal fs-2"
+                        t-out="i"/>
+            </div>
+        </div>
+    </div>
+    <div class="o_dial_buttons o_dial_main_buttons justify-content-around w-100 border border-bottom-0 bg-white position-md-relative ">
+        <button aria-label="Keypad" class="o_dial_keypad_button btn btn-light flex-basis-auto w-100 py-4 bg-white o_dial_keypad_icon" title="Keypad">
+            <i class="fa fa-fw fs-2 fa-keyboard-o"/>
+        </button>
+        <button aria-label="Hang up but keep call in queue" class="o_dial_postpone_button btn btn-light flex-basis-auto w-100 py-4 bg-white" title="Hang up but keep call in queue">
+            <i class="fa fa-fw fs-2 fa-user-times"/>
+        </button>
+        <button aria-label="Call" class="o_dial_call_button btn btn-secondary flex-basis-auto w-100 py-4 bg-white" title="Call">
+            <i class="fa fa-fw fs-2 fa-phone"/>
+        </button>
+    </div>
+</div>
+
+<!--
+  header of the voip_widget
+  takes a value title as parameter that is a String and will be the title of the header.
+
+  @param {string} title
+-->
+<t t-name="voip.DialingPanel.HeaderContent">
+    <i class="oi oi-large oi-voip ms-3 me-1 my-0" role="img"/>
+    <div class="o_dial_text flex-grow-1 mx-1 my-0" t-out="title"/>
+    <a aria-label="Close" class="o_dial_window_close d-flex align-items-center h-100 m-0 px-3 py-0 border-0 opacity-50 opacity-100-hover text-reset" href="#" title="Close">
+        <i class="oi oi-large oi-close"/>
+    </a>
+</t>
+
+</templates>

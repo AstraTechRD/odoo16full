@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!-- Hide the big buttons related to the website sales orders -->
+    <t t-extend="website.dashboard_header">
+        <t t-jquery="div.o_dashboard_common" t-operation="replace"/>
+    </t>
+    <!-- Remove the 'community' Sales Dashboard, keeping only Plausible -->
+    <!-- This template actually inherits website_sale.dashboard_content and not
+    the one from website, but apparently for some reason if a t-inherit is done
+    in extension mode, it needs to inherit the very base template of the inherit
+    hierarchy, not the one it actually wants to inherits.
+    -->
+    <t t-name="website_sale_dashboard.dashboard_content" t-inherit="website.dashboard_content" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_dashboard_sales')]" position="replace"/>
+    </t>
+    <!-- Remove the date range buttons related to the 'community' Sales Dashboard -->
+    <t t-extend="website.DateRangeButtons">
+        <t t-jquery="t[t-set='show_range_buttons']" t-operation="attributes">
+            <attribute name="t-value" value="0" />
+        </t>
+    </t>
+
+</templates>

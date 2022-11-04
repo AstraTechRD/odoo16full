@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+    <data>
+
+        <template id="pe_ubl_2_1_common_line">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+               xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+               xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+               xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+               xmlns:sac="urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1"
+               xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <t t-set="line" t-value="line_vals['line']"/>
+                <cbc:ID t-esc="line_vals['index']"/>
+                <cbc:LineExtensionAmount
+                        t-att-currencyID="line.currency_id.name"
+                        t-esc="format_float(line.price_subtotal)"/>
+                <cac:PricingReference>
+                    <cac:AlternativeConditionPrice>
+                        <cbc:PriceAmount
+                                t-att-currencyID="line.currency_id.name"
+                                t-esc="format_float(line_vals['price_total_unit'], precision=price_precision)"/>
+                        <cbc:PriceTypeCode
+                                t-esc="line_vals['price_unit_type_code']"/>
+                    </cac:AlternativeConditionPrice>
+                </cac:PricingReference>
+                <cac:TaxTotal>
+                    <cbc:TaxAmount
+                            t-att-currencyID="line.currency_id.name"
+                            t-esc="format_float(line.price_total - line.price_subtotal)"/>
+                        <cac:TaxSubtotal
+                            t-foreach="tax_details['tax_details_per_record'][line]['tax_details'].values()"
+                            t-as="tax_detail_vals">
+                            <t t-set="tax" t-value="tax_detail_vals['tax']"/>
+                            <cbc:TaxableAmount
+                                    t-if="tax.tax_group_id.l10n_pe_edi_code != 'ICBPER'"
+                                    t-att-currencyID="line.currency_id.name"
+                                    t-esc="format_float(tax_detail_vals['base_amount_currency'])"/>
+                            <cbc:TaxAmount
+                                    t-att-currencyID="line.currency_id.name"
+                                    t-esc="format_float(tax_detail_vals['tax_amount_currency'] or 0.0)"/>
+                            <cbc:BaseUnitMeasure
+                                    t-if="tax.tax_group_id.l10n_pe_edi_code == 'ICBPER'"
+                                    t-att-unitCode="line.product_uom_id.l10n_pe_edi_measure_unit_code"
+                                    t-esc='int(line.quantity)'/>
+                            <cac:TaxCategory>
+                                <cbc:Percent
+                                        t-if="tax.amount_type == 'percent'"
+                                        t-esc="tax.amount"/>
+                                <cbc:PerUnitAmount
+                                        t-if="tax.amount_type == 'fixed'"
+                                        t-att-currencyID="line.currency_id.name"
+                                        t-esc="tax.amount"/>
+                                <cbc:TaxExemptionReasonCode
+                                        t-if="tax.tax_group_id.l10n_pe_edi_code != 'ICBPER' and line.l10n_pe_edi_affectation_reason"
+                                        t-esc="line.l10n_pe_edi_affectation_reason"/>
+                                <cac:TaxScheme>
+                                    <cbc:ID t-esc="tax.l10n_pe_edi_tax_code"/>
+                                    <cbc:Name t-esc="tax.tax_group_id.l10n_pe_edi_code"/>
+                                    <cbc:TaxTypeCode t-esc="tax.l10n_pe_edi_international_code"/>
+                                </cac:TaxScheme>
+                            </cac:TaxCategory>
+                        </cac:TaxSubtotal>
+                </cac:TaxTotal>
+                <cac:Item>
+                    <cbc:Description t-esc="(line.name or '').replace('\n', ' ')[:250]"/>
+                    <cac:CommodityClassification t-if="line.product_id">
+                        <cbc:ItemClassificationCode t-esc="line.product_id.unspsc_code_id.code"/>
+                    </cac:CommodityClassification>
+                </cac:Item>
+                <cac:Price>
+                    <cbc:PriceAmount
+                            t-att-currencyID="line.currency_id.name"
+                            t-esc="format_float(line_vals['price_subtotal_unit'], precision=price_precision)"/>
+                </cac:Price>
+            </t>
+        </template>
+
+        <template id="pe_ubl_2_1_common">
+            <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+               xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+               xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+               xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+               xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+               xmlns:sac="urn:sunat:names:specification:ubl:peru:schema:xsd:SunatAggregateComponents-1"
+               xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <ext:UBLExtensions>
+                    <ext:UBLExtension>
+                        <ext:ExtensionContent>
+                            <ds:Signature
+                                    Id="placeholder"
+                                    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"/>
+                        </ext:ExtensionContent>
+                    </ext:UBLExtension>
+                </ext:UBLExtensions>
+                <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+                <cbc:CustomizationID>2.0</cbc:CustomizationID>
+                <cbc:ID t-esc="record.name.replace(' ', '')"/>
+                <cbc:IssueDate t-esc="certificate_date"/>
+                <cbc:DocumentCurrencyCode t-esc="record.currency_id.name"/>
+                <cac:OrderReference t-if="record.ref and record.l10n_latam_document_type_id.internal_type == 'invoice'">
+                      <cbc:ID t-esc="record.ref[:20]"/>
+                </cac:OrderReference>
+                <cac:Signature>
+                    <cbc:ID>IDSignKG</cbc:ID>
+                    <cac:SignatoryParty>
+                        <cac:PartyIdentification>
+                            <cbc:ID t-esc="record.company_id.vat"/>
+                        </cac:PartyIdentification>
+                        <cac:PartyName>
+                            <cbc:Name t-esc="record.company_id.name.upper()"/>
+                        </cac:PartyName>
+                    </cac:SignatoryParty>
+                    <cac:DigitalSignatureAttachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>#SignVX</cbc:URI>
+                        </cac:ExternalReference>
+                    </cac:DigitalSignatureAttachment>
+                </cac:Signature>
+                <cac:AccountingSupplierParty>
+                    <cbc:CustomerAssignedAccountID t-esc="record.company_id.partner_id.vat"/>
+                    <cac:Party>
+                        <cac:PartyIdentification>
+                            <cbc:ID
+                                    t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                    t-esc="record.company_id.partner_id.vat"/>
+                        </cac:PartyIdentification>
+                        <cac:PartyName>
+                            <cbc:Name t-esc="record.company_id.name"/>
+                        </cac:PartyName>
+                        <cac:PartyLegalEntity>
+                            <cbc:RegistrationName t-esc="record.company_id.partner_id.name"/>
+                            <cac:RegistrationAddress>
+                                <cbc:ID t-esc="record.company_id.partner_id.l10n_pe_district.code"/>
+                                <cbc:AddressTypeCode t-esc="record.company_id.l10n_pe_edi_address_type_code"/>
+                                <cbc:StreetName
+                                        t-if="record.company_id.partner_id.street"
+                                        t-esc="record.partner_id.street"/>
+                                <cbc:CityName
+                                        t-if="record.company_id.partner_id.city"
+                                        t-esc="record.partner_id.city"/>
+                            </cac:RegistrationAddress>
+                        </cac:PartyLegalEntity>
+                    </cac:Party>
+                </cac:AccountingSupplierParty>
+                <cac:AccountingCustomerParty>
+                    <cbc:AdditionalAccountID t-esc="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"/>
+                    <cac:Party>
+                        <cac:PartyIdentification>
+                            <cbc:ID
+                                    t-att-schemeID="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                    t-esc="record.partner_id.vat"/>
+                        </cac:PartyIdentification>
+                        <cac:PartyLegalEntity>
+                            <cbc:RegistrationName t-esc="record.partner_id.name"/>
+                        </cac:PartyLegalEntity>
+                    </cac:Party>
+                </cac:AccountingCustomerParty>
+                <!--SPOT-->
+                <t t-if="spot">
+                    <cac:PaymentMeans>
+                        <cbc:ID t-esc="spot['ID']"/>
+                        <cbc:PaymentMeansCode t-esc="spot['PaymentMeansCode']"/>
+                        <cac:PayeeFinancialAccount>
+                            <cbc:ID t-esc="spot['PayeeFinancialAccount']"/>
+                        </cac:PayeeFinancialAccount>
+
+                    </cac:PaymentMeans>
+                    <cac:PaymentTerms>
+                        <cbc:ID t-esc="spot['ID']"/>
+                        <cbc:PaymentMeansID t-esc="spot['PaymentMeansID']"/>
+                        <cbc:PaymentPercent t-esc="spot['PaymentPercent']"/>
+                        <cbc:Amount currencyID="PEN" t-esc="spot['Amount']"/>
+                    </cac:PaymentTerms>
+                </t>
+                <!--END SPOT-->
+
+                <!--PAYMENT TERMS-->
+                <t t-if="not is_refund">
+                    <t t-if="PaymentMeansID == 'Contado'">
+                        <cac:PaymentTerms>
+                            <cbc:ID>FormaPago</cbc:ID>
+                            <cbc:PaymentMeansID t-esc="PaymentMeansID"/>
+                        </cac:PaymentTerms>
+                    </t>
+                    <t t-else="">
+                        <cac:PaymentTerms>
+                            <cbc:ID>FormaPago</cbc:ID>
+                            <cbc:PaymentMeansID t-esc="PaymentMeansID"/>
+                            <cbc:Amount
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_float(total_after_spot)"/>
+                        </cac:PaymentTerms>
+
+                        <!-- Repeated with due dates-->
+                        <t t-set="id_value" t-value="0"/>
+                        <cac:PaymentTerms t-foreach="invoice_date_due_vals_list" t-as="due_vals">
+                            <t t-set="id_value" t-value="id_value + 1"/>
+                            <cbc:ID>FormaPago</cbc:ID>
+                            <cbc:PaymentMeansID>Cuota<t t-esc="'{0:03d}'.format(id_value)"/></cbc:PaymentMeansID>
+                            <cbc:Amount
+                                t-att-currencyID="due_vals['currency_name']"
+                                t-esc="format_float(due_vals['amount'])"/>
+                            <cbc:PaymentDueDate t-esc="due_vals['date_maturity']"/>
+                        </cac:PaymentTerms>
+                    </t>
+                </t>
+                <!--END PAYMENT TERMS-->
+
+                <cac:TaxTotal>
+                    <cbc:TaxAmount
+                            t-att-currencyID="record.currency_id.name"
+                            t-esc="format_float(record.amount_tax)"/>
+                        <cac:TaxSubtotal t-foreach="tax_details_grouped['tax_details'].values()" t-as="tax_detail_vals">
+                            <cbc:TaxableAmount
+                                    t-att-currencyID="record.currency_id.name"
+                                    t-esc="format_float(tax_detail_vals['base_amount_currency'])"/>
+                            <cbc:TaxAmount
+                                    t-att-currencyID="record.currency_id.name"
+                                    t-esc="format_float(tax_detail_vals['tax_amount_currency'] or 0.0)"/>
+                            <cac:TaxCategory>
+                                <cac:TaxScheme>
+                                    <cbc:ID t-esc="tax_detail_vals['l10n_pe_edi_tax_code']"/>
+                                    <cbc:Name t-esc="tax_detail_vals['l10n_pe_edi_code']"/>
+                                    <cbc:TaxTypeCode t-esc="tax_detail_vals['l10n_pe_edi_international_code']"/>
+                                </cac:TaxScheme>
+                            </cac:TaxCategory>
+                        </cac:TaxSubtotal>
+                </cac:TaxTotal>
+            </t>
+        </template>
+
+    </data>
+</odoo>

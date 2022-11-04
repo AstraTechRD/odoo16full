@@ -1,0 +1,63 @@
+<odoo>
+    <!--Hr Department Inherit Kanban view-->
+    <record id="hr_department_view_kanban" model="ir.ui.view">
+        <field name="name">hr.department.kanban.inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//templates" position="before">
+                    <field name="appraisals_to_process_count" groups="hr_appraisal.group_hr_appraisal_user"/>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
+                    <div groups="hr_appraisal.group_hr_appraisal_user" t-if="record.appraisals_to_process_count.raw_value > 0" class="row ml16">
+                        <div class="col">
+                            <a name="%(hr_appraisal_action_from_department)d" type="action">
+                                <t t-esc="record.appraisals_to_process_count.raw_value"/> Appraisals
+                            </a>
+                        </div>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
+                    <a groups="hr_appraisal.group_hr_appraisal_user" role="menuitem" class="dropdown-item" name="%(action_appraisal_report_all)d" type="action">
+                        Appraisals
+                    </a>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="hr_department_view_form" model="ir.ui.view">
+        <field name="name">hr.department.view.form</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="custom_appraisal_templates"/>
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <notebook attrs="{'invisible': [('custom_appraisal_templates', '=', False)]}">
+                    <page string="Appraisal Templates">
+                        <group>
+                            <group>
+                                <div class="col-12">
+                                    <h3 class="col-6 ps-0">Employee</h3>
+                                    <field name="employee_feedback_template" nolabel="1"/>
+                                </div>
+                            </group>
+                            <group>
+                                <div class="col-12">
+                                    <h3 class="col-6 ps-0">Manager</h3>
+                                    <field name="manager_feedback_template" nolabel="1"/>
+                                </div>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

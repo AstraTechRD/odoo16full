@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="LastTransactionStatusButton" owl="1">
+        <div class="header-button balance-button" t-on-click="sendLastTransactionStatus">
+            <span class="last-transaction-status-button">
+                <i t-if="state.pending" class="fa fa-spinner fa-spin"/>
+                <t t-else="">Last Transaction Status</t>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="LastTransactionPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-alert">
+                <p class="title">Worldline - Last Transaction Status</p>
+                <p class="body">
+                    <t t-if="props.error" t-esc="props.error"/>
+                    <t t-else="">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="text-align: right; padding: 0.3em;">Action identifier:</td>
+                                <td style="text-align: left" t-esc="props.action_identifier" />
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 0.3em;">Time:</td>
+                                <td style="text-align: left" t-esc="props.time" />
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 0.3em;">Amount:</td>
+                                <td style="text-align: left" t-esc="props.amount" />
+                            </tr>
+                        </table>
+                    </t>
+                </p>
+                <div class="footer">
+                    <div class="button cancel" t-on-click="confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

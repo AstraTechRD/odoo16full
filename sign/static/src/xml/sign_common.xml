@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.sign_item" name="Signature Item">
+        <t t-if="readonly">
+            <!-- TEMPLATE EDITION or REQUEST DISPLAY -->
+            <div t-if="type == 'signature' || type == 'initial'" t-att-title="role" class="o_sign_sign_item" style="text-align: center;" t-att-data-signature="value">
+                <span class="o_sign_helper"/>
+                <img t-if="frame_value" t-att-src="frame_value" alt="Frame" class="o_sign_frame"/>
+                <img t-if="value" t-att-src="value" alt="Signature"/>
+                <t t-if="!value">
+                    <span class="o_placeholder">
+                        <t t-esc="placeholder"/>
+                    </span>
+                </t>
+                <t t-if="editMode" t-call="sign.sign_item_configuration"/>
+            </div>
+            <div t-if="type == 'text' &amp;&amp; !isSignItemEditable" t-att-title="role" class="o_sign_sign_item"><t t-if="!value"><p class="o_placeholder o_sign_field_alignment"><t t-esc="placeholder"/></p></t><t t-esc="value"/><t t-if="editMode" t-call="sign.sign_item_configuration"/></div>
+            <div t-if="type == 'text' &amp;&amp; isSignItemEditable" t-att-title="role" type="text" class="o_sign_sign_item"><input t-att-placeholder="placeholder" t-att-value="value" class="o_sign_editable_input"/><t t-if="isSignItemEditable" t-call="sign.sign_item_configuration"/></div>
+            <div t-if="type == 'textarea'" t-att-title="role" class="o_sign_sign_item o_sign_sign_textarea"><t t-if="!value"><p class="o_placeholder o_sign_field_alignment"><t t-esc="placeholder"/></p></t><t t-esc="value"/><t t-if="editMode" t-call="sign.sign_item_configuration"/></div>
+            <div t-if="type == 'checkbox'" t-att-title="role" class="o_sign_sign_item" style="margin: 2px; padding:2px"><t t-if="value == 'on'">&#9745;</t><t t-if="value == 'off'">&#9744;</t><t t-if="!value"><span class="o_placeholder"><t t-if="placeholder == '☑'">&#9745;</t><t t-else="">&#9744;</t></span></t><t t-if="editMode" t-call="sign.sign_item_configuration"/></div>
+            <div t-if="type == 'selection'" t-att-title="role" class="o_sign_sign_item" style="white-space: normal;text-align: center;"><t t-if="!value"><span class="o_placeholder"><t t-esc="placeholder"/></span></t><div class="o_sign_select_options_display"/><t t-if="editMode" t-call="sign.sign_item_configuration"/></div>
+        </t>
+
+        <t t-if="!readonly">
+            <!-- SIGN SESSION : filling the signature values  -->
+            <button t-if="type == 'signature' || type == 'initial'" t-att-title="role" class="o_sign_sign_item text-center" style="color:#757575;"
+                    t-att-data-signature="value">
+                <span class="o_sign_helper"/>
+                <img t-if="frame_value" t-att-src="frame_value" alt="Frame"/>
+                <img t-if="value" t-att-src="value" alt="Signature"/>
+                <t t-if="!value">
+                    <span class="o_placeholder">
+                        <t t-esc="placeholder"/>
+                    </span>
+                </t>
+            </button>
+            <input t-if="type == 'text'" t-att-title="role" type="text" class="o_sign_sign_item" t-att-placeholder="placeholder" t-att-value="value"/>
+            <input t-if="type == 'checkbox' and value == 'on'" t-att-title="role" type="checkbox" class="o_sign_sign_item" checked="1"/>
+            <input t-elif="type == 'checkbox'" t-att-title="role" type="checkbox" class="o_sign_sign_item"/>
+            <textarea t-if="type == 'textarea'" t-att-title="role" class="o_sign_sign_item" t-att-placeholder="placeholder" t-att-value="value" t-esc="value"/>
+            <div t-if="type == 'selection'" t-att-title="role" class="o_sign_sign_item" style="white-space: normal;color: #757575;" t-att-value="value"><div class="o_sign_select_options_display o_sign_select_options_display_edit"/></div>
+        </t>
+    </t>
+
+    <div t-name="sign.sign_item_configuration" t-attf-class="o_sign_config_area {{ isSignItemEditable &amp;&amp; type == 'text' ? 'o_sign_editable_config_area' : '' }}">
+         <div class="o_sign_config_handle" aria-label="Signature configuration" title="Signature configuration">
+            <span class="fa fa-arrows" role="img"/>
+        </div>
+        <span t-if="isSignItemEditable" class="fa fa-times" role="img" aria-label="Delete sign item" title="Delete sign"/>
+        <div class="o_sign_item_display">
+<!--            Don't display role for checkbox. We don't have place-->
+            <t t-if="type != 'checkbox' || isSignItemEditable"><span class="o_sign_responsible_display"/></t>
+        </div>
+    </div>
+
+    <!-- Signing part -->
+    <div t-name="sign.signature_dialog">
+        <div class="o_web_sign_name_and_signature"/>
+        <div class="mt16 small">By clicking Adopt &amp; Sign, I agree that the chosen signature/initials will be a valid electronic representation of my hand-written signature/initials for all purposes when it is used on documents, including legally binding contracts.</div>
+    </div>
+
+    <div t-name="sign.public_signer_dialog">
+        <div class="mb-3 row">
+            <label for="o_sign_public_signer_name_input" class="col-lg-3 col-form-label">Your name</label>
+            <div class="col-lg-9">
+                <input type="text" id="o_sign_public_signer_name_input" placeholder="Your name" class="form-control"/>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="o_sign_public_signer_mail_input" class="col-lg-3 col-form-label">Your email</label>
+            <div class="col-lg-9">
+                <input type="email" id="o_sign_public_signer_mail_input" placeholder="Your email" class="form-control"/>
+            </div>
+        </div>
+    </div>
+
+    <div t-name="sign.public_sms_signer">
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label" for="phone">Phone Number</label>
+            <div class="col-sm">
+                <div class="input-group">
+                    <input type="text" name="phone" id="o_sign_phone_number_input" placeholder="e.g. +1 415 555 0100" class="form-control" t-att-value="widget.signerPhone"/>
+                    <button class='btn btn-sm btn-primary o_sign_resend_sms'>Send SMS</button>
+                </div>
+                <span class="text-muted form-text">A SMS will be sent to the following phone number. Please update it if it's not relevant.</span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-sm-3 col-form-label" for="validation_code">Validation Code</label>
+            <div class="col-sm">
+                <input type="text" name="validation_code" id="o_sign_public_signer_sms_input" placeholder="e.g. 314159" class="form-control"/>
+                <span class="text-muted form-text">Enter the code received through SMS to complete your signature</span>
+            </div>
+        </div>
+    </div>
+
+    <div t-name="sign.public_password" class="mb-3">
+        <span>Your file is encrypted, PDF's password is required to generate final document. The final document will be encrypted with the same password.</span>
+        <div>
+            <input type="password" id="o_sign_public_signer_password_input" class="form-control"/>
+        </div>
+    </div>
+
+    <div t-name="sign.thank_you_dialog">
+        <div class="o_thankyou_message" t-out="widget.options.message"/>
+        <div class="o_thankyou_message" t-if="widget.has_next_document">Other documents have to be signed.</div>
+    </div>
+
+    <div t-name="sign.refuse_confirm_dialog">
+        <div> Reason </div>
+        <textarea class="o_sign_refuse_confirm_message" placeholder="Why do you refuse to sign this document?"/>
+    </div>
+
+    <div t-name="sign.next_direct_sign_dialog">
+        <div class="o_nextdirectsign_message">We will send you this document by email once everyone has signed.<br/>
+        </div>
+    </div>
+
+    <div t-name="sign.item_bottom_sheet" class="o_sign_item_bottom_sheet">
+        <label class="o_sign_label"><t t-esc="widget.label" />
+            <input t-if="widget.type === 'text'" type="text" class="o_sign_item_bottom_sheet_field"
+                   t-att-placeholder="widget.placeholder" t-att-value="widget.value"/>
+            <textarea t-if="widget.type === 'textarea'" class="o_sign_item_bottom_sheet_field"
+                      t-att-placeholder="widget.placeholder" t-att-value="widget.value" t-esc="widget.value"/>
+        </label>
+        <button class="o_sign_next_button btn btn-primary btn-block"><t t-esc="widget.buttonText"/></button>
+    </div>
+
+</templates>

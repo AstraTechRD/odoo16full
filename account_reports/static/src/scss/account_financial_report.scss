@@ -1,0 +1,689 @@
+.o_foldable_menu {
+    &.o_closed_menu {
+        display: none;
+    }
+    .o_open_menu {
+        display: block;
+    }
+}
+@mixin o-account-reports-i-fa-toggle {
+    i.fa {
+        visibility: hidden;
+    }
+    &:hover i.fa {
+        visibility: visible;
+    }
+}
+
+.o_form_view {
+    .o_account_reports_page {
+        .o_input {
+            width: 100%;
+        }
+    }
+}
+
+// Reports on large screens
+@media (min-width: map-get($grid-breakpoints,"xl")) {
+    .o_content > .o_account_reports_body {
+        .o_account_reports_no_print {
+            min-width: map-get($container-max-widths,"xl") !important;
+            width: fit-content !important;
+        }
+    }
+}
+
+// The selector is to target financial reports without targeting follow ups
+// reports_body are not a direct child of o_content on follow ups but it is for financial reports
+.o_content > .o_account_reports_body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden !important; // Removes a useless scrollbar when resizing down
+
+    #warnings_div {
+        width: 100%;
+
+        .alert {
+            width: 100%;
+        }
+    }
+
+    .o_account_reports_summary {
+        display: none;
+    }
+
+    .o_account_reports_no_print {
+        // form sheet
+        border: 1px solid #C9CCD2;
+        box-shadow: 0 5px 20px -15px rgba(0,0,0,.4);
+        margin: 24px 12px 48px;
+        padding: 24px;
+        max-width: calc(100% - 12px); // Prevents the sheet to take horizontal space that is not available
+
+        .table-responsive {
+            min-height: 470px;
+            width: auto;
+        }
+
+        .o_account_reports_table {
+            thead {
+                background-color: #FFFFFF;
+                z-index: 2;
+            }
+        }
+    }
+}
+
+.o_account_reports_page {
+    // Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
+    direction: ltr;
+    background-color: $o-view-background-color;
+    color: $o-main-text-color;
+
+    // Override bootstrap in the account reports.
+    thead, tbody, tfoot, tr, td, th {
+        border-style: none;
+    }
+
+    // Clearfix the floats (prevent the element height to collapse)
+    .o_account_reports_header {
+        clear: both;
+        overflow: visible;
+    }
+
+    .dropdown-toggle::after {
+        display: none; // disable bootstrap's caret and do it manually for positioning
+    }
+
+    padding: 24px;
+
+    .o_account_reports_level0 {
+        border-width: 2px;
+        font-weight: bold;
+        border-bottom-style: solid;
+    }
+    .o_account_reports_table {
+        margin-bottom: 24px;
+
+        th.o_account_report_column_header {
+            &.sortable span {
+                cursor: pointer;
+
+                &::before {
+                    content: '\f07d';
+                    font-family: 'FontAwesome';
+                    color: lightgray;
+                    padding-right: 8px;
+                }
+            }
+            &.up span::before {
+                content: '\f176';
+                color: black;
+                padding-right: 8px;
+            }
+            &.down span::before {
+                content: '\f175';
+                color: black;
+                padding-right: 8px;
+            }
+            &:first-child {
+                border: none;
+            }
+        }
+    }
+    .o_account_reports_subtable {
+        .table-striped {
+            tbody tr:nth-of-type(odd) {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+        }
+        thead {
+            tr:first-child {
+                border-bottom: 1px solid $o-gray-300;
+            }
+        }
+        tbody {
+            border: none;
+        }
+        tbody tr:hover {
+            td {
+                background-color: rgba(0, 0, 0, 0.05) !important;
+            }
+        }
+        & td {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        max-width: 500px;
+        margin-left:auto;
+        margin-right:auto;
+        border: 1px solid $o-gray-300;
+    }
+    .account_report_line_name a {
+        color:#008784;
+    }
+    a {
+        cursor: pointer;
+    }
+    .o_reports_date_to {
+        margin-left: 20px;
+    }
+    .o_account_report_line {
+        span {
+            white-space: nowrap;
+        }
+        position: relative;
+    }
+    // truncate span content and add '...' if content width > span width
+    .o_account_report_line_ellipsis, .o_account_report_name_ellipsis {
+        min-width: 320px;
+        max-width: 320px;
+
+        .dropdown-toggle, .account_report_line_name {
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .trust-partner {
+            float: left;
+        }
+
+        > span[class="account_report_line_name"],
+        > span[class="o_account_report_column_value"],
+        span[class^="o_account_reports_domain_line_"] {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 8px;
+        }
+    }
+
+    tr:focus {
+        outline: none;
+
+        .o_account_report_line_ellipsis, .o_account_report_name_ellipsis {
+            span {
+                white-space: initial;
+                overflow: initial;
+                z-index: 1;
+            }
+        }
+    }
+    // ----------------------------------------------------------------
+    .o_account_report_summary {
+        padding-left: 5px;
+    }
+    .o_account_reports_summary_edit {
+        padding-bottom: 40px;
+        padding-top: 15px;
+    }
+    .js_account_report_foldable {
+        cursor: pointer;
+    }
+    .color-red {
+        color: #d23f3a !important;
+    }
+    .color-blue {
+        color: #2693d5 !important;
+    }
+    .color-green {
+        color: green !important;
+    }
+    .color-transparent {
+        opacity: 0 !important;
+    }
+    .trust-partner {
+        font-size: 0.8em;
+        margin-left: 5px;
+    }
+    .print_only {
+        display: none;
+    }
+    .o_account_reports_table {
+        width: 100%;
+
+        .number {
+            text-align: right;
+        }
+        .text {
+            text-align: left;
+        }
+        .date {
+            text-align: center;
+        }
+        th {
+            background-color: white;
+            background-clip: padding-box;
+            .subtitle{
+                font-weight:normal;
+            }
+        }
+        .o_account_reports_header_hierarchy {
+            th:not(:first-child) {
+                border-collapse: separate;
+                padding-right: 8px;
+                padding-left: 8px;
+            }
+            th:first-child {
+                border: none;
+            }
+        }
+
+        .o_account_report_column_value .o_account_report_line a {
+            color: inherit;
+        }
+    }
+    .oe_link_reports {
+        @extend .btn;
+        @extend .btn-outline-secondary;
+        @extend .btn-sm;
+        line-height: 0.8;
+        vertical-align: initial;
+    }
+    .folded {
+        .oe_link_reports {
+            display: none;
+        }
+    }
+    p.o_account_reports_contact_info {
+        min-height: 30px;
+    }
+    .o_input {
+        width: 70%;
+    }
+    .o_account_reports_edit_summary_pencil {
+        margin-left: -15px;
+        position: absolute;
+    }
+    table > tbody > tr >  td ~ td{
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    table > tbody > tr >  td{
+        vertical-align: top;
+
+        &.number {
+            font-family: 'Courier New', monospace;
+            font-feature-settings: 'tnum';
+            font-weight: bold;
+        }
+    }
+    .o_account_reports_summary {
+        margin-bottom: 20px;
+        @include o-account-reports-i-fa-toggle;
+    }
+    .o_account_reports_unfolded td + td span {
+        visibility: hidden;
+    }
+    div.o_account_reports_saved_summary {
+        padding-left: 5px;
+    }
+    .o_account_reports_web_action, .o_change_trust,
+    span.o_account_reports_web_action, div.o_account_reports_saved_summary span,
+    td.o_account_reports_unfoldable, td.o_account_reports_foldable, span.partner_id, span.move_line_id, input[type=checkbox] {
+        cursor: pointer;
+    }
+    p.footnote {
+        margin-top: 8px;
+
+        > .text {
+            white-space: pre-wrap;
+        }
+    }
+    p.footnote > .o_account_reports_footnote_icons, p.o_account_reports_footnote_edit > .o_account_reports_footnote_icons {
+        visibility: hidden;
+    }
+    p.footnote:hover > .o_account_reports_footnote_icons {
+        visibility: visible;
+    }
+    .o_account_reports_footnote_icons {
+        position: absolute;
+        margin-left: 3px;
+    }
+    .o_account_reports_caret_icon {
+        position: absolute;
+        display: contents;
+        .fa {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+        }
+    }
+    .o_account_reports_domain_line_0 {
+        margin-left: 0px;
+    }
+    .o_account_reports_domain_line_1 {
+        margin-left: 15px;
+    }
+    .o_account_reports_domain_line_2 {
+        margin-left: 30px;
+    }
+    @for $i from 3 through 13 {
+        .o_account_reports_domain_line_#{$i} {
+            margin-left: ($i * 10px) + 10;
+        }
+    }
+    tr.o_account_reports_domain_total {
+        font-weight: bold;
+    }
+    tr.o_account_reports_initial_balance {
+        > td > span:last-child {
+            margin-left: 30px;
+        }
+    }
+    tr.hierarchy_total {
+        font-weight: bold;
+    }
+    b.o_account_reports_footnote_sup {
+        margin-top: 10px;
+        color: $o-main-text-color;
+    }
+    ul.o_account_reports_domain_dropdown {
+        margin-left: 70px
+    }
+    .total {
+        font-weight: bold;
+        color: #212121 !important;
+    }
+    .o_account_reports_level0, .o_account_reports_level1, .o_account_reports_level2, .o_account_reports_domain_total, .total {
+        .text-muted {
+            color: #666666 !important;
+        }
+    }
+    .o_foldable_total {
+        color: #666666 !important;
+        &.color-red {
+            color: #d23f3a !important;
+        }
+        &.color-green {
+            color: green !important;
+        }
+        &.color-blue {
+            color: #2693d5 !important;
+        }
+    }
+    .o_account_reports_totals_below_sections.o_js_account_report_parent_row_unfolded {
+        .o_account_report_column_value {
+            visibility: hidden;
+        }
+        td.number.o_foldable_total {
+            border-bottom: none;
+        }
+    }
+    td.o_foldable_total {
+        font-weight: bold;
+    }
+    @mixin report_level($indent) {
+        border-bottom: 1px solid #eee;
+        line-height: 1.8;
+
+        > td.o_account_report_line_indent > span:last-child {
+            margin-left: ($indent + 1) * 10px;
+        }
+        &.total {
+            font-weight: bold !important;
+            color: #212121 !important;
+
+            > td > span:last-child {
+                margin-left: $indent * 10px;
+            }
+        }
+    }
+    .o_account_reports_level0 {
+        & td {
+            padding-top: 32px;
+            span {
+                top: unset;
+            }
+        }
+
+        .o_account_report_name_ellipsis > span {
+            left: 8px;
+        }
+
+        > td.o_account_report_line_indent.o_foldable_total > span:last-child {
+            margin-left: 10px;
+        }
+    }
+    .o_account_reports_level1 {
+        @include report_level(1);
+        font-weight: bold;
+        border-bottom: 2px solid #bbb;
+    }
+    .o_account_reports_level2 {
+        @include report_level(2);
+        font-weight: bold;
+        border-bottom: 1px solid #bbb;
+    }
+    @for $i from 3 through 13 {
+        .o_account_reports_level#{$i} {
+            @include report_level($i);
+        }
+    }
+    .o_account_reports_default_style {
+        border-bottom: 1px solid #eee;
+        > td.o_account_report_line_indent > tr:first-child > span:last-child {
+            margin-left: 30px;
+        }
+        &.o_account_reports_domain_total {
+            > td.o_account_report_line_indent > span:last-child {
+                margin-left: 30px;
+            }
+        }
+    }
+    .o_account_followup_not_clicked {
+        .o_account_followup_skip {
+            display: inline-block;
+        }
+        .o_account_followup_done {
+            display: none;
+        }
+    }
+    .o_account_followup_clicked {
+        .o_account_followup_skip {
+            display: none;
+        }
+        .o_account_followup_done {
+            display: inline-block;
+        }
+    }
+    .o_account_reports_history {
+        min-width: 300px;
+    }
+    .o_account_coa_column_contrast td:nth-child(4n-1),
+    .o_account_coa_column_contrast td:nth-child(4n-2),
+    td.o_account_coa_column_contrast:nth-child(4n-1),
+    td.o_account_coa_column_contrast:nth-child(4n-2) {
+        background-color: #FAFAFA;
+        background-clip: padding-box;
+    }
+    .table-hover tbody {
+        tr:not(.o_account_reports_level0):hover > td {
+            background-clip: padding-box;
+        }
+
+        // Since, we can't add spacing between rows in a table, this prevents the background to be the full height of the row.
+        tr.o_account_reports_level0:hover > td {
+            background-color: #F0F0F0 !important;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(#FFF, #FFF), linear-gradient(#F0F0F0, #F0F0F0);
+            background-size: 100% 26px, 100% 28px;
+        }
+    }
+
+    .table-bold-unfold {
+        td.o_foldable_total.folded {
+            font-weight: normal;
+        }
+
+        .o_account_reports_level1, .o_account_reports_level2 {
+            font-weight: normal;
+        }
+    }
+
+    .o_account_reports_ja_journal_line td {
+        padding-top: 3rem !important;
+    }
+
+    .o_account_reports_ja_name_muted>td:first-of-type {
+        @extend .text-muted;
+    }
+
+    .o_account_reports_ja_header_line {
+        background-color: #F6F6F6;
+    }
+}
+
+.o_form_view {
+    .o_account_reports_no_print {
+        div.o_account_reports_summary {
+            cursor: pointer;
+        }
+        .o_account_reports_table {
+            margin-bottom: 0px;
+            tbody tr:not(.o_account_reports_level0):hover {
+                background-color: #f0f0f0;
+            }
+        }
+    }
+}
+
+.o_account-progress-bar-content {
+    color: black;
+    position: absolute;
+    width: 100%;
+}
+.o_account-progress {
+    position: relative;
+}
+.o_account_reports_history [summary="o_followup_letter_display_none"] {
+    display: none;
+}
+
+.o_account_report_search {
+    margin-left: 10px;
+    margin-right: 10px;
+    .o_account_report_select {
+        min-width: 100px;
+    }
+}
+
+// Filters lines
+// -----------------------------------------
+.o_reports_filter_input_wrapper {
+    position: relative;
+    float: right;
+    width: 150px;
+    margin-bottom: 20px;
+
+    .searchIcon {
+        position: absolute;
+        right: 10px;
+    }
+}
+    .o_account_reports_filter_input {
+    border: none;
+    border-bottom: 1px black solid;
+}
+    .o_account_reports_filtered_lines {
+    display: none;
+}
+
+.o_account_reports_filter_journals {
+    .dropdown-menu {
+        overflow: auto;
+        // 86.5px is the height of .o_control_panel
+        max-height: calc(100vh - (86.5px + #{$o-navbar-height}));
+    }
+}
+
+// Summary to be edited
+// -----------------------------------------
+.o_account_reports_body .o_account_reports_summary {
+    display: inline-block;
+    position: relative;
+
+    .o_account_report_summary_placeholder{
+        opacity: .5;
+    }
+
+    .o_account_report_summary {
+        padding: 10px 0;
+
+        &, > span, .o_input, .o_account_reports_edit_summary_pencil {
+            transition: all .2s ease 0s;
+        }
+    }
+
+    .o_input {
+        border: none;
+        padding: 10px;
+    }
+
+    .o_account_reports_edit_summary_pencil {
+        @include o-position-absolute(20px, $left: 0);
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    &:hover {
+        .o_account_reports_edit_summary_pencil {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .o_account_report_summary .o_input, .o_account_report_summary span {
+            padding-right: 0;
+        }
+    }
+}
+
+.o_account_reports_body {
+    .alert a {
+        cursor: pointer;
+    }
+}
+
+.o_account_reports_summary_edit {
+    padding-bottom: 25px;
+    padding-top: 10px;
+
+    textarea {
+        border: 1px solid map-get($grays, '600');
+        resize: vertical;
+        width: 100%;
+    }
+}
+
+.o_financial_report_hover_popup {
+    color: orange;
+}
+
+// Print mode report summary
+// -----------------------------------------
+p.o_account_reports_contact_info {
+    min-height: 30px;
+}
+
+.o_account_reports_load_more {
+    span.account_report_line_name {
+        cursor: pointer;
+    }
+}
+
+.o_country_specific_report_label {
+    margin-left: 16px;
+    background-color: white;
+    align-self: normal;
+}
+
+[class*='o_account_reports_filter'] {
+    // TODO A more general fix might be warranted. The solution provided here
+    // still entails some minor glitches.
+    > .dropdown-menu {
+        overflow-y: auto;
+        max-height: calc(100vh - #{$o-navbar-height} - 100px);  // 100px for the control panel
+    }
+}

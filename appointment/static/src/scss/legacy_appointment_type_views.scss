@@ -1,0 +1,126 @@
+// TODO: Remove this file when studio is migrated to the new views
+.o_legacy_kanban_view.o_kanban_dashboard.o_appointment_kanban {
+    &.o_kanban_grouped {
+        .o_appointment_kanban_card_ungrouped {
+            display:none !important;
+        }
+        .o_kanban_group:not(.o_column_folded){
+            @include media-breakpoint-up(sm) {
+                min-width: 380px;
+            }
+        }
+    }
+    &.o_kanban_ungrouped {
+        // ungrouped layout as list re-used form survey_survey
+        .o_appointment_kanban_card_grouped {
+            display:none !important;
+        }
+        padding: 0;
+
+        .o_appointment_kanban_card {
+            width: 100%;
+            margin: 0;
+            border-top: 0 !important;
+            &:first-child {
+                border-bottom: 1px solid #dee2e6 !important;
+            }
+        }
+        .o_m2m_avatar, .o_m2m_avatar_empty {
+            width: 32px;
+            height: 32px;
+        }
+        .o_m2m_avatar_empty span {
+            margin-top: 8px;
+        }
+    }
+    .ribbon {
+        &::before, &::after {
+            display: none;
+        }
+    }
+    // Ungrouped specific
+    .o_appointment_kanban_card_ungrouped {
+        .ribbon {
+            height: 71px;
+            width: 80px;
+            &-top-right {
+                margin-top: -$o-kanban-inside-vgutter;
+                right: 0;
+                & span {
+                    top: 13px;
+                }
+            }
+            & span {
+                background-color: $o-brand-odoo;
+                font-size: 0.8rem;
+                width: 120px;
+                height: 20px;
+                left: -13px;
+            }
+        }
+        .o_appointment_text_button, .o_appointment_text_button:focus, .o_appointment_text_button:hover {
+            // remove button "box" aspect
+            background: transparent;
+            border-width: 0;
+            outline: 0;
+            padding: 0;
+            font-weight: 300;
+            &:hover {
+                font-weight: normal;
+            }
+            &.o_appointment_text_big_nb {
+                text-align: left;
+                font-size: 300%;
+                @include media-breakpoint-up(sm) {
+                    min-width: 1.2em;
+                    text-align: right;
+                }
+            }
+        }
+        .text-large {
+            line-height: 1.1em;
+            font-size: 120%;
+            font-weight: 300;
+        }
+    }
+    // Grouped specific
+    .o_appointment_kanban_card_grouped {
+        .o_kanban_record {
+            min-height: 165px;
+         }
+        .ribbon {
+            &::before, &::after {
+                display: none;
+            }
+            span {
+                background-color: $o-brand-odoo;
+                padding: 5px;
+                font-size: small;
+                z-index: unset;
+                height: auto;
+            }
+        }
+        .ribbon-top-right {
+            margin-top: -$o-kanban-dashboard-vpadding;
+            span {
+                left: 0;
+                right: 30px;
+            }
+        }
+    }
+    .o_appointment_kanban_boxes {
+        flex-flow: row nowrap;
+        .o_appointment_kanban_box {
+            flex: 1 1 auto;
+            flex-flow: row nowrap;
+            &:first-child {
+                justify-content: flex-start;
+                padding-left: 16px;
+            }
+            div:last-child {
+                justify-content: flex-end;
+                text-align: right;
+            }
+        }
+    }
+}

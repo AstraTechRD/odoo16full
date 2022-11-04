@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_lu_yearly_tax_report_manual" model="ir.ui.view">
+            <field name="name">l10n_lu.yearly.tax.report.manual.view</field>
+            <field name="model">l10n_lu.yearly.tax.report.manual</field>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <form create="false">
+                    <header name="header">
+                        <button name="action_reset_state" type="object" states="exported" string="Reset to Processing" class="oe_highlight"/>
+                        <button name="print_xml" string="Export XML" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="not_exported,exported"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="year"/>
+                            </group>
+                            <group>
+                                <field name="company_ids" groups="base.group_no_one" widget="many2many_tags" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <notebook class="lu-notebook">
+                            <page string="General Information">
+                                <group col="3" string="">
+                                    <label for="avg_nb_employees" colspan="2"/>
+                                    <field name="avg_nb_employees" nolabel="1" colspan="1"/>
+                                    <label for="avg_nb_employees_with_salary" colspan="2"/>
+                                    <field name="avg_nb_employees_with_salary" nolabel="1" colspan="1"/>
+                                    <label for="avg_nb_employees_with_no_salary" colspan="2"/>
+                                    <field name="avg_nb_employees_with_no_salary" nolabel="1" colspan="1"/>
+                                    <label for="phone_number" colspan="2"/>
+                                    <field name="phone_number" nolabel="1" colspan="1"/>
+                                    <label for="books_records_documents" colspan="2"/>
+                                    <field name="books_records_documents" nolabel="1" colspan="1"/>
+                                    <label for="submitted_rcs" colspan="2"/>
+                                    <field name="submitted_rcs" nolabel="1" colspan="1"/>
+                                </group>
+                            </page>
+                            <page string="Sales and Receipts">
+                                <group col="6" string="Total Sales / Receipts (472)">
+                                    <label for="report_section_472_rest" string="Sales / Receipts (472): amount still to be allocated" colspan="4"/>
+                                    <label for="report_section_472_rest" string="472" colspan="1" class="oe_right"/>
+                                    <field name="report_section_472_rest" nolabel="1" class="oe_inline"/>
+                                    <separator string="Repartition fields for the annual tax report" colspan="6" class="fs-5"/>
+                                    <label for="report_section_001" string="Supply of inhouse manufactured goods" colspan="4"/>
+                                    <label for="report_section_001" string="001" colspan="1" class="oe_right"/>
+                                    <field name="report_section_001" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_002" string="Supply of goods not manufactured inhouse" colspan="4"/>
+                                    <label for="report_section_002" string="002" colspan="1" class="oe_right"/>
+                                    <field name="report_section_002" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_003" string="Net profit margin (special arrangement: Art. 56ter-1 and 56ter-2)" colspan="4"/>
+                                    <label for="report_section_003" string="003" colspan="1" class="oe_right"/>
+                                    <field name="report_section_003" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_004" string="Supply of services" colspan="4"/>
+                                    <label for="report_section_004" string="004" colspan="1" class="oe_right"/>
+                                    <field name="report_section_004" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_005" string="Disposal of tangible and intangible capital assets for ancillary transactions" colspan="4"/>
+                                    <label for="report_section_005" string="005" colspan="1" class="oe_right"/>
+                                    <field name="report_section_005" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_206" string="Custom: " colspan="2"/>
+                                    <label for="report_section_206" string="206" colspan="1" class="oe_right"/>
+                                    <field name="report_section_206" colspan="1" nolabel="1"/>
+                                    <label for="report_section_206" string="007" colspan="1" class="oe_right"/>
+                                    <field name="report_section_007" colspan="1" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Other Assimilated Supplies">
+                                <group col="6" string="Application of goods for non-business use and for business purposes (455)">
+                                    <label for="report_section_455_rest" string="Application of goods for non-business use and for business purposes (455): amount still to be allocated" colspan="4"/>
+                                    <label for="report_section_455_rest" string="455" colspan="1" class="oe_right"/>
+                                    <field name="report_section_455_rest" nolabel="1" class="oe_inline"/>
+                                    <separator string="Repartition fields for the annual tax report" colspan="6" class="fs-5"/>
+                                    <label for="report_section_008" string="Application of goods for private use or for that of the staff (008)" colspan="4"/>
+                                    <label for="report_section_008" string="008" colspan="1" class="oe_right"/>
+                                    <field name="report_section_008" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_009" string="Application for the purpose of business of goods produced in the course of the business (009)" colspan="4"/>
+                                    <label for="report_section_009" string="009" colspan="1" class="oe_right"/>
+                                    <field name="report_section_009" nolabel="1" class="oe_inline"/>
+                                </group>
+                                <separator/>
+                                <group col="6" string="Non-business use of goods and supply of services free of charge (456)">
+                                    <label for="report_section_456_rest" string="Non-business use of goods and supply of services free of charge (456): amount still to be allocated" colspan="4"/>
+                                    <label for="report_section_456_rest" string="456" colspan="1" class="oe_right"/>
+                                    <field name="report_section_456_rest" nolabel="1" class="oe_inline"/>
+                                    <separator string="Repartition fields for the annual tax report" colspan="6" class="fs-5"/>
+                                    <label for="report_section_010" string="Use of goods considered business assets for purposes other than those of the business (010)" colspan="4"/>
+                                    <label for="report_section_010" string="010" colspan="1" class="oe_right"/>
+                                    <field name="report_section_010" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_011" string="Supply of services carried out free of charge for purposes other than those of the business (011)" colspan="4"/>
+                                    <label for="report_section_011" string="011" colspan="1" class="oe_right"/>
+                                    <field name="report_section_011" nolabel="1" class="oe_inline"/>
+                                </group>
+                            </page>
+                            <page string="Intra-Community">
+                                <group col="6" string="Intra-Community supply (457)">
+                                    <label for="report_section_457_rest" string="Intra-Community supply (457): amount still to be allocated" colspan="4"/>
+                                    <label for="report_section_457_rest" string="457" colspan="1" class="oe_right"/>
+                                    <field name="report_section_457_rest" nolabel="1" colspan="1" class="oe_inline"/>
+                                    <separator string="Repartition fields for the annual tax report" colspan="6" class="fs-5"/>
+                                    <label for="report_section_013" string="IC supply of goods to persons identified for VAT purposes in another Member State (MS) (013)" colspan="4"/>
+                                    <label for="report_section_013" string="013" colspan="1" class="oe_right"/>
+                                    <field name="report_section_013" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_202" string="IC supply of new means of transport (Art. 43(1)(e)) to persons not identified for VAT purposes who are established or reside in an other MS (202)" colspan="4"/>
+                                    <label for="report_section_202" string="202" colspan="1" class="oe_right"/>
+                                    <field name="report_section_202" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_203" string="Supply of goods carried out to customers not identified for VAT
+                                            purposes and established in the MS where the dispatch ends, when these supplies are taxable in that MS" colspan="4"/>
+                                    <label for="report_section_203" string="203" colspan="1" class="oe_right"/>
+                                    <field name="report_section_203" nolabel="1" class="oe_inline"/>
+                                </group>
+                            </page>
+                            <page string="Total Input Tax">
+                                <group col="6" string="Invoiced by other taxable persons for goods or services supplied (458)">
+                                    <label for="report_section_458_rest" string="Invoiced by other taxable persons for goods or services supplied (458): amount still to be allocated" colspan="4"/>
+                                    <field name="report_section_458_rest" string="458" colspan="2"/>
+                                    <separator string="Repartition fields for the annual tax report" colspan="6" class="fs-5"/>
+                                    <label for="report_section_077" string="VAT on stock entries" colspan="4"/>
+                                    <field name="report_section_077" string="077" colspan="2"/>
+                                    <label for="report_section_081" string="VAT on capital expenditures" colspan="4"/>
+                                    <field name="report_section_081" string="081" colspan="2"/>
+                                    <label for="report_section_085" string="VAT on operational expenditures" colspan="4"/>
+                                    <field name="report_section_085" string="085" colspan="2"/>
+                                </group>
+                                <group col="6" string="Due in respect of intra-Community acquisitions of goods (459)">
+                                    <label for="report_section_459_rest" string="Due in respect of Intra-Community acquistions of goods (459): amount still to be allocated" colspan="4"/>
+                                    <field name="report_section_459_rest" string="459" colspan="2"/>
+                                    <separator string="Repartition fields for the annual tax report" colspan="6" class="fs-5"/>
+                                    <label for="report_section_078" string="VAT on stock entries" colspan="4"/>
+                                    <field name="report_section_078" string="078" colspan="2"/>
+                                    <label for="report_section_082" string="VAT on capital expenditures" colspan="4"/>
+                                    <field name="report_section_082" string="082" colspan="2"/>
+                                    <label for="report_section_086" string="VAT on operational expenditures" colspan="4"/>
+                                    <field name="report_section_086" string="086" colspan="2"/>
+                                </group>
+                                <group col="6" string="Due or paid in respect of importation of goods (460)">
+                                    <label for="report_section_460_rest" string="Due or paid in respect of mportation of goods (460): amount still to be allocated" colspan="4"/>
+                                    <field name="report_section_460_rest" string="460" colspan="2"/>
+                                    <separator string="Repartition fields for the annual tax report" colspan="6" class="fs-5"/>
+                                    <label for="report_section_079" string="VAT on stock entries" colspan="4"/>
+                                    <field name="report_section_079" string="079" colspan="2"/>
+                                    <label for="report_section_083" string="VAT on capital expenditures" colspan="4"/>
+                                    <field name="report_section_083" string="083" colspan="2"/>
+                                    <label for="report_section_087" string="VAT on operational expenditures" colspan="4"/>
+                                    <field name="report_section_087" string="087" colspan="2"/>
+                                </group>
+                                <group col="6" string="Due under the reverse charge (461)">
+                                    <label for="report_section_461_rest" string="Due under the reverse charge (461): amount still to be allocated" colspan="4"/>
+                                    <field name="report_section_461_rest" string="461" colspan="2"/>
+                                    <separator string="Repartition fields for the annual tax report" colspan="6" class="fs-5"/>
+                                    <label for="report_section_404" string="VAT on stock entries" colspan="4"/>
+                                    <field name="report_section_404" string="404" colspan="2"/>
+                                    <label for="report_section_405" string="VAT on capital expenditures" colspan="4"/>
+                                    <field name="report_section_405" string="405" colspan="2"/>
+                                    <label for="report_section_406" string="VAT on operational expenditures" colspan="4"/>
+                                    <field name="report_section_406" string="406" colspan="2"/>
+                                </group>
+                            </page>
+                            <page string="Accountant and Lessor">
+                                <group col="6" string="Appendix F. Names and addresses to be specified">
+                                    <separator string="Accountant (A9) details" colspan="6" class="fs-5"/>
+                                    <label for="report_section_397" string="a) Name" colspan="1"/>
+                                    <label for="report_section_397" string="397" colspan="1" class="oe_right"/>
+                                    <field name="report_section_397" nolabel="1" class="oe_inline" colspan="4"/>
+                                    <label for="report_section_398" string="b) Address" colspan="1"/>
+                                    <label for="report_section_398" string="398" colspan="1" class="oe_right"/>
+                                    <field name="report_section_398" nolabel="1" class="oe_inline" colspan="4"/>
+                                    <label for="report_section_399" string="399" colspan="2" class="oe_right"/>
+                                    <field name="report_section_399" nolabel="1" class="oe_inline" colspan="4"/>
+                                    <separator string="Lessor (A18a) details" colspan="6" class="fs-5"/>
+                                    <label for="report_section_400" string="a) Name" colspan="1"/>
+                                    <label for="report_section_400" string="400" colspan="1" class="oe_right"/>
+                                    <field name="report_section_400" nolabel="1" class="oe_inline" colspan="4"/>
+                                    <label for="report_section_401" string="b) Address" colspan="1"/>
+                                    <label for="report_section_401" string="401" colspan="1" class="oe_right"/>
+                                    <field name="report_section_401" nolabel="1" class="oe_inline" colspan="4"/>
+                                    <label for="report_section_402" string="402" colspan="2" class="oe_right"/>
+                                    <field name="report_section_402" nolabel="1" class="oe_inline" colspan="4"/>
+                                </group>
+                            </page>
+                            <page string="Adjustment of Deductions" name="deductions">
+                                <group col="6" string="Adjustment of Deductions">
+                                    <label for="report_section_098" string="Adjustment of deductions in accordance with provisions of Art. 53" colspan="4"/>
+                                    <label for="report_section_098" string="098" colspan="1" class="oe_right"/>
+                                    <field name="report_section_098" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_099" string="Adjustment of deductions in accordance with provisions of the grand-ducal Regulation of 7 March 1980 - option to tax land" colspan="4"/>
+                                    <label for="report_section_099" string="099" colspan="1" class="oe_right"/>
+                                    <field name="report_section_099" nolabel="1" class="oe_inline"/>
+                                    <label for="report_section_229" string="Other: " colspan="2"/>
+                                    <label for="report_section_229" string="229" colspan="1" class="oe_right"/>
+                                    <field name="report_section_229" colspan="1" nolabel="1"/>
+                                    <label for="report_section_229" string="100" colspan="1" class="oe_right"/>
+                                    <field name="report_section_100" colspan="1" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Appendix A" name="appendix_a">
+                                <group col="12" class="appendix_a" string="">
+                                    <div colspan="4"/>
+                                    <div colspan="2" class="fw-bolder">
+                                        TOTAL if applicable VAT included
+                                    </div>
+                                    <div colspan="2" class="fw-bolder">
+                                        %
+                                    </div>
+                                    <div colspan="2" class="fw-bolder">
+                                        VAT excluded
+                                    </div>
+                                    <div colspan="2" class="fw-bolder">
+                                        of VAT invoiced
+                                    </div>
+
+                                    <div colspan="8"/>
+                                    <field name="report_section_192" string="192" colspan="2"/>
+                                    <field name="report_section_193" string="193" colspan="2"/>
+                                    <label for="report_section_239" string="Gross salaries" colspan="4"/>
+                                    <field name="report_section_239" string="239" colspan="2"/>
+                                    <field name="report_section_240" string="240" colspan="2"/>
+                                    <field name="report_section_114" string="114" colspan="4"/>
+                                    <label for="report_section_241" string="of which productive salaries" colspan="4" class="ms-3"/>
+                                    <field name="report_section_241" string="241" colspan="2"/>
+                                    <field name="report_section_242" string="242" colspan="2"/>
+                                    <field name="report_section_243" string="243" colspan="4"/>
+                                    <label for="report_section_244" string="Gross wages" colspan="4"/>
+                                    <field name="report_section_244" string="244" colspan="2"/>
+                                    <field name="report_section_245" string="245" colspan="2"/>
+                                    <field name="report_section_246" string="246" colspan="4"/>
+                                    <label for="report_section_247" string="Occasional salaries" colspan="4"/>
+                                    <field name="report_section_247" string="247" colspan="2"/>
+                                    <field name="report_section_248" string="248" colspan="2"/>
+                                    <field name="report_section_249" string="249" colspan="4"/>
+                                    <label for="report_section_250" string="Compulsory social security contributions" colspan="4"/>
+                                    <field name="report_section_250" string="250" colspan="2"/>
+                                    <field name="report_section_251" string="251" colspan="2"/>
+                                    <field name="report_section_252" string="252" colspan="4"/>
+                                    <label for="report_section_253" string="Accident insurance" colspan="4"/>
+                                    <field name="report_section_253" string="253" colspan="2"/>
+                                    <field name="report_section_254" string="254" colspan="2"/>
+                                    <field name="report_section_255" string="255" colspan="4"/>
+                                    <label for="report_section_256" string="Commissions" colspan="4"/>
+                                    <field name="report_section_256" string="256" colspan="2"/>
+                                    <field name="report_section_257" string="257" colspan="2"/>
+                                    <field name="report_section_258" string="258" colspan="2"/>
+                                    <field name="report_section_259" string="259" colspan="2"/>
+                                    <label for="report_section_260" string="Staff travel and representation expenses" colspan="4"/>
+                                    <field name="report_section_260" string="260" colspan="2"/>
+                                    <field name="report_section_261" string="261" colspan="2"/>
+                                    <field name="report_section_262" string="262" colspan="2"/>
+                                    <field name="report_section_263" string="263" colspan="2"/>
+                                    <field name="report_section_264" string="264" placeholder="Custom" colspan="4"/>
+                                    <field name="report_section_265" string="265" colspan="2"/>
+                                    <field name="report_section_266" string="266" colspan="2"/>
+                                    <field name="report_section_267" string="267" colspan="2"/>
+                                    <field name="report_section_268" string="268" colspan="2"/>
+                                    <label for="report_section_269" string="Accounting and bookkeeping fees" colspan="4"/>
+                                    <field name="report_section_269" string="269" colspan="2"/>
+                                    <field name="report_section_270" string="270" colspan="2"/>
+                                    <field name="report_section_271" string="271" colspan="2"/>
+                                    <field name="report_section_272" string="272" colspan="2"/>
+                                    <field name="report_section_273" string="273" placeholder="Custom" colspan="4"/>
+                                    <field name="report_section_274" string="274" colspan="2"/>
+                                    <field name="report_section_275" string="275" colspan="2"/>
+                                    <field name="report_section_276" string="276" colspan="2"/>
+                                    <field name="report_section_277" string="277" colspan="2"/>
+                                    <field name="report_section_278" string="278" placeholder="Custom" colspan="4"/>
+                                    <field name="report_section_279" string="279" colspan="2"/>
+                                    <field name="report_section_280" string="280" colspan="2"/>
+                                    <field name="report_section_281" string="281" colspan="2"/>
+                                    <field name="report_section_282" string="282" colspan="2"/>
+                                    <label for="report_section_283" string="Employer's travel and representation expenses" colspan="4"/>
+                                    <field name="report_section_283" string="283" colspan="2"/>
+                                    <field name="report_section_284" string="284" colspan="2"/>
+                                    <field name="report_section_183" string="183" colspan="2"/>
+                                    <field name="report_section_184" string="184" colspan="2"/>
+                                    <label for="report_section_285" string="Electricity" colspan="4"/>
+                                    <field name="report_section_285" string="285" colspan="2"/>
+                                    <field name="report_section_286" string="286" colspan="2"/>
+                                    <field name="report_section_287" string="287" colspan="2"/>
+                                    <field name="report_section_288" string="288" colspan="2"/>
+                                    <label for="report_section_289" string="Gas" colspan="4"/>
+                                    <field name="report_section_289" string="289" colspan="2"/>
+                                    <field name="report_section_290" string="290" colspan="2"/>
+                                    <field name="report_section_291" string="291" colspan="2"/>
+                                    <field name="report_section_292" string="292" colspan="2"/>
+                                    <label for="report_section_293" string="Water" colspan="4"/>
+                                    <field name="report_section_293" string="293" colspan="2"/>
+                                    <field name="report_section_294" string="294" colspan="2"/>
+                                    <field name="report_section_295" string="295" colspan="2"/>
+                                    <field name="report_section_296" string="296" colspan="2"/>
+                                    <label for="report_section_297" string="Heating" colspan="4"/>
+                                    <field name="report_section_297" string="297" colspan="2"/>
+                                    <field name="report_section_298" string="298" colspan="2"/>
+                                    <field name="report_section_299" string="299" colspan="2"/>
+                                    <field name="report_section_300" string="300" colspan="2"/>
+                                    <label for="report_section_301" string="Telecommunications" colspan="4"/>
+                                    <field name="report_section_301" string="301" colspan="2"/>
+                                    <field name="report_section_302" string="302" colspan="2"/>
+                                    <field name="report_section_303" string="303" colspan="2"/>
+                                    <field name="report_section_304" string="304" colspan="2"/>
+                                    <label for="report_section_305" string="Renting/leasing of immovable property with VAT" colspan="4"/>
+                                    <field name="report_section_305" string="305" colspan="2"/>
+                                    <field name="report_section_306" string="306" colspan="2"/>
+                                    <field name="report_section_185" string="185" colspan="2"/>
+                                    <field name="report_section_186" string="186" colspan="2"/>
+                                    <label for="report_section_307" string="Renting/leasing of immovable property with no VAT" colspan="4"/>
+                                    <field name="report_section_307" string="307" colspan="2"/>
+                                    <field name="report_section_308" string="308" colspan="2"/>
+                                    <field name="report_section_309" string="309" colspan="4"/>
+                                    <label for="report_section_310" string="Renting/leasing of installed equipment and machinery" colspan="4"/>
+                                    <field name="report_section_310" string="310" colspan="2"/>
+                                    <field name="report_section_311" string="311" colspan="2"/>
+                                    <field name="report_section_312" string="312" colspan="2"/>
+                                    <field name="report_section_313" string="313" colspan="2"/>
+                                    <label for="report_section_314" string="Fire insurance" colspan="6"/>
+                                    <field name="report_section_314" string="314" colspan="2"/>
+                                    <field name="report_section_315" string="315" colspan="4"/>
+                                    <label for="report_section_316" string="Property tax" colspan="6"/>
+                                    <field name="report_section_316" string="316" colspan="2"/>
+                                    <field name="report_section_317" string="317" colspan="4"/>
+                                    <field name="report_section_318" string="318" placeholder="Custom" colspan="8"/>
+                                    <field name="report_section_319" string="319" colspan="2"/>
+                                    <field name="report_section_320" string="320" colspan="2"/>
+                                    <field name="report_section_321" string="321" placeholder="Custom" colspan="8"/>
+                                    <field name="report_section_322" string="322" colspan="2"/>
+                                    <field name="report_section_323" string="323" colspan="2"/>
+                                    <label for="report_section_324" string="Business tax" colspan="8"/>
+                                    <field name="report_section_324" string="324" colspan="4"/>
+                                    <label for="report_section_325" string="Licensing (cabaretage) tax and other taxes" colspan="8"/>
+                                    <field name="report_section_325" string="325" colspan="4"/>
+                                    <label for="report_section_326" string="Interest paid for long-term debts" colspan="8"/>
+                                    <field name="report_section_326" string="326" colspan="4"/>
+                                    <label for="report_section_327" string="Interest paid for short-term debts" colspan="8"/>
+                                    <field name="report_section_327" string="327" colspan="4"/>
+                                    <label for="report_section_328" string="Other financial costs" colspan="8"/>
+                                    <field name="report_section_328" string="328" colspan="2"/>
+                                    <field name="report_section_329" string="329" colspan="2"/>
+                                    <label for="report_section_330" string="Stock and business equipment insurance" colspan="8"/>
+                                    <field name="report_section_330" string="330" colspan="4"/>
+                                    <label for="report_section_331" string="Public and professional third party liability insurance" colspan="8"/>
+                                    <field name="report_section_331" string="331" colspan="4"/>
+                                    <label for="report_section_332" string="Office expenses" colspan="8"/>
+                                    <field name="report_section_332" string="332" colspan="2"/>
+                                    <field name="report_section_333" string="333" colspan="2"/>
+                                    <label for="report_section_334" string="Cleaning and maintenance of business premises" colspan="8"/>
+                                    <field name="report_section_334" string="334" colspan="2"/>
+                                    <field name="report_section_335" string="335" colspan="2"/>
+                                    <label for="report_section_336" string="Fees and subscriptions paid" colspan="8"/>
+                                    <field name="report_section_336" string="336" colspan="4"/>
+                                    <label for="report_section_337" string="Papers and periodicals for business purposes" colspan="8"/>
+                                    <field name="report_section_337" string="337" colspan="2"/>
+                                    <field name="report_section_338" string="338" colspan="2"/>
+                                    <label for="report_section_115" string="Expenses for work carried out by sub-contractors" colspan="8"/>
+                                    <field name="report_section_115" string="115" colspan="2"/>
+                                    <field name="report_section_187" string="187" colspan="2"/>
+                                    <label for="report_section_188" string="Expenses for other work carried out by third parties" colspan="8"/>
+                                    <field name="report_section_188" string="188" colspan="2"/>
+                                    <field name="report_section_189" string="189" colspan="2"/>
+                                    <label for="report_section_343" string="Shipping and transport expenses" colspan="8"/>
+                                    <field name="report_section_343" string="343" colspan="2"/>
+                                    <field name="report_section_344" string="344" colspan="2"/>
+                                    <label for="report_section_345" string="Work clothes" colspan="8"/>
+                                    <field name="report_section_345" string="345" colspan="2"/>
+                                    <field name="report_section_346" string="346" colspan="2"/>
+                                    <label for="report_section_347" string="Advertising and publicity" colspan="8"/>
+                                    <field name="report_section_347" string="347" colspan="2"/>
+                                    <field name="report_section_348" string="348" colspan="2"/>
+                                    <label for="report_section_349" string="Packaging" colspan="8"/>
+                                    <field name="report_section_349" string="349" colspan="2"/>
+                                    <field name="report_section_350" string="350" colspan="2"/>
+                                    <label for="report_section_351" string="Repair and maintenance of equipment and machinery" colspan="8"/>
+                                    <field name="report_section_351" string="351" colspan="2"/>
+                                    <field name="report_section_352" string="352" colspan="2"/>
+                                    <label for="report_section_353" string="Other repairs" colspan="8"/>
+                                    <field name="report_section_353" string="353" colspan="2"/>
+                                    <field name="report_section_354" string="354" colspan="2"/>
+                                    <label for="report_section_355" string="New acquisitions (tools and equipment)" colspan="8"/>
+                                    <field name="report_section_355" string="355" colspan="2"/>
+                                    <field name="report_section_356" string="356" colspan="2"/>
+                                    <field name="report_section_357" string="357" placeholder="Custom" colspan="8"/>
+                                    <field name="report_section_358" string="358" colspan="2"/>
+                                    <field name="report_section_359" string="359" colspan="2"/>
+                                    <label for="report_section_361" string="Total 'Appendix to Operational Expenditures'" colspan="8"/>
+                                    <field name="report_section_361" string="361" colspan="2"/>
+                                    <field name="report_section_362" string="362" colspan="2"/>
+                                    <label for="report_section_190" string="Car expenses" colspan="8"/>
+                                    <field name="report_section_190" string="190" colspan="2"/>
+                                    <field name="report_section_191" string="191" colspan="2"/>
+                                </group>
+                            </page>
+                            <page string="Appendix B" name="appendix_b">
+                                <group col="10" string="">
+                                    <separator string="Total" colspan="10"/>
+                                    <label for="report_section_389" string="Assessment total of the taxable amount for non-business use of assets allocated to business" colspan="7"/>
+                                    <label for="report_section_389" string="389" class="oe_right" colspan="1"/>
+                                    <field name="report_section_389" nolabel="1" colspan="2"/>
+
+                                    <separator string="Motor vehicles" colspan="10"/>
+                                    <separator string="Values" colspan="10" class="fs-5 fw-bold"/>
+
+                                    <label for="report_section_363" string="Book (net asset) value at the beginning of the financial year" colspan="7"/>
+                                    <label for="report_section_363" string="363" class="oe_right"/>
+                                    <field name="report_section_363" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_364" string="Acquisitions during the financial year" colspan="7"/>
+                                    <label for="report_section_364" string="364" class="oe_right" colspan="1"/>
+                                    <field name="report_section_364" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_365" string="Sales during the financial year" colspan="7"/>
+                                    <label for="report_section_365" string="365" class="oe_right" colspan="1"/>
+                                    <field name="report_section_365" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_366" string="Depreciation during the financial year" colspan="7"/>
+                                    <label for="report_section_366" string="366" class="oe_right" colspan="1"/>
+                                    <field name="report_section_366" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_367" string="Book (net asset) value at the end of the financial year" colspan="7"/>
+                                    <label for="report_section_367" string="367" class="oe_right" colspan="1"/>
+                                    <field name="report_section_367" nolabel="1" colspan="2"/>
+
+                                    <separator colspan="10"/>
+
+                                    <div colspan="4"/>
+                                    <div colspan="3" class="fw-bolder w-100">
+                                        Taxable amount (net of VAT)
+                                    </div>
+                                    <div colspan="3" class="fw-bolder">
+                                        Tax
+                                    </div>
+
+                                    <label for="report_section_381" string="Total of expenses during the financial year" colspan="4"/>
+                                    <label for="report_section_381" string="381" class="oe_right" colspan="1"/>
+                                    <field name="report_section_381" nolabel="1" colspan="2"/>
+                                    <label for="report_section_382" string="382" class="oe_right" colspan="1"/>
+                                    <field name="report_section_382" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_368" string="Fuel (petrol, diesel) and lubricants" colspan="4"/>
+                                    <label for="report_section_368" string="368" class="oe_right" colspan="1"/>
+                                    <field name="report_section_368" nolabel="1" colspan="2"/>
+                                    <label for="report_section_369" string="369" class="oe_right" colspan="1"/>
+                                    <field name="report_section_369" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_372" string="LPG" colspan="4"/>
+                                    <label for="report_section_372" string="372" class="oe_right" colspan="1"/>
+                                    <field name="report_section_372" nolabel="1" colspan="2"/>
+                                    <label for="report_section_373" string="373" class="oe_right" colspan="1"/>
+                                    <field name="report_section_373" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_374" string="Repairs and servicing" colspan="4"/>
+                                    <label for="report_section_374" string="374" class="oe_right" colspan="1"/>
+                                    <field name="report_section_374" nolabel="1" colspan="2"/>
+                                    <label for="report_section_375" string="375" class="oe_right" colspan="1"/>
+                                    <field name="report_section_375" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_376" string="Tyres, etc." colspan="4"/>
+                                    <label for="report_section_376" string="376" class="oe_right" colspan="1"/>
+                                    <field name="report_section_376" nolabel="1" colspan="2"/>
+                                    <label for="report_section_377" string="377" class="oe_right" colspan="1"/>
+                                    <field name="report_section_377" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_378" string="Leasing / renting" colspan="4"/>
+                                    <label for="report_section_378" string="378" class="oe_right" colspan="1"/>
+                                    <field name="report_section_378" nolabel="1" colspan="2"/>
+                                    <label for="report_section_379" string="379" class="oe_right" colspan="1"/>
+                                    <field name="report_section_379" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_380" string="Depreciation" colspan="4"/>
+                                    <label for="report_section_380" string="380" class="oe_right" colspan="1"/>
+                                    <field name="report_section_380" nolabel="1" colspan="2"/>
+
+                                    <separator colspan="10" string="Number of km travelled during the financial year" class="fs-5 fw-bold"/>
+
+                                    <label for="report_section_383" string="Km travelled" colspan="4"/>
+                                    <label for="report_section_383" string="383" class="oe_right" colspan="1"/>
+                                    <field name="report_section_383" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_384" string="Non-business portion (km)" colspan="4"/>
+                                    <label for="report_section_384" string="384" class="oe_right" colspan="1"/>
+                                    <field name="report_section_384" nolabel="1" colspan="2"/>
+
+                                    <label for="report_section_385" string="Non-business portion (in %)" colspan="4"/>
+                                    <label for="report_section_385" string="385" class="oe_right" colspan="1"/>
+                                    <field name="report_section_385" nolabel="1" colspan="2"/>
+
+                                    <separator colspan="10" string="Non-business expenditures for motor vehicules" class="fs-5 fw-bold"/>
+                                    <label for="report_section_386" string="Non-business part of expenditures for motor vehicules (VAT excluded)" colspan="7"/>
+                                    <label for="report_section_386" string="386" class="oe_right" colspan="1"/>
+                                    <field name="report_section_386" nolabel="1" colspan="2"/>
+
+                                    <separator colspan="10" string="Other assets:" class="fs-5 fw-bold"/>
+                                    <label for="report_section_387" string="387" class="oe_right" colspan="1"/>
+                                    <field name="report_section_387" nolabel="1" colspan="2"/>
+                                    <label for="report_section_388" string="388" class="oe_right" colspan="1"/>
+                                    <field name="report_section_388" nolabel="1" colspan="2"/>
+                                </group>
+                            </page>
+                            <page string="Appendix C" name="appendix_c">
+                                <group col="12" string="">
+                                    <label for="report_section_166" string="Supplies carried out within the scope of the special arrangement" colspan="6"/>
+                                    <label for="report_section_166" string="166" class="oe_right" colspan="4"/>
+                                    <field name="report_section_166" nolabel="1" colspan="2"/>
+                                    <label for="report_section_106" string="Services supplied by the declaring person as a registered taxpayer in Luxembourg" colspan="6"/>
+                                    <label for="report_section_106" string="106" class="oe_right" colspan="4"/>
+                                    <field name="report_section_106" nolabel="1" colspan="2"/>
+                                    <label for="report_section_107" string="Services to be declared and taxed by the registered taxpayer in Luxembourg" colspan="6"/>
+                                    <label for="report_section_107" string="107" class="oe_right" colspan="4"/>
+                                    <field name="report_section_107" nolabel="1" colspan="2"/>
+                                </group>
+                            </page>
+                            <page string="Appendix D" name="appendix_d">
+                                <group col="1">
+                                    <group col="12" string="Total entry of stock for business purposes">
+                                        <label for="report_section_154" string="Not falling within the scope of Art. 56ter-1 and 56ter-2" colspan="6"/>
+                                        <field name="report_section_154" string="154" colspan="6"/>
+                                        <label for="report_section_155" string="Of which goods for resale" colspan="6"/>
+                                        <field name="report_section_155" string="155" colspan="6"/>
+                                        <label for="report_section_148" string="Purchases of goods which give rise to a chargeable event for the supplier or for the taxable person acquiring the goods" colspan="6"/>
+                                        <field name="report_section_148" string="148" colspan="6"/>
+                                        <label for="report_section_131" string="Purchases within the country" colspan="6"/>
+                                        <field name="report_section_131" string="131" colspan="6"/>
+                                        <label for="report_section_130" string="Manufactured tobacco" colspan="6"/>
+                                        <field name="report_section_130" string="130" colspan="6"/>
+                                        <label for="other_purchases" string="Purchases other than manufactured tobacco" colspan="7"/>
+                                        <field name="other_purchases" colspan="3" nolabel="1"/>
+                                    </group>
+                                    <group col="12" attrs="{'invisible': [('other_purchases', '=', False)]}" string="">
+                                        <label for="report_section_129" string="Total" colspan="6" class="ms-3"/>
+                                        <field name="report_section_129" string="129" colspan="6"/>
+                                        <label for="report_section_771" string="rate of 17 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_771" string="771" colspan="6"/>
+                                        <label for="report_section_772" string="rate of 14 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_772" string="772" colspan="6"/>
+                                        <label for="report_section_774" string="rate of 12 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_774" string="774" colspan="6"/>
+                                        <label for="report_section_773" string="rate of 8 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_773" string="773" colspan="6"/>
+                                        <label for="report_section_124" string="rate of 3 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_124" string="124" colspan="6"/>
+                                        <label for="report_section_394" string="Custom %" class="ms-4" colspan="3"/>
+                                        <field name="report_section_394" string="394" colspan="3"/>
+                                        <field name="report_section_128" string="128" colspan="6"/>
+                                        <label for="report_section_197" string="Exempt" colspan="6" class="ms-4"/>
+                                        <field name="report_section_197" string="197" colspan="6"/>
+                                    </group>
+                                    <group col="12" string="">
+                                        <label for="report_section_139" string="Intra-Community acquisitions" colspan="6"/>
+                                        <field name="report_section_139" string="139" colspan="4"/>
+                                        <label for="report_section_138" string="Manufactured tobacco" colspan="6"/>
+                                        <field name="report_section_138" string="138" colspan="6"/>
+                                        <label for="other_acquisitions" string="Acquisitions other than manufactured tobacco" colspan="7"/>
+                                        <field name="other_acquisitions" colspan="3" nolabel="1"/>
+                                    </group>
+                                    <group col="12" attrs="{'invisible': [('other_acquisitions', '=', False)]}" string="">
+                                        <label for="report_section_137" string="Total" colspan="6" class="ms-3"/>
+                                        <field name="report_section_137" string="137" colspan="6"/>
+                                        <label for="report_section_776" string="rate of 17 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_776" string="776" colspan="6"/>
+                                        <label for="report_section_777" string="rate of 14 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_777" string="777" colspan="6"/>
+                                        <label for="report_section_778" string="rate of 8 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_778" string="778" colspan="6"/>
+                                        <label for="report_section_134" string="rate of 3 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_134" string="134" colspan="6"/>
+                                        <label for="report_section_153" string="Custom %" class="ms-4" colspan="3"/>
+                                        <field name="report_section_153" string="153" colspan="3"/>
+                                        <field name="report_section_136" string="136" colspan="6"/>
+                                        <label for="report_section_198" string="Exempt" colspan="6" class="ms-4"/>
+                                        <field name="report_section_198" string="198" colspan="6"/>
+                                    </group>
+                                    <group col="12" string="">
+                                        <label for="report_section_147" string="Imports" colspan="6"/>
+                                        <field name="report_section_147" string="147" colspan="6"/>
+                                        <label for="report_section_146" string="Manufactured tobacco" colspan="6"/>
+                                        <field name="report_section_146" string="146" colspan="6"/>
+                                        <label for="other_imports" string="Imports other than manufactured tobacco" colspan="7"/>
+                                        <field name="other_imports" colspan="3" nolabel="1"/>
+                                    </group>
+                                    <group col="12" attrs="{'invisible': [('other_imports', '=', False)]}" string="">
+                                        <label for="report_section_145" string="Total" colspan="6" class="ms-3"/>
+                                        <field name="report_section_145" string="145" colspan="6"/>
+                                        <label for="report_section_781" string="rate of 17 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_781" string="781" colspan="6"/>
+                                        <label for="report_section_782" string="rate of 14 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_782" string="782" colspan="6"/>
+                                        <label for="report_section_783" string="rate of 8 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_783" string="783" colspan="6"/>
+                                        <label for="report_section_142" string="rate of 3 %" colspan="6" class="ms-4"/>
+                                        <field name="report_section_142" string="142" colspan="6"/>
+                                        <label for="report_section_149" string="Custom %" class="ms-4" colspan="3"/>
+                                        <field name="report_section_149" string="149" colspan="3"/>
+                                        <field name="report_section_144" string="144" colspan="6"/>
+                                        <label for="report_section_199" string="Exempt" colspan="6" class="ms-4"/>
+                                        <field name="report_section_199" string="199" colspan="6"/>
+                                    </group>
+                                    <group col="12" string="">
+                                        <label for="report_section_150" string="Purchases of goods which don't give rise to a chargeable event neither for the supplier nor for the taxable person acquiring the goods" colspan="6"/>
+                                        <field name="report_section_150" string="150" colspan="6"/>
+                                        <label for="report_section_151" string="Purchases of goods abroad which are not brought to Luxembourg" colspan="6"/>
+                                        <field name="report_section_151" string="151" colspan="6"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Appendix E" name="appendix_e">
+                                <group col="1">
+                                    <group col="10" string="">
+                                        <div colspan="4"/>
+                                        <div colspan="3" class="fw-bolder">Start of financial year</div>
+                                        <div colspan="3" class="fw-bolder">End of financial year</div>
+                                        <label for="report_section_168" string="Total stock and tobacco" colspan="4"/>
+                                        <field name="report_section_168" string="168" colspan="3"/>
+                                        <field name="report_section_181" string="181" colspan="3"/>
+                                        <label for="report_section_167" string="Manufactured tobacco in stock" colspan="4"/>
+                                        <field name="report_section_167" string="167" colspan="3"/>
+                                        <field name="report_section_180" string="180" colspan="3"/>
+                                        <label for="report_section_116" string="Work in progress (VAT excluded)" colspan="4"/>
+                                        <field name="report_section_116" string="116" colspan="3"/>
+                                        <field name="report_section_117" string="117" colspan="3"/>
+                                        <label for="report_section_118" string="Receivables from clients (VAT excluded)" colspan="4"/>
+                                        <field name="report_section_118" string="118" colspan="3"/>
+                                        <field name="report_section_119" string="119" colspan="3"/>
+                                        <label for="report_section_120" string="Payments made on account by clients (VAT excluded)" colspan="4"/>
+                                        <field name="report_section_120" string="120" colspan="3"/>
+                                        <field name="report_section_121" string="121" colspan="3"/>
+                                        <label for="stock" string="Stock" colspan="4"/>
+                                        <field name="stock" colspan="6" nolabel="1"/>
+                                    </group>
+                                    <group col="10" attrs="{'invisible': [('stock', '=', False)]}" string="">
+                                        <label for="report_section_163" string="Stock not falling within the scope" colspan="4" class="ms-3"/>
+                                        <field name="report_section_163" string="163" colspan="3"/>
+                                        <field name="report_section_176" string="176" colspan="3"/>
+                                        <label for="report_section_791" string="rate of 17%" colspan="4" class="ms-4"/>
+                                        <field name="report_section_791" string="791" colspan="3"/>
+                                        <field name="report_section_792" string="792" colspan="3"/>
+                                        <label for="report_section_793" string="rate of 14%" colspan="4" class="ms-4"/>
+                                        <field name="report_section_793" string="793" colspan="3"/>
+                                        <field name="report_section_794" string="794" colspan="3"/>
+                                        <label for="report_section_797" string="rate of 12%" colspan="4" class="ms-4"/>
+                                        <field name="report_section_797" string="797" colspan="3"/>
+                                        <field name="report_section_798" string="798" colspan="3"/>
+                                        <label for="report_section_795" string="rate of 8%" colspan="4" class="ms-4"/>
+                                        <field name="report_section_795" string="795" colspan="3"/>
+                                        <field name="report_section_796" string="796" colspan="3"/>
+                                        <label for="report_section_158" string="rate of 3%" colspan="4" class="ms-4"/>
+                                        <field name="report_section_158" string="158" colspan="3"/>
+                                        <field name="report_section_171" string="171" colspan="3"/>
+                                        <label for="report_section_396" string="Custom %" class="ms-4"/>
+                                        <field name="report_section_396" string="396" colspan="3"/>
+                                        <field name="report_section_162" string="162" colspan="3"/>
+                                        <field name="report_section_175" string="175" colspan="3"/>
+                                        <label for="report_section_200" string="Exempt" colspan="4" class="ms-4"/>
+                                        <field name="report_section_200" string="200" colspan="3"/>
+                                        <field name="report_section_201" string="201" colspan="3"/>
+                                        <label for="report_section_164" string="Stock for resale" colspan="4" class="ms-3"/>
+                                        <field name="report_section_164" string="164" colspan="3"/>
+                                        <field name="report_section_177" string="177" colspan="3"/>
+                                        <label for="report_section_165" string="Goods produced inhouse" colspan="4" class="ms-3"/>
+                                        <field name="report_section_165" string="165" colspan="3"/>
+                                        <field name="report_section_178" string="178" colspan="3"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Appendix to Operational Expenditures" name="appendix_expenditures">
+                                <div>
+                                    <field name="appendix_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'exported')]}"/>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+               </form>
+            </field>
+        </record>
+
+        <record id="l10n_lu_yearly_tax_report_appendix_view_tree" model="ir.ui.view">
+            <field name="name">l10n_lu_reports.report.appendix.expenditures.view.tree</field>
+            <field name="model">l10n_lu_reports.report.appendix.expenditures</field>
+            <field name="arch" type="xml">
+                <tree string="Appendix line" editable="bottom" class="o_appendix_content">
+                    <field name="report_section_411"/>
+                    <field name="report_section_412"/>
+                    <field name="report_section_413"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="l10n_lu_yearly_tax_report_manual_view_tree" model="ir.ui.view">
+            <field name="name">l10n_lu.yearly.tax.report.manual.view.tree</field>
+            <field name="model">l10n_lu.yearly.tax.report.manual</field>
+            <field name="arch" type="xml">
+                <tree string="Reports" create="true" delete="false" import="false">
+                    <field name="year"/>
+                    <field name="company_ids" widget="many2many_tags"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="l10n_lu_yearly_tax_report_manual_view_kanban" model="ir.ui.view">
+            <field name="name">l10n_lu.yearly.tax.report.manual.view.kanban</field>
+            <field name="model">l10n_lu.yearly.tax.report.manual</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="year"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-12">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="year"/>
+                                        </strong>
+                                    </div>
+                                    <div class="col-12">
+                                        <field name="state" widget="label_selection" options="{'classes': {'not_exported': 'default', 'exported': 'success'}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_l10n_lu_yearly_tax_report_manual" model="ir.actions.act_window">
+            <field name="name">Annual Tax Report</field>
+            <field name="res_model">l10n_lu.yearly.tax.report.manual</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_id" ref="l10n_lu_yearly_tax_report_manual_view_tree"/>
+        </record>
+        <menuitem id="menu_action_l10n_lu_yearly_tax_report_manual" name="Annual Tax Report" action="action_l10n_lu_yearly_tax_report_manual" parent="l10n_lu.account_reports_lu_statements_menu"/>
+    </data>
+</odoo>

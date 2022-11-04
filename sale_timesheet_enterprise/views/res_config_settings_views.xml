@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.timesheet.enterprise</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_timesheet.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='invoice_policy']" position="replace">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Invoicing Policy</span>
+                        <div class="text-muted">
+                            Timesheets taken into account when invoicing your time
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <label for="invoiced_timesheet" string="Invoice" class="mr16"/>
+                                <field name="invoiced_timesheet" widget="radio" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

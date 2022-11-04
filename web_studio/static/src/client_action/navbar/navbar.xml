@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web_studio.StudioNavbar" t-inherit="web_enterprise.EnterpriseNavBar" t-inherit-mode="primary">
+      <xpath expr="//nav" position="attributes">
+        <attribute name="class" add="o_studio_navbar" separator=" "/>
+      </xpath>
+
+      <xpath expr="//a[contains(@class, 'o_menu_toggle')]" position="attributes">
+        <attribute name="t-on-click.prevent">onMenuToggle</attribute>
+      </xpath>
+
+      <xpath expr='//nav' position="inside">
+        <HomeMenuCustomizer t-if="studio.mode === studio.MODES.HOME_MENU"/>
+        <t t-call="web_studio.menuButtons" />
+        <t t-call="web_studio.masterButtons" />
+      </xpath>
+
+      <xpath expr="//div[contains(@class, 'o_menu_systray')]" position="replace"/>
+  </t>
+
+  <t t-name="web_studio.menuButtons" owl="1">
+    <div class="o-studio--menu ms-auto">
+      <t t-if="studio.mode === studio.MODES.EDITOR" >
+          <EditMenuItem />
+          <NewModelItem />
+      </t>
+    </div>
+  </t>
+
+  <t t-name="web_studio.masterButtons" owl="1">
+    <div class="o_studio_buttons">
+      <div ref="studioNotes" class="o_web_studio_notes">
+          <a href="#" t-on-click.prevent="_onNotesClicked">
+              Notes
+          </a>
+      </div>
+      <div class="o_web_studio_leave" t-on-click="closeStudio">
+          <a class="btn btn-primary">Close</a>
+      </div>
+    </div>
+  </t>
+
+</templates>

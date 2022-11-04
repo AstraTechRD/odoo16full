@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    
+    <t t-name="sale_timesheet_grid.GroupedGridBody" t-inherit="web_grid.GroupedGridBody" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[contains(@t-elif, 'project_id')]" position="after">
+            <t t-elif="widgetToShow === 'so_line'">
+                <TimesheetM2OWidgetAdapter Component="widgetComponents.TimesheetM2OSOLine" value="grid.__label" workingHoursData="props.solHoursData[grid.__label[0]]" rowIndex="grid_index" />
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="sale_timesheet_grid.GridRows" t-inherit="web_grid.GridRows" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[contains(@t-elif, 'project_id')]" position="after">
+            <t t-elif="widgetToShow === 'so_line'">
+                <t t-set="so_line" t-value="grid.rows[rowlabel_index].values.so_line" />
+                <TimesheetM2OWidgetAdapter Component="widgetComponents.TimesheetM2OSOLine" value="so_line" workingHoursData="props.solHoursData[so_line[0]]" rowIndex="grid_index" />
+            </t>
+        </xpath>
+    </t>
+
+</templates>

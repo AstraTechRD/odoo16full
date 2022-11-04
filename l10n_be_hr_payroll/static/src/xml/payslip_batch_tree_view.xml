@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="l10n_be_hr_payroll.ListView.Buttons" t-inherit="hr_payroll_holidays.ListViewButtonTemplate" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-if='props.showButtons']">
+            <button type="button" class="btn btn-secondary o_button_generate_warrant_payslips" t-on-click="generateWarrantPayslips">
+                Generate Warrant Payslips
+            </button>
+        </xpath>
+    </t>
+</templates>

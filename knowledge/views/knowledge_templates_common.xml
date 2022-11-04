@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="knowledge_article_tree_favorites">
+        <!-- Go through 'all_visible_articles' if available to avoid extra ACL queries -->
+        <section class="o_favorite_container" t-if="all_visible_articles.filtered(lambda article: article in favorites_sudo.article_id)">
+            <div class="o_section_header h4 mb-0">Favorites</div>
+            <ul class="o_tree_favorite">
+                <!-- We loop on favorites_sudo and not filtered visible_articles to ensure the
+                articles are shown based on knowledge.article.favorite's sequence field -->
+                <t t-foreach="favorites_sudo" t-as="favorite_sudo">
+                    <t t-call="knowledge.articles_template">
+                        <t t-set="articles" t-value="all_visible_articles.filtered(lambda article: article == favorite_sudo.article_id)"/>
+                        <t t-set="isFavoriteTree" t-value="true"/>
+                    </t>
+                </t>
+            </ul>
+        </section>
+        <section class="o_favorite_container" t-else=""/>
+    </template>
+
+    <template id="articles_template">
+        <t t-set="unfolded_articles_ids" t-value="unfolded_articles_ids or []"/>
+        <t t-set="unfolded_favorite_articles_ids" t-value="unfolded_favorite_articles_ids or []"/>
+        <t t-foreach="articles" t-as="article">
+            <t t-set="readonly" t-value="portal_readonly_mode or not user_write_access_by_article.get(article.id)"/>
+            <t t-set="favorite" t-value="favorites_sudo.filtered(lambda f: f.article_id == article) if favorites_sudo else False"/>
+            <t t-set="children"
+                    t-value="all_visible_articles.filtered(lambda child: child.parent_id == article and not child.is_article_item)
+                             if all_visible_articles else article.child_ids"/>
+            <t t-set="unfoldChildren" t-value="bool(
+                children and (
+                    (not isFavoriteTree and article.id in unfolded_articles_ids)
+                    or (isFavoriteTree and article.id in unfolded_favorite_articles_ids)
+                ))"/>
+            <t t-set="isActive" t-value="article.id == active_article_id if active_article_id else False"/>
+            <!-- readonly is used to for the drag and drop cancel.-->
+            <li t-attf-class="o_article #{ 'readonly' if readonly else '' } #{ 'o_article_tree_child' if is_child else ''} #{'o_article_has_children' if children else ''}"
+                t-attf-id="article_#{article.id}"
+                t-att-data-article-id="article.id" t-att-data-parent-id="article.parent_id.id"
+                t-att-data-favorite-article-id="favorite.id if favorite else False"
+                t-att-data-category="article.category">
+                <div t-attf-class="#{ '' if readonly else 'o_article_handle' } d-flex align-items-center #{ 'o_article_active fw-bold text-900' if isActive else 'text-muted' }">
+                    <button type="button"
+                            class="flex-shrink-1 o_article_caret btn btn-link text-muted p-0 border-0 invisible" >
+                        <i t-att-class="'align-self-center fa fa-fw fa-caret-' + ('down' if unfoldChildren or not children else 'right')"/>
+                    </button>
+                    <t t-call="knowledge.articles_template_name"/>
+                </div>
+                <ul t-if="unfoldChildren">
+                    <t t-call="knowledge.articles_template">
+                        <t t-set="articles" t-value="children.sorted('sequence')"/>
+                        <t t-set="is_child" t-value="True"/>
+                    </t>
+                </ul>
+            </li>
+        </t>
+    </template>
+
+    <template id="articles_template_name">
+        <div class="w-100 min-w-0 d-flex">
+            <t t-if="not portal_readonly_mode">
+                <div class="o_article_emoji_dropdown" t-att-data-article-id="article.id">
+                    <a t-attf-class="o_article_emoji py-1 text-center {{'o_article_emoji_active text-900' if isActive else ''}}" type="button"
+                        t-if="not readonly and not article.is_locked">
+                        <t t-if="article.icon" t-out="article.icon"/>
+                        <t t-else="" t-out="article._get_no_icon_placeholder()"></t>
+                    </a>
+                    <a t-else="" class="py-1 d-inline-block text-center">
+                        <t t-if="article.icon" t-out="article.icon"/>
+                        <t t-else="" t-out="article._get_no_icon_placeholder()"></t>
+                    </a>
+                </div>
+                <div class="o_article_name p-1 flex-grow-1 text-truncate cursor-pointer" t-out="article.name"/>
+                <button t-if="not readonly" class="o_article_create btn p-1 opacity-75 opacity-100-hover" type="button">
+                    <i class="fa fa-fw fa-plus" title="Create a nested article" />
+                </button>
+            </t>
+            <div class="o_article_name p-1 flex-grow-1 text-truncate cursor-pointer" t-else="">
+                <a t-out="article.display_name" t-attf-href="/knowledge/article/{{article.id}}" class="text-decoration-none"/>
+            </div>
+        </div>
+    </template>
+
+</data>
+</odoo>

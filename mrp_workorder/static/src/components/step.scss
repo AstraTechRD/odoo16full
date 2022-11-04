@@ -1,0 +1,96 @@
+.o_tablet_client_action .o_tablet_timeline {
+    border-right: 1px solid #c9ccd2;
+    .o_tablet_step {
+        flex: 0 0 auto;
+        border-bottom: 1px solid #c9ccd2;
+        background: none;
+        padding: 2rem;
+        user-select: none;
+        cursor: pointer;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        &_details {
+            .fa:first-child {
+                opacity: 0.5;
+                margin-right: 5px;
+            }
+        }
+
+        &.o_faulty {
+            background-color: rgba(map-get($theme-colors, 'danger'), 0.25);
+
+            &.o_selected {
+                box-shadow: inset 0px 0px 0px 3px map-get($theme-colors, 'danger');
+            }
+        }
+
+        &.o_line_completed {
+            background: #F5F5F5;
+        }
+
+        &.o_selected {
+            background-color: #f4a46057;
+        }
+        &.o_deleted {
+            background-color: #a3363657;
+            text-decoration: line-through;
+        }
+
+        .o_barcode_product_ref {
+            font-size: 1.1em;
+        }
+
+        .o_line_button {
+            min-width: 60px;
+            height: 60px;
+            padding: 0 8px;
+            border-radius: 8px;
+            line-height: 16px;
+            font-size: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-transform: none;
+
+            &.o_shortcut_displayed {
+                padding-top: 14px;
+            }
+
+            &.btn-secondary {
+                @include o-hover-opacity();
+            }
+
+            &.o_set {
+                border: 4px solid $o-brand-primary;
+                color: $o-brand-primary;
+
+                &.o_difference {
+                    color: orange;
+                    border-color: orange;
+                }
+            }
+        }
+
+        .o_next_expected {
+            color: #00A09D;
+            opacity: 1 !important;
+        }
+
+        .o_step_title {
+            color: white;
+        }
+        .o_tablet_quality_state {
+            text-align: center;
+            $color_by_state: ("to_do": "lightgray", "ok": "lightgreen", "fail": "lightcoral");
+
+            @each $state, $color in $color_by_state {
+                .o_tablet_step_#{$state} {
+                    color: #{$color};
+                }
+            }
+        }
+    }
+}

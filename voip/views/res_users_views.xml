@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_user_form" model="ir.ui.view">
+        <field name="name">VoIP Config in User Form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <group name="messaging" position="after">
+                <!-- This group is not displayed in the forms of portal users (share = True) in order to avoid confusing
+                     administrators with irrelevant settings. -->
+                <group name="voip_user_config" string="VoIP" col="4" attrs="{'invisible': [('share', '=', True)]}">
+                    <field name="voip_username" readonly="0"/>
+                    <field name="voip_secret" password="True" readonly="0"/>
+                    <field name="should_call_from_another_device" readonly="0"/>
+                    <field name="external_device_number" readonly="0"/>
+                    <field name="should_auto_reject_incoming_calls" readonly="0"/>
+                    <field name="how_to_call_on_mobile" widget="radio"/>
+                </group>
+            </group>
+        </field>
+    </record>
+    <record id="res_users_view_form_preferences" model="ir.ui.view">
+        <field name="name">VoIP Config in Preferences Form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <group name="signature" position="after">
+                <group name="voip_user_config" string="VoIP" col="4">
+                    <field name="voip_username" readonly="0"/>
+                    <field name="voip_secret" password="True" readonly="0"/>
+                    <field name="should_call_from_another_device" readonly="0"/>
+                    <field name="external_device_number" readonly="0"/>
+                    <field name="should_auto_reject_incoming_calls" readonly="0"/>
+                    <field name="how_to_call_on_mobile" widget="radio" readonly="0"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

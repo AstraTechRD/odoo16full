@@ -1,0 +1,270 @@
+.o_barcode_client_action {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: $o-view-background-color;
+    overflow: auto;
+
+    .o_strong {
+        font-weight: bold;
+    }
+
+    // Top navbar
+    // =====================================
+    .o_barcode_header {
+        flex: 0 0 46px;
+        color: white;
+        background-color: var(--barcode__header-bg, #{$o-brand-odoo});
+
+        .nav-link {
+            cursor: pointer;
+        }
+         .nav-link, .navbar-text {
+            font-size: 16px;
+            color: #FFFFFF;
+
+            &:hover {
+                color: rgba($color: #FFFFFF, $alpha: 0.75)
+            }
+        }
+    }
+
+    // Top Block
+    // =====================================
+    .o_barcode_message {
+        box-shadow: inset 0 0 20px $gray-900;
+
+        .o_barcode_pic {
+            display: flex;
+            align-items: center;
+            flex: 1 1 60%;
+            max-width: 200px;
+            .fa-exclamation-triangle {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    // Summary
+    // =====================================
+    .o_barcode_lines_header {
+        font-size: 16px;
+        color: white;
+        background-color: var(--barcode__linesHeader-bg, #{$o-gray-800});
+
+        @include media-breakpoint-down(md) {
+            font-size: 14px;
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    // Lines Block
+    // =====================================
+    .o_barcode_lines {
+        clear: both;
+        flex: auto;
+        overflow: auto;
+        color: $gray-800;
+        margin-bottom: 60px;
+        @media (orientation: portrait) {
+            margin-bottom: 30px;
+        }
+
+        &.o_js_has_highlight .o_barcode_line.o_highlight {
+            &.o_highlight_green {
+                box-shadow: inset 0px 0px 0px 3px $o-brand-secondary;
+            }
+
+            .product-label, .o_barcode_scanner_qty {
+                color: $headings-color;
+            }
+
+            .qty-done, .inventory_quantity {
+                font-weight: bold;
+
+                &.o_js_qty_animate {
+                    animation: o_barcode_scanner_qty_update .2s alternate;
+                }
+            }
+        }
+    }
+
+    // Embedded views
+    // =====================================
+    .o_barcode_generic_view {
+        flex: 1;
+        overflow: auto;
+        margin-bottom: 30px;
+
+        .o_view_controller, .o_view_controller .o_form_view.o_form_nosheet {
+            height: 100%;
+            flex-grow: 1;
+            padding-top: 0;
+        }
+
+        .o_field_one2many.o_field_widget .o_kanban_record {
+            font-size: 0.6em;
+        }
+
+        .o_form_view {
+            &.o_xxs_form_view {
+                .o_td_label > .o_form_label {
+                    color: $gray-900;
+                    font-weight: bold;
+                    padding-top: 5px;
+                }
+                .o_field_widget {
+                    font-size: 1em;
+                    .btn.fa {
+                        font-size: 1em;
+                    }
+                }
+                .o_list_view {
+                    th, .o_field_widget {
+                        font-size: $font-size-base;
+                    }
+                }
+            }
+            &.o_form_nosheet {
+                padding-bottom: 80px;
+            }
+            .o_kanban_record {
+                font-size: 1em;
+            }
+        }
+    }
+
+    // Settings menu
+    // =====================================
+    .o_barcode_settings {
+        display: flex;
+        flex: auto;
+
+        > button {
+            flex: 1 0 auto;
+            border-bottom: 1px solid $border-color;
+
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+    }
+
+    // Control buttons (validate, previous,
+    // next, put in pack, ...)
+    // =====================================
+    .o_barcode_control {
+        flex: 0 0 60px;
+        margin: 0 -1px;
+        width: 100%;
+        > .btn {
+            flex: 1;
+            width: 50%;
+            @media (orientation: portrait) {
+                font-size: 0.8em;
+            }
+            @media (orientation: landscape) {
+                height: 60px;
+            }
+            border-width: 1px 0 0 0;
+            border-style: solid;
+            &.btn-secondary {
+                color: $gray-800;
+                border-color: $gray-400;
+            }
+            &.btn-primary {
+                border-color: $primary;
+            }
+            &.btn-success {
+                border-color: $success;
+            }
+            &[disabled] {
+                opacity: 1;
+                background-color: $gray-200;
+                color: $btn-link-disabled-color;
+            }
+            + .btn {
+                border-left-width: 1px;
+                border-left-color: $gray-400;
+            }
+        }
+        .fa-angle-left, .fa-angle-right {
+            font-size: 1.5em;
+        }
+        &:first-of-type {
+            box-shadow: 0 -3px 10px $gray-300;
+        }
+    }
+
+    // Line form
+    // =====================================
+    .o_barcode_line_form {
+        margin-left: 24px;
+        margin-bottom: 36px;
+        font-size: 1.4em;
+
+        @include media-breakpoint-down(md) {
+            margin-left: 0;
+        }
+
+        .row {
+            width: 700px;
+
+            @include media-breakpoint-down(md) {
+                width: 100vw;
+            }
+
+            &.row-long {
+                width: 100%;
+            }
+
+            a.o_field_widget {
+                display: inline-block;
+                padding-top: 8px;
+            }
+
+            // Avoids to make the UoM field as long as the quantity done field.
+            .o_field_widget[name="product_uom_id"] input {
+                @include media-breakpoint-up(sm) {
+                    min-width: 0;
+                }
+            }
+
+            .o_qty_done_field_completed input {
+                background: var(--barcode__input--completed, #f6fdf6);
+            }
+
+            .o_qty_done_field_not_completed input {
+                background: var(--barcode__input--notCompleted, #fcf9f2);
+            }
+
+            & > div {
+                .o_field_float {
+                    width: 100%;
+                }
+
+                .o_input {
+                    padding: 8px;
+                    border: 1px solid $border-color;
+                }
+
+                .o_required_modifier .o_input {
+                    border-bottom: 2px solid $border-color
+                }
+
+                .o_dropdown_button {
+                    display: none;
+                }
+
+                i {
+                    min-width: 24px;
+                    max-width: 24px;
+                    color: $o-main-color-muted;
+                }
+            }
+        }
+    }
+}

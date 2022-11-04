@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_employee_view_form_in_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.in.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='personal_information']/group" position="inside">
+                <group string="Personal Information" attrs="{'invisible': [('company_country_code', '!=', 'IN')]}">
+                    <field name="uan" placeholder="12 digit Universal Account Number"/>
+                    <field name="esic_number" placeholder="17 digit ESIC Number"/>
+                    <field name="pan"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

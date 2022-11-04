@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="calendar_event_view_form_inherit_appointment" model="ir.ui.view">
+        <field name="name">calendar.event.form</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="appointment_type_id" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_search_inherit_appointment" model="ir.ui.view">
+        <field name="name">calendar.event.search.inherit.appointment</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <separator/>
+                <filter string="Online Appointments" domain="[('appointment_type_id', '!=', False)]" name="online"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//filter[@name='responsible']" position="after">
+                <field name="appointment_type_id"/>
+                <filter string="Appointment Type" name="group_by_appointment_type_id" context="{'group_by': 'appointment_type_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Calendar Reporting -->
+    <record id="calendar_event_view_graph" model="ir.ui.view">
+        <field name="name">Events</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <graph string="Appointments" type="line" sample="1">
+                <field name="start"/>
+                <field name="res_id" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="calendar_event_view_pivot" model="ir.ui.view">
+        <field name="name">calendar.event.pivot</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <pivot string="Appointments" display_quantity="1" sample="1">
+                <field name="start" type="row"/>
+                <field name="categ_ids" type="row"/>
+                <field name="name" type="row"/>
+                <field name="user_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="calendar_event_action_report" model="ir.actions.act_window">
+        <field name="name">All Appointments</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">graph,pivot,calendar,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Schedule appointments to get statistics
+            </p>
+        </field>
+    </record>
+
+    <record id="calendar_event_action_reporting" model="ir.actions.act_window">
+        <field name="name">Online Appointments</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">pivot,graph,calendar,tree,form</field>
+        <field name="context">{'search_default_online': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Schedule appointments to get statistics
+            </p>
+        </field>
+    </record>
+
+</odoo>

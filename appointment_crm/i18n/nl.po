@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_crm
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-23 08:25+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_appointment_type
+msgid "Appointment Type"
+msgstr "Afspraak soort"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_calendar_event
+msgid "Calendar Event"
+msgstr "Agend-afspraak"
+
+#. module: appointment_crm
+#. openerp-web
+#: code:addons/appointment_crm/static/src/xml/calendar_appointment_scheduling.xml:0
+#, python-format
+msgid "Click in your calendar to pick meeting time proposals for"
+msgstr "Klik in uw agenda om voorstellen voor vergadertijden te kiezen voor:"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_create
+msgid "Create Opportunities"
+msgstr "Verkoopkansen aanmaken"
+
+#. module: appointment_crm
+#: model:ir.model.fields,help:appointment_crm.field_appointment_type__lead_create
+msgid ""
+"For each scheduled appointment, create a new opportunity and assign it to "
+"the responsible user."
+msgstr ""
+"Maak voor elke geplande afspraak een nieuwe verkoopkans en wijs deze toe aan"
+" de verantwoordelijke gebruiker."
+
+#. module: appointment_crm
+#: model:ir.model.fields,help:appointment_crm.field_appointment_type__opportunity_id
+msgid ""
+"Link an opportunity/lead to the appointment type created.\n"
+"Used when creating a custom appointment type from the Meeting action in the crm form view."
+msgstr ""
+"Koppel een opportunity/lead aan het gemaakte afspraaktype.\n"
+"Wordt gebruikt bij het maken van een aangepast afspraaktype vanuit de actie Vergadering in de crm-formulierweergave."
+
+#. module: appointment_crm
+#: model:crm.tag,name:appointment_crm.appointment_crm_tag
+msgid "Online Appointment"
+msgstr "Online afspraak"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_calendar_event__opportunity_id
+msgid "Opportunity"
+msgstr "Verkoopkans"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__opportunity_id
+msgid "Opportunity/Lead"
+msgstr "Verkoopkans/Lead"

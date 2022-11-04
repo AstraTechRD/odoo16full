@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="industry_fsm_sale.FsmProductQuantity" t-inherit-mode="extension" owl="1">
+        <xpath expr="button[@name='fsm_remove_quantity']" position="attributes">
+            <attribute name="t-att-disabled">props.value === 0 or !props.record.data.quantity_decreasable</attribute>
+        </xpath>
+    </t>
+
+</templates>

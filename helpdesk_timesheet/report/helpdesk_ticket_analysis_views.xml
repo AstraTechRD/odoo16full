@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_helpdesk_ticket_graph_analysis" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.report.analysis.inherited</field>
+        <field name="model">helpdesk.ticket.report.analysis</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_graph_analysis"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="attributes">
+                <attribute name="js_class">hr_timesheet_graphview</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_report_analysis_view_search_timesheet" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.report.analysis.search.timesheet</field>
+        <field name="model">helpdesk.ticket.report.analysis</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_report_analysis_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="my_ticket" position="after">
+                <filter string="My Team's Tickets" name="my_team_ticket" domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                <filter string="My Department" name="department" domain="[('employee_id.member_of_department', '=', True)]" help="My Department"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

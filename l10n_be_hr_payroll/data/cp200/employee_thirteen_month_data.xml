@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cp200_employees_thirteen_month_gross_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_salary"/>
+        <field name="name">Gross Salary</field>
+        <field name="code">SALARY</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+    </record>
+
+    <record id="cp200_employees_thirteen_month_onss_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Social contribution</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">41</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">SALARY</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+    </record>
+
+    <record id="cp200_employees_thirteen_month_p_p" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">102</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = compute_thirteen_month_withholding_taxes(payslip, categories, worked_days, inputs)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+    </record>
+
+    <record id="cp200_employees_thirteen_month_pp_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_withholding_taxes_total"/>
+        <field name="name">Withholding Taxes (Total)</field>
+        <field name="code">PPTOTAL</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories.PP
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_thirteen_month_mis_ex_onss" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
+        <field name="name">Special social cotisation</field>
+        <field name="code">M.ONSS</field>
+        <field name="amount_select">fix</field>
+        <field name="sequence">165</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = compute_special_social_cotisations(payslip, categories, worked_days, inputs)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <!-- TODO master: Remove this rule -->
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

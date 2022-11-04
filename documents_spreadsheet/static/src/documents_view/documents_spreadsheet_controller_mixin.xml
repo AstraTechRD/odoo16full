@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="spreadsheet.DocumentsViews.Buttons" t-inherit="documents.DocumentsViews.Buttons" t-inherit-mode="extension">
+        <xpath expr="//button[contains(@t-attf-class, 'o_documents_kanban_upload')]" position="after">
+            <button type="button" t-attf-class="btn btn-secondary o_documents_kanban_spreadsheet {{additionalClasses}}" t-att-disabled="disabled"
+                t-on-click.stop.prevent="onClickCreateSpreadsheet">
+                Create Spreadsheet
+            </button>
+        </xpath>
+    </t>
+</templates>

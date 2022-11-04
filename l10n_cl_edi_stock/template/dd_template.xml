@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+    <data>
+        <template id="dd_template">
+            <DD>
+                <RE t-esc="format_vat(picking.company_id.vat)"/>
+                <TD t-esc="picking.l10n_latam_document_type_id.code"/>
+                <F t-esc="int(picking.l10n_latam_document_number)"/>
+                <FE t-esc="fe_value"/>
+                <RR t-esc="rr_value"/>
+                <RSR t-esc="rsr_value"/>
+                <MNT t-esc="mnt_value"/>
+            <t t-if="it1_value">
+                <IT1 t-esc="it1_value"/>
+            </t>
+                <CAF t-att-version="caf.xpath('//AUTORIZACION/CAF')[0].attrib['version']">
+                    <DA>
+                        <RE t-esc="caf.xpath('//AUTORIZACION/CAF/DA/RE')[0].text"/>
+                        <RS t-esc="caf.xpath('//AUTORIZACION/CAF/DA/RS')[0].text"/>
+                        <TD t-esc="caf.xpath('//AUTORIZACION/CAF/DA/TD')[0].text"/>
+                        <RNG>
+                            <D t-esc="caf.xpath('//AUTORIZACION/CAF/DA/RNG/D')[0].text"/>
+                            <H t-esc="caf.xpath('//AUTORIZACION/CAF/DA/RNG/H')[0].text"/>
+                        </RNG>
+                        <FA t-esc="caf.xpath('//AUTORIZACION/CAF/DA/FA')[0].text"/>
+                        <RSAPK>
+                            <M t-esc="caf.xpath('//AUTORIZACION/CAF/DA/RSAPK/M')[0].text"/>
+                            <E t-esc="caf.xpath('//AUTORIZACION/CAF/DA/RSAPK/E')[0].text"/>
+                        </RSAPK>
+                        <IDK t-esc="caf.xpath('//AUTORIZACION/CAF/DA/IDK')[0].text"/>
+                    </DA>
+                    <FRMA t-att-algoritmo="caf.xpath('//AUTORIZACION/CAF/FRMA')[0].attrib['algoritmo']"
+                          t-esc="caf.xpath('//AUTORIZACION/CAF/FRMA')[0].text"/>
+                </CAF>
+                <TSTED t-esc="time_stamp"/>
+            </DD>
+        </template>
+    </data>
+</odoo>

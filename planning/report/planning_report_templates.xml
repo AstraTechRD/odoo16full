@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="resource_planning">
+        <t t-set="show_percentage" t-value="any(s.resource_type == 'user' and s.allocated_percentage and s.allocated_percentage != 100 for s in slots)" />
+        <t t-set="show_role" t-value="any(s.role_id for s in slots)" />
+        <t t-set="show_time" t-value="any((s.allocated_percentage and s.allocated_percentage != 100) or s.allocated_hours for s in slots)" />
+        <t t-set="show_name" t-value="any(s.name for s in slots)" />
+        <table class="table table-striped table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th t-if="show_role" class="align-middle" name="role_header">Role</th>
+                    <th class="align-middle">Start</th>
+                    <th class="align-middle">End</th>
+                    <th t-if="show_time" class="align-middle">Allocated Time</th>
+                    <th t-if="show_name" class="align-middle">Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="slots" t-as="slot">
+                    <tr>
+                        <td t-if="show_role" name="role_record" class="align-middle"><t t-if="slot.role_id" t-esc="slot.role_id.name" /></td>
+                        <td class="align-middle"><t t-esc="slot._format_datetime_to_user_tz(slot.start_datetime, env, slot.resource_id.tz)" /></td>
+                        <td class="align-middle"><t t-esc="slot._format_datetime_to_user_tz(slot.end_datetime, env, slot.resource_id.tz)" /></td>
+                        <td t-if="show_time" class="align-middle">
+                            <t t-if="slot.allocated_hours" t-out="ceil(slot.allocated_hours)" t-options="{'widget': 'float_time'}"/>
+                            <t t-if="slot.allocated_percentage and show_percentage">
+                                (<t t-out="ceil(slot.allocated_percentage)" t-options="{'widget': 'float', 'precision': 0}"/>%)
+                            </t>
+                        </td>
+                        <td t-if="show_name" class="align-middle"><t t-if="slot.name" t-esc="slot.name" /></td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+        <p style="page-break-before: always;"></p>
+    </template>
+
+    <template id="slot_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="grouped_slots" t-value="docs._group_slots_by_resource()" />
+
+                <div class="page">
+                    <h1>Planning</h1>
+
+                    <t t-foreach="grouped_slots" t-as="resource">
+                        <h4>
+                            <t t-esc="resource.name" t-if="resource" />
+                            <t t-else="">Open Shifts</t>
+                        </h4>
+                        <t t-set="slots" t-value="grouped_slots[resource]" />
+                        <t t-call="planning.resource_planning" />
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsTagsList" t-inherit="web.TagsList" t-inherit-mode="primary" owl="1">
+        <!-- Add color -->
+        <xpath expr="//t/span/t/span" position="attributes">
+            <attribute name="t-attf-style">background-color: {{tag.group_hex_color || '#4A4F59'}}</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="replace">
+            <div t-if="props.displayBadge" class="o_tag_badge_text">
+                <span t-attf-style="color: {{tag.group_hex_color || '#4A4F59'}}">●</span>
+                <t t-esc="tag.text"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.SystrayItem" owl="1">
+    <div t-attf-class="o_web_studio_navbar_item {{ buttonDisabled ? 'o_disabled' : ''}} d-none d-md-inline-block" t-ref="root" t-on-click.prevent="_onClick">
+        <a href="#" title="Toggle Studio" alt="Odoo Studio Icon" aria-label="Toggle Studio">
+            <i class="oi oi-large oi-studio" role="img"/>
+        </a>
+    </div>
+</t>
+
+</templates>

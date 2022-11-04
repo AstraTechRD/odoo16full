@@ -1,0 +1,224 @@
+.o_appointment_index {
+    min-height: 80vh;
+    .o_half_screen_height {
+        min-height: 200px !important;
+    }
+    .o_appointment_appointments_list {
+        header {
+            a {
+                transition: all .25s ease-in-out;
+                &:hover, &:focus {
+                    transform: scale(1.05);
+                }
+            }
+        }
+        .o_appointment_unpublished {
+            bottom: 0;
+            padding: $card-spacer-y $card-spacer-x;
+        }
+    }
+    .o_appointment_appointments_list_form {
+        #appointment_type_id {
+            height: 2.5rem;
+            &:disabled {
+                background-color: #FAFAFA;
+            }
+        }
+    }
+    .o_appointment_svg {
+        max-width: 500px;
+    }
+}
+
+.o_appointment_slots_loading {
+    @media screen and (min-device-width: 769px) {
+        min-height: 35em;
+    }
+}
+
+.modal-open {
+    > .modal-backdrop {
+        z-index: $zindex-dropdown - 1;
+    }
+}
+
+.o_appointment_days {
+    font-size: 12px;
+    height: 64px;
+    .o_weekend {
+        background-color: mix(map-get($theme-colors, 'primary'), $body-bg, 30%);
+        color: color-contrast(mix(map-get($theme-colors, 'primary'), $body-bg, 30%));
+    }
+    .o_day_wrapper {
+        min-width: 54px;
+        @include media-breakpoint-down(sm) {
+            min-width: 28px;
+        }
+    }
+    .o_day {
+        .o_slot_button {
+            border: 1px solid map-get($theme-colors, 'primary');
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+    }
+    .o_slot_button:hover, .o_slot_selected {
+        color: color-contrast(map-get($theme-colors, 'primary'));
+        background-color: map-get($theme-colors, 'primary');
+    }
+    .o_mute_day {
+        opacity: 0.5
+    }
+    .o_today .o_day_wrapper:after {
+        content: "";
+        display: block;
+        border-bottom: 2px solid map-get($theme-colors, 'secondary') !important;
+    }
+}
+
+.o_appointment_month {
+    .table {
+        border-collapse: separate;
+        border-spacing: unset;
+    }
+
+    .table th, .table td {
+        width: 3em;
+    }
+}
+
+.o_appointment {
+    .o_appointment_selected_slot_date {
+        font-size: 18px;
+        font-weight: 500;
+    }
+    .o_appointment_details_column {
+        @media screen and (min-device-width: 769px) {
+            min-height: 45em;
+        }
+    }
+    .o_appointment_fa_width {
+        width: 1.5rem !important;
+    }
+    .o_appointment_no_slot_month_helper {
+        > * {
+            width: 75%;
+            @media screen and (max-width: 400px) {
+                width: 95%;
+            }
+        }
+        .o_appointment_no_slot_month_helper_svg {
+            max-width: 400px;
+        }
+    }
+    .o_appointment_no_slot_overall_helper_svg {
+        max-width: 450px;
+    }
+    .o_appointment_availabilities {
+        .o_slots_list {
+            a {
+                color: $body-color;
+                height: 50px;
+                border-color: mix(map-get($theme-colors, 'primary'), $body-bg, 30%);
+                font-weight: 500;
+                font-size: 16px;
+                &:hover {
+                    color: color-contrast(map-get($theme-colors, 'primary')) !important;
+                    background-color: map-get($theme-colors, 'primary');
+                }
+            }
+        }
+    }
+    .o_appointment_attendee_form {
+        input {
+            background-color: $body-bg;
+            color: $body-color;
+            &::placeholder {
+                color:darkgray;
+            }
+        }
+        .o_appointment_attendee_form_details {
+            padding-left: calc(1px + 1.25rem);
+        }
+    }
+    .o_appointment_user_short_card {
+        header {
+            height: 300px;
+        }
+        .card-body {
+            padding: 0.75rem 1.25rem;
+        }
+    }
+    .o_appointment_validation_details {
+        label {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .row {
+            padding-bottom: 0.75rem;
+        }
+        .o_pt_2_px {
+            padding-top: 2px;
+        }
+    }
+    .o_appointment_validation_bottom_btns {
+        border-top: 1px solid #DEE2E6;
+        .o_outlook_calendar {
+            background-color: #1976D2;
+            color: white;
+            &:hover {
+                background-color: #144c85;
+            }
+        }
+        .o_google_calendar {
+            background-color: white;
+            font-weight: 500;
+            color: black;
+            border: 1px solid #DEE2E6;
+            &:hover {
+                background-color: $gray-200;
+            }
+        }
+        a{
+            border-radius: 5px;
+            img {
+                padding-right: 6px;
+            }
+        }
+        @media screen and (max-width: 768px) {
+            text-align: right;
+        }
+    }
+    .alert-info {
+        background: #CFF4FC;
+        border: 1px solid #9EEAF9;
+        color: #055160;
+        padding: 1rem;
+    }
+}
+
+.o_appointment, .o_appointment_choice {
+    .o_appointment_avatar_background {
+        background: mix(map-get($theme-colors, 'primary'), $body-bg, 20%);
+    }
+    // Class used to adapt the color of the svg picture to the chosen theme's color
+    .o_appointment_svg_fill_color_1 {
+        fill: o-color("o-color-1");
+    }
+    select {
+        background-color: $body-bg;
+        color: $text-muted;
+        &:focus {
+            background-color: $body-bg;
+            color: $body-color;
+        }
+        &:disabled {
+            background-color: mix(map-get($theme-colors, 'primary'), $body-bg, 30%);
+            color: $text-muted;
+        }
+    }
+
+    .alert-info a {
+        color: $info;
+    }
+}

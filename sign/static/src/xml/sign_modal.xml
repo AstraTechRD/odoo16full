@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sign.sign_name_and_signature" t-extend="web.sign_name_and_signature">
+        <t t-jquery="div.row" t-operation="append">
+            <div t-attf-class="col-auto form-check btn border-0 {{ widget.showFrameCheck ? '' : 'd-none'}}">
+                <input type="checkbox" t-attf-class="o_web_frame_button ms-2 form-check-input" id="switchFrame"/>
+                <label class="form-check-label ms-2" for="switchFrame">Frame</label>
+            </div>
+        </t>
+
+        <t t-jquery="div.o_web_sign_signature" t-operation="before">
+            <div t-attf-class="o_sign_frame {{ widget.activeFrame ? 'active': '' }}"><p t-attf-hash="{{ widget.hash }}" t-attf-sign_label="{{ widget.signLabel }}"/></div>
+        </t>
+    </t>
+
+</templates>

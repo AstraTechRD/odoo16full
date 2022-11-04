@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="project_update_default_description" inherit_id="sale_timesheet.project_update_default_description">
+        <!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
+        <xpath expr="//t[@name='costs']/h3" position="after">
+<div name="budget" t-if="budget and project.analytic_account_id">
+<t><t t-esc="budget['percentage']"/>% of the <t t-esc="budget['amount']"/> budget has been spent.</t>
+</div>
+        </xpath>
+    </template>
+
+</odoo>

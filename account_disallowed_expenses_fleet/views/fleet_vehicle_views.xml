@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="fleet_vehicle_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='horsepower_tax']" position='after'>
+                <label for="rate_ids">Disallowed Expenses Rate</label>
+                <field name="rate_ids" nolabel='1' editable="bottom" colspan="2">
+                    <tree editable="bottom">
+                        <field name="date_from"/>
+                        <field name="rate"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>

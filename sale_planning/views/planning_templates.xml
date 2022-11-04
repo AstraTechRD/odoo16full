@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="period_report_template" inherit_id="planning.period_report_template">
+        <xpath expr="//div[hasclass('o_calendar_widget')]" position="before">
+            <span class="has_sale_line" t-att-value="has_sale_line"/>
+        </xpath>
+        <xpath expr="//th[@id='o_role']" position="after">
+            <th t-if="has_sale_line" name="sale_order_item" class="text-start">Sales Order Item</th>
+        </xpath>
+        <xpath expr="//td[@name='role_id']" position="after">
+            <td t-if="has_sale_line" class="align-middle" name="sale_line_id">
+                <t t-esc="shift.sale_line_id.order_id.name"/> - <t t-esc="shift.sale_line_id.name"/>
+            </td>
+        </xpath>
+        <xpath expr="//dd[@id='role']" position="after">
+            <dt class="col-sm-4" name="sale_order_item">Sales Order Item</dt>
+            <dd class="col-sm-8" id="sale_line"/>
+        </xpath>
+    </template>
+</odoo>

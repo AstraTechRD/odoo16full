@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_form__l10n_be_view_for" model="ir.ui.view">
+        <field name="name">hr.employee.inherit.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_of_birth']" position="after">
+                <field name="resident_bool" eval="False" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='marital']" position="after">
+                <field name="spouse_fiscal_status" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('company_country_code', '!=', 'BE')], 'required': [('marital', 'in', ['married', 'cohabitant'])]}" help="if spouse has professionnel income or not"/>
+                <p colspan="2" class="p-0 m-0 " attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('company_country_code', '!=', 'BE')]}">
+                    <a class="btn btn-link p-0 mb-1" data-bs-toggle="collapse" href="#spouse_status_explanation" role="button" aria-expanded="false" aria-controls="#spouse_status_explanation">Toggle Explanation</a>
+                </p>
+                <div class="collapse" id="spouse_status_explanation" colspan="2" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('company_country_code', '!=', 'BE')]}">
+                  <div class="card card-body">
+                    <field name="spouse_fiscal_status_explanation" nolabel="1" class="text-muted" widget="text"/>
+                  </div>
+                </div>
+                <field name="disabled_spouse_bool" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('company_country_code', '!=', 'BE')]}"/>
+            </xpath>
+            <xpath expr="//group[@name='gender_birthday']" position="after">
+                <group>
+                    <field name="disabled" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='children']" position="inside">
+                <field name="l10n_be_dependent_children_attachment" attrs="{'invisible': ['|', ('company_country_code', '!=', 'BE'), ('children', '&lt;=', 0)]}"/>
+                <field name="disabled_children_bool"  attrs="{'invisible': ['|', ('company_country_code', '!=', 'BE'), ('children', '&lt;=', 0)]}"/>
+                <field name="disabled_children_number" attrs="{'invisible':['|', ('disabled_children_bool','!=',True), ('children', '&lt;=', 0)]}" help="Number of dependent children declared as disabled"/>
+                <field name="children" invisible="1" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+            </xpath>
+            <xpath expr="//group[@name='family_status']" position="after">
+                    <group>
+                        <field name="other_dependent_people" groups="hr.group_hr_user" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+                    </group>
+                    <group col="4" colspan="2">
+                        <field name="other_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                        <field name="other_disabled_senior_dependent" attrs="{'invisible':['|', ('other_dependent_people','!=',True), ('other_senior_dependent', '&lt;=', 0)]}"/>
+                        <field name="other_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                        <field name="other_disabled_juniors_dependent" attrs="{'invisible':['|', ('other_dependent_people','!=',True), ('other_juniors_dependent', '&lt;=', 0)]}"/>
+                    </group>
+            </xpath>
+            <xpath expr="//group[@name='departure']" position="attributes">
+                <attribute name="attrs">{'invisible': ['&amp;', ('active', '=', True), ('departure_reason_id', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='departure_reason_id']" position="after">
+                <field name="start_notice_period" groups="base.group_no_one" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+                <field name="end_notice_period" groups="base.group_no_one" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+            </xpath>
+            <xpath expr="//div[@name='div_km_home_work']" position="after">
+                <field name="has_bicycle" required="True" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+            </xpath>
+            <field name="identification_id" position="after">
+                <field name="niss" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+            </field>
+            <field name="study_school" position="after">
+                <field name="l10n_be_scale_seniority" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}"/>
+            </field>
+            <group name="payroll_group" position="after">
+                <strong class="o_horizontal_separator" colspan="2" id="previous_employer_title" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}" groups="hr_payroll.group_hr_payroll_user">Previous Employer</strong>
+                <group attrs="{'invisible': [('company_country_code', '!=', 'BE')]}" groups="hr_payroll.group_hr_payroll_user">
+                    <label for="l10n_be_holiday_pay_to_recover_n"/>
+                    <div class="o_row">
+                        <field name="l10n_be_holiday_pay_to_recover_n" nolabel="1"/>
+                        <span>€</span>
+                    </div>
+                    <label for="l10n_be_holiday_pay_number_of_days_n"/>
+                    <div class="o_row">
+                        <field name="l10n_be_holiday_pay_number_of_days_n" nolabel="1"/>
+                        <span>days</span>
+                    </div>
+                    <label for="l10n_be_holiday_pay_recovered_n"/>
+                    <div class="o_row">
+                        <field name="l10n_be_holiday_pay_recovered_n" nolabel="1"/>
+                        <span>€</span>
+                    </div>
+                </group>
+                <group attrs="{'invisible': [('company_country_code', '!=', 'BE')]}" groups="hr_payroll.group_hr_payroll_user">
+                    <label for="l10n_be_holiday_pay_to_recover_n1"/>
+                    <div class="o_row">
+                        <field name="l10n_be_holiday_pay_to_recover_n1" nolabel="1"/>
+                        <span>€</span>
+                    </div>
+                    <label for="l10n_be_holiday_pay_number_of_days_n1"/>
+                    <div class="o_row">
+                        <field name="l10n_be_holiday_pay_number_of_days_n1" nolabel="1"/>
+                        <span>days</span>
+                    </div>
+                    <label for="l10n_be_holiday_pay_recovered_n1"/>
+                    <div class="o_row">
+                        <field name="l10n_be_holiday_pay_recovered_n1" nolabel="1"/>
+                        <span>€</span>
+                    </div>
+                </group>
+                <group id="recovery_pay_lines" class="mt-3" colspan="2" attrs="{'invisible': [('company_country_code', '!=', 'BE')]}" groups="hr_payroll.group_hr_payroll_user">
+                    <strong class="o_horizontal_separator" colspan="2">Previous Occupations</strong>
+                    <field name="double_pay_line_ids" colspan="2" nolabel="1"/>
+                </group>
+            </group>
+            <page name="hr_settings" position="inside">
+                <group string="SD Worx" groups="l10n_be_hr_payroll.group_export_sdworx_leaves">
+                    <group>
+                        <field name="sdworx_code"/>
+                    </group>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>

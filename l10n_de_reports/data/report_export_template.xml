@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="tax_export_xml">
+            <Anmeldungssteuern art="UStVA" version="201801">
+                <DatenLieferant>
+                    <Name><t t-out="company.name" /></Name>
+                    <Strasse><t t-out="company.street" /><t t-if="company.street2">, <t t-out="company.street2" /></t></Strasse>
+                    <PLZ><t t-out="company.zip" /></PLZ>
+                    <Ort><t t-out="company.city" /></Ort>
+                    <Telefon><t t-out="company.phone" /></Telefon>
+                    <Email><t t-out="company.email" /></Email>
+                </DatenLieferant>
+                <Erstellungsdatum><t t-out="creation_date" /></Erstellungsdatum>
+                <Steuerfall>
+                    <Umsatzsteuervoranmeldung>
+                        <Jahr><t t-out="year" /></Jahr>
+                        <Zeitraum><t t-out="period" /></Zeitraum>
+                        <Steuernummer><t t-out="company.l10n_de_stnr" /></Steuernummer>
+                        <!-- kz nodes will be added dynamically here containing the values of the tax report -->
+                    </Umsatzsteuervoranmeldung>
+                </Steuerfall>
+            </Anmeldungssteuern>
+        </template>
+    </data>
+</odoo>

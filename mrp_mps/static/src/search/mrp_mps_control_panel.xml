@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="mrp_mps.MrpMpsControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-slot='control-panel-bottom-left']" position="replace">
+            <div>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    t-on-click.stop="_onClickReplenish"
+                    t-on-mouseover.stop="_onMouseOverReplenish"
+                    t-on-mouseout.stop="_onMouseOutReplenish">Replenish</button>
+                <button
+                    type="button"
+                    class='btn btn-secondary'
+                    t-on-click.stop="_onClickCreate">Add a Product</button>
+            </div>
+            <ActionMenus t-if="isRecordSelected"
+                getActiveIds="() => Array.from(model.selectedRecords)"
+                context="{}"
+                domain="model.domain"
+                items="getActionMenuItems()"
+                isDomainSelected="model.isDomainSelected"
+                resModel="'mrp.production.schedule'"/>
+        </xpath>
+        <xpath expr="//t[@t-foreach='searchMenus']" position="before">
+            <GroupMenu items="groups"/>
+        </xpath>
+    </t>
+
+    <t t-name="mrp_mps.MrpMpsControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
+            <t t-call="mrp_mps.MrpMpsControlPanel.Regular"/>
+        </xpath>
+    </t>
+
+</templates>

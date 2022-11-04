@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_confirm_schedule_wizard_form" model="ir.ui.view">
+        <field name="name">view.task.confirm.schedule.wizard.form</field>
+        <field name="model">project.task.confirm.schedule.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        The following tasks have not been scheduled because the corresponding
+                        employees are unavailable. The next possible dates for these tasks are:
+                    </p>
+                    <field name="show_warnings" invisible="1"/>
+                    <field name="line_ids">
+                        <tree create="false" editable="true">
+                            <field name="task_id"/>
+                            <field name="date_begin"/>
+                            <field name="date_end" widget="task_confirm_date_end_with_warning"/>
+                            <field name="warning" invisible="1"/>
+                            <field name="schedule_task"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <field name="selected_line_count" invisible="1"/>
+                    <button string="Schedule Tasks" name="action_confirm" type="object" class="btn-primary" attrs="{'invisible': [('selected_line_count', '=', 0)]}"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

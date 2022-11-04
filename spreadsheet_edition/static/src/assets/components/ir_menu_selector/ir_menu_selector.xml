@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+  <t t-name="spreadsheet_edition.IrMenuSelector" owl="1">
+      <MenuSelectorWidgetAdapter
+        class="'o-ir-menu-selector'"
+        Component="StandaloneMany2OneField"
+        menuId="props.menuId"
+        availableMenuIds="availableMenuIds"
+        onValueChanged="props.onValueChanged"
+        autoFocus="props.autoFocus"
+      />
+  </t>
+
+    <t t-name="spreadsheet_edition.IrMenuSelectorDialog" owl="1">
+      <Dialog title="this.constructor.title" size="'sm'">
+        <IrMenuSelector
+          menuId="props.menuId"
+          onValueChanged.bind="_onValueChanged"
+          autoFocus="true"
+        />
+        <t t-set-slot="footer">
+          <button class="btn btn-primary o-confirm" t-on-click.stop="_onConfirm" t-att-disabled="!selectedMenu.id">
+            Confirm
+          </button>
+          <button class="btn btn-secondary o-cancel" t-on-click.stop="props.close">Cancel</button>
+        </t>
+      </Dialog>
+    </t>
+</templates>

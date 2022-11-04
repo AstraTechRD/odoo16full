@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.ActionHelper" t-inherit="web.ActionHelper" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_view_nocontent')]" position="attributes">
+            <attribute name="t-ref">noContentHelper</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="timesheet_grid.NoContentHelper" t-inherit="web.NoContentHelper" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_view_nocontent')]" position="attributes">
+            <attribute name="t-ref">noContentHelper</attribute>
+        </xpath>
+    </t>
+
+</templates>

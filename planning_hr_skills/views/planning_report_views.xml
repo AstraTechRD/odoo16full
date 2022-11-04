@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_analysis_report_view_search" model="ir.ui.view">
+        <field name="name">planning.slot.report.search</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="inherit_id" ref="planning.planning_analysis_report_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="employee_skill_ids" groups="planning.group_planning_user" filter_domain="[('employee_skill_ids.skill_id', 'ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

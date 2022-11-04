@@ -1,0 +1,217 @@
+<?xml version ="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web_map.MapRenderer" owl="1">
+        <div class="o-map-renderer row g-0">
+            <t t-if="props.model.data.routingError">
+                <t t-call="web_map.MapRenderer.RountingUnavailable"/>
+            </t>
+            <t t-elif="props.model.metaData.routing and !props.model.data.useMapBoxAPI">
+                <t t-call="web_map.MapRenderer.NoMapToken"/>
+            </t>
+            <t t-if="props.model.data.fetchingCoordinates">
+                <t t-call="web_map.MapRenderer.FetchingCoordinates"/>
+            </t>
+            <div class="o-map-renderer--container col-md-12 col-lg-10" t-ref="mapContainer"/>
+            <t t-call="web_map.MapRenderer.PinListContainer"/>
+        </div>
+    </t>
+
+    <t t-name="web_map.MapRenderer.FetchingCoordinates" owl="1">
+        <div class="alert alert-info col-md-12 col-lg-10 pe-5 ps-5 mb-0 text-center o-map-renderer--alert" role="status">
+            <i class="fa fa-spin fa-circle-o-notch"/> Locating new addresses...
+        </div>
+    </t>
+
+    <t t-name="web_map.MapRenderer.NoMapToken" owl="1">
+        <div class="alert alert-info alert-dismissible col-md-12 col-lg-10 pe-5 ps-5 mb-0 text-center o-map-renderer--alert" role="status">
+            To get routing on your map, you first need to setup your Mapbox token.
+            <a href="/web#action=base_setup.action_general_configuration" class="ml8">
+                <i class="fa fa-arrow-right"/>
+                Set up token
+            </a>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </t>
+
+    <t t-name="web_map.MapRenderer.PinListContainer" owl="1">
+        <div class="o-map-renderer--pin-list-container d-none d-lg-block col-2 bg-view border-start cursor-default">
+            <t t-if="!props.model.metaData.hideTitle">
+                <div class="o-map-renderer--pin-list-header o_pin_list_header">
+                    <header>
+                        <i class="fa fa-list text-odoo"/>
+                        <span class="fs-6 fw-bold" t-out="props.model.metaData.panelTitle"/>
+                    </header>
+                </div>
+            </t>
+            <t t-if="props.model.data.isGrouped">
+                <t t-foreach="props.model.data.recordGroups" t-as="groupId" t-key="groupId">
+                    <div class="o-map-renderer--pin-list-group">
+                        <t t-set="group" t-value="props.model.data.recordGroups[groupId]"/>
+                        <div class="o-map-renderer--pin-list-group-header" t-on-click="() => this.toggleGroup(groupId)">
+                            <i t-attf-class="fa fa-caret-{{ state.closedGroupIds.includes(groupId) ? 'right' : 'down' }}"/>
+                            <span t-att-style="'color:' + getGroupColor(groupId)">
+                                <t t-call="web_map.pinSVG">
+                                    <t t-set="numbering" t-value="props.model.metaData.numbering" />
+                                </t>
+                            </span>
+                            <t t-if="group.name" t-esc="group.name"/>
+                            <t t-else="">Undefined</t>
+                        </div>
+                        <t t-if="!state.closedGroupIds.includes(groupId)">
+                            <t t-call="web_map.MapRenderer.PinList">
+                                <t t-set="records" t-value="group.records"/>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-call="web_map.MapRenderer.PinList">
+                    <t t-set="records" t-value="props.model.data.records"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web_map.MapRenderer.PinList" owl="1">
+        <t t-tag="props.model.metaData.numbering ? 'ol' : 'ul'" class="o-map-renderer--pin-list-details">
+            <t t-call="web_map.MapRenderer.PinListItems"/>
+        </t>
+    </t>
+
+    <t t-name="web_map.MapRenderer.PinListItems" owl="1">
+        <t t-foreach="records" t-as="record" t-key="record.id">
+            <t t-set="latitude" t-value="record.partner and record.partner.partner_latitude"/>
+            <t t-set="longitude" t-value="record.partner and record.partner.partner_longitude"/>
+            <li t-att-class="{'o-map-renderer--pin-located': latitude and longitude}" t-att-title="(!latitude or !longitude) and 'Could not locate'">
+                <a t-if="latitude and longitude" href="" t-on-click.prevent="() => this.centerAndOpenPin(record)">
+                    <t t-esc="record.display_name"/>
+                </a>
+                <t t-else="">
+                    <span class="text-muted" t-esc="record.display_name"/>
+                    <span class="float-end" t-if="record.partner and record.partner.fetchingCoordinate">
+                        <i class="fa fa-spin fa-circle-o-notch"/>
+                    </span>
+                </t>
+            </li>
+        </t>
+    </t>
+
+    <t t-name="web_map.MapRenderer.RountingUnavailable" owl="1">
+        <div class="alert alert-warning alert-dismissible col-md-12 col-lg-10 pe-5 ps-5 mb-0 text-center o-map-renderer--alert" role="status">
+            <strong>Unsuccessful routing request: </strong>
+            <t t-esc="props.model.data.routingError"/>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </t>
+
+    <t t-name="web_map.marker" owl="1">
+        <div t-att-style="color and ('color:' + color)">
+            <t t-call="web_map.pinSVG" />
+            <t t-if="numbering" t-call="web_map.markerNumber"/>
+            <t t-elif="isMulti" t-call="web_map.markerBadge"/>
+        </div>
+    </t>
+
+    <t t-name="web_map.markerBadge" owl="1">
+        <span class="badge text-bg-danger rounded-pill o-map-renderer--marker-badge" t-att-style="color and `background-color: ${color} !important`">
+            <t t-esc="count"/>
+        </span>
+    </t>
+
+    <t t-name="web_map.markerNumber" owl="1">
+        <p class="o-map-renderer--marker-number">
+            <t t-esc="number"/>
+            <t t-if="count gt 1">
+                <t t-call="web_map.markerBadge"/>
+            </t>
+        </p>
+    </t>
+
+    <t t-name="web_map.markerPopup" owl="1">
+        <div>
+            <table class="o-map-renderer--popup-table">
+                <thead>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="fields" t-as="field" t-key="field.id">
+                        <td class="o-map-renderer--popup-table-content-name">
+                            <t t-esc="field.string"/>
+                        </td>
+                        <td class="o-map-renderer--popup-table-space"></td>
+                        <td class="o-map-renderer--popup-table-content-value">
+                            <t t-esc="field.value"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="o-map-renderer--popup-buttons mt8">
+                <t t-if="hasFormView">
+                    <button class="btn btn-primary o-map-renderer--popup-buttons-open">
+                        open
+                    </button>
+                </t>
+                <div class="o-map-renderer--popup-buttons-divider"/>
+                <a class="btn btn-primary text-white" t-att-href="url" target="_blank">
+                    navigate to
+                </a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_map.pinSVG" owl="1">
+        <t t-if="numbering">
+            <t t-call="web_map.pinNoCircleSVG" />
+        </t>
+        <t t-else="">
+            <t t-call="web_map.pinCircleSVG" />
+        </t>
+    </t>
+
+    <t t-name="web_map.pinCircleSVG" owl="1">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 60 78.6" style="enable-background:new 0 0 60 78.6;" xml:space="preserve">
+            <style type="text/css">
+                .st0{opacity:0.3;enable-background:new;}
+                .st1{fill:currentColor;stroke:#1A1919;stroke-width:3;stroke-miterlimit:10;}
+            </style>
+            <g>
+                <g id="Layer_2_1_">
+                    <g id="Layer_1-2">
+                        <path class="st0" d="M32.5,4C17.3,4,5,16.3,5,31.5c0,18.2,23.4,44.6,24.4,45.7c1.5,1.7,4.1,1.8,5.8,0.3c0.1-0.1,0.2-0.2,0.3-0.3
+                            c1-1.1,24.4-27.4,24.4-45.7C60,16.3,47.7,4,32.5,4z M32.5,42.4c-6.3,0-11.4-5.1-11.4-11.5s5.1-11.5,11.5-11.5S44,24.6,44,31v0
+                            C43.9,37.3,38.8,42.4,32.5,42.4z"/>
+                        <path class="st1" d="M28.8,1.8c-14.9,0-27,12.1-27.1,27.1c0,18.5,24.2,45.7,25.3,46.9c0.9,1,2.4,1.1,3.4,0.2
+                            c0.1-0.1,0.1-0.1,0.2-0.2c1-1.1,25.3-28.3,25.3-46.9C55.9,13.9,43.7,1.8,28.8,1.8z M28.8,40.3c-6.3,0-11.5-5.1-11.5-11.4
+                            s5.1-11.5,11.4-11.5s11.5,5.1,11.5,11.4v0C40.2,35.2,35.1,40.3,28.8,40.3z"/>
+                    </g>
+                </g>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="web_map.pinNoCircleSVG" owl="1">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 61 78.9" style="enable-background:new 0 0 61 78.9;" xml:space="preserve">
+            <style type="text/css">
+                .st0{opacity:0.3;enable-background:new;}
+                .st1{fill:currentColor;stroke:#1A1919;stroke-width:3;stroke-miterlimit:10;}
+            </style>
+            <g>
+                <g id="Layer_2_1_">
+                    <g id="Layer_1-2">
+                        <path class="st0" d="M33.5,4C18.3,4,6,16.3,6,31.5c0,18.2,23.4,44.6,24.4,45.7c1.5,1.7,4.1,1.8,5.8,0.3c0.1-0.1,0.2-0.2,0.3-0.3
+                            c1-1.1,24.4-27.4,24.4-45.7C61,16.3,48.7,4,33.5,4z"/>
+                        <path class="st1" d="M28.7,1.7c-14.9,0-27,12.1-27.1,27.1c0,18.5,24.2,45.7,25.3,46.9c0.9,1,2.4,1.1,3.4,0.2
+                            c0.1-0.1,0.1-0.1,0.2-0.2c1-1.1,25.3-28.3,25.3-46.9C55.8,13.8,43.6,1.7,28.7,1.7z"/>
+                    </g>
+                </g>
+            </g>
+        </svg>
+    </t>
+
+</templates>

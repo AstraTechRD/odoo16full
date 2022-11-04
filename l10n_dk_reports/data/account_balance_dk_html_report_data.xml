@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_balance_report_l10n_dk_balance" model="account.report">
+        <field name="name">Balance</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.dk"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_balance_report_l10n_dk_balance_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_balance_report_l10n_dk_aktiver" model="account.report.line">
+                <field name="name">Aktiver</field>
+                <field name="code">AKT</field>
+                <field name="aggregation_formula">IMAK.balance + ANAK.balance + OMAK.balance</field>
+                <field name="children_ids">
+                    <record id="account_balance_report_l10n_immaterielle_aktiver" model="account.report.line">
+                        <field name="name">Immaterielle aktiver</field>
+                        <field name="code">IMAK</field>
+                        <field name="aggregation_formula">GOOD.balance</field>
+                        <field name="children_ids">
+                            <record id="account_balance_report_l10n_dk_goodwill_licenser" model="account.report.line">
+                                <field name="name">Goodwill, licenser m.m.</field>
+                                <field name="code">GOOD</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">520</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_balance_report_l10n_anlægsaktiver" model="account.report.line">
+                        <field name="name">Anlægsaktiver</field>
+                        <field name="code">ANAK</field>
+                        <field name="aggregation_formula">GBYG.balance + AADI.balance</field>
+                        <field name="children_ids">
+                            <record id="account_balance_report_l10n_dk_grunde_og_bygninger" model="account.report.line">
+                                <field name="name">Grunde og bygninger</field>
+                                <field name="code">GBYG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">551</field>
+                            </record>
+                            <record id="account_balance_report_l10n_dk_andre_anlæg" model="account.report.line">
+                                <field name="name">Andre anlæg, driftsmateriel og inventar</field>
+                                <field name="code">AADI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">570</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_balance_report_l10n_omsætningsaktiver" model="account.report.line">
+                        <field name="name">Omsætningsaktiver</field>
+                        <field name="code">OMAK</field>
+                        <field name="aggregation_formula">VABE.balance + IGANG.balance + FORUD.balance + TILG.balance + ATIL.balance + LIKBE.balance</field>
+                        <field name="children_ids">
+                            <record id="account_balance_report_l10n_dk_varebeholdninger" model="account.report.line">
+                                <field name="name">Varebeholdninger</field>
+                                <field name="code">VABE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">652 + 653 + 651</field>
+                            </record>
+                            <record id="account_balance_report_l10n_dk_igangværende_arbejder" model="account.report.line">
+                                <field name="name">Igangværende arbejder</field>
+                                <field name="code">IGANG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">654</field>
+                            </record>
+                            <record id="account_balance_report_l10n_dk_forudbetaling" model="account.report.line">
+                                <field name="name">Forudbetaling til leverandører</field>
+                                <field name="code">FORUD</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">658</field>
+                            </record>
+                            <record id="account_balance_report_l10n_dk_tilgodehavender" model="account.report.line">
+                                <field name="name">Tilgodehavender</field>
+                                <field name="code">TILG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">661</field>
+                            </record>
+                            <record id="account_balance_report_l10n_dk_andre_tilgodehavender" model="account.report.line">
+                                <field name="name">Andre tilgodehavender</field>
+                                <field name="code">ATIL</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">665 + 664 + 668 + 667</field>
+                            </record>
+                            <record id="account_balance_report_l10n_dk_likvide_beholdninger" model="account.report.line">
+                                <field name="name">Likvide beholdninger</field>
+                                <field name="code">LIKBE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">sum([('account_id.code', '=like', '68%'), ('account_id.code', '!=', '6821')])</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_balance_report_l10n_dk_passiver" model="account.report.line">
+                <field name="name">Passiver</field>
+                <field name="code">PAS</field>
+                <field name="aggregation_formula">EGEN.balance + LANG.balance + KORT.balance</field>
+                <field name="children_ids">
+                    <record id="account_balance_report_l10n_egenkapital" model="account.report.line">
+                        <field name="name">EGENKAPITAL</field>
+                        <field name="code">EGEN</field>
+                        <field name="aggregation_formula">AFR.balance + EGEN2.balance + PREV_YEAR_EARNINGS_DK.balance</field>
+                        <field name="children_ids">
+                            <record id="account_balance_report_l10n_dk_earnings" model="account.report.line">
+                                <field name="name">Årets foreløbige resultat</field>
+                                <field name="code">AFR</field>
+                                <field name="aggregation_formula">IAI.balance + ALLOCATED_EARNINGS_CURRENT_YEAR_DK.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_balance_report_l10n_dk_current_year_earnings" model="account.report.line">
+                                        <field name="name">Indeværende års indtjening</field>
+                                        <field name="code">IAI</field>
+                                        <field name="action_id" ref="account_financial_report_l10n_lu_dk_action"/>
+                                        <field name="expression_ids">
+                                            <record id="account_balance_report_l10n_dk_current_year_earnings_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation'])]"/>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_balance_report_l10n_dk_current_year_allocated_earnings" model="account.report.line">
+                                        <field name="name">Aktuelt års allokerede indtjening</field>
+                                        <field name="code">ALLOCATED_EARNINGS_CURRENT_YEAR_DK</field>
+                                        <field name="expression_ids">
+                                            <record id="account_balance_report_l10n_dk_current_year_allocated_earnings_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_balance_report_l10n_dk_previous_year_earnings" model="account.report.line">
+                                <field name="name">Tidligere års resultat</field>
+                                <field name="code">PREV_YEAR_EARNINGS_DK</field>
+                                <field name="expression_ids">
+                                    <record id="account_balance_report_l10n_dk_previous_year_earnings_balance_domain" model="account.report.expression">
+                                        <field name="label">balance_domain</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation'])]"/>
+                                        <field name="date_scope">from_beginning</field>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                    <record id="account_balance_report_l10n_dk_previous_year_earnings_balance_aggregate" model="account.report.expression">
+                                        <field name="label">balance_aggregate</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PREV_YEAR_EARNINGS_DK.allocated_earnings_dk_balance - AFR.balance</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="account_balance_report_l10n_dk_previous_year_earnings_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PREV_YEAR_EARNINGS_DK.balance_domain + PREV_YEAR_EARNINGS_DK.balance_aggregate</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="account_balance_report_l10n_dk_previous_year_earnings_allocated_earnings_dk_balance" model="account.report.expression">
+                                        <field name="label">allocated_earnings_dk_balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                        <field name="date_scope">from_beginning</field>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_balance_report_l10n_egenkapital2" model="account.report.line">
+                                <field name="name">Egenkapital</field>
+                                <field name="code">EGEN2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-72 - 74</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_balance_report_l10n_langfristet_gæld" model="account.report.line">
+                        <field name="name">Langfristet gæld</field>
+                        <field name="code">LANG</field>
+                        <field name="aggregation_formula">KREIN.balance</field>
+                        <field name="children_ids">
+                            <record id="account_balance_report_l10n_kreditinstitutter" model="account.report.line">
+                                <field name="name">Kreditinstitutter</field>
+                                <field name="code">KREIN</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-840 - 77</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_balance_report_l10n_kortfristet_gæld" model="account.report.line">
+                        <field name="name">Kortfristet gæld</field>
+                        <field name="code">KORT</field>
+                        <field name="aggregation_formula">BNKG.balance + FORKU.balance + LEVG.balance + MOAF.balance + LRG.balance + AKFG.balance</field>
+                        <field name="children_ids">
+                            <record id="account_balance_report_l10n_bankgæld" model="account.report.line">
+                                <field name="name">Bankgæld</field>
+                                <field name="code">BNKG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-841 - 843</field>
+                            </record>
+                            <record id="account_balance_report_l10n_forudbet_kunder" model="account.report.line">
+                                <field name="name">Forudbetalinger fra kunder</field>
+                                <field name="code">FORKU</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('account_id.tag_ids', '=', ref('l10n_dk.account_tag_prepayments_from_customers'))])</field>
+                            </record>
+                            <record id="account_balance_report_l10n_leverandørgæld" model="account.report.line">
+                                <field name="name">Leverandørgæld</field>
+                                <field name="code">LEVG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-844 - 845 - 847</field>
+                            </record>
+                            <record id="account_balance_report_l10n_moms_og_afgifter" model="account.report.line">
+                                <field name="name">Moms og afgifter</field>
+                                <field name="code">MOAF</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-87</field>
+                            </record>
+                            <record id="account_balance_report_l10n_lønrelateret_gæld" model="account.report.line">
+                                <field name="name">Lønrelateret gæld</field>
+                                <field name="code">LRG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-881 - 884 - 880 - 882</field>
+                            </record>
+                            <record id="account_balance_report_l10n_anden_kortfristet_gæld" model="account.report.line">
+                                <field name="name">Anden kortfristet gæld</field>
+                                <field name="code">AKFG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum(['|', '|', ('account_id.code', '=like', '885%'), ('account_id.code', '=like', '886%'), ('account_id.code', '=', '6821')])</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_balance_report_l10n_nulkontrol" model="account.report.line">
+                <field name="name">Nulkontrol</field>
+                <field name="code">NUL</field>
+                <field name="aggregation_formula">AKT.balance - PAS.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

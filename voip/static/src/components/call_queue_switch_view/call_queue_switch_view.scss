@@ -1,0 +1,16 @@
+.o_CallQueueSwitchView_operatorIcon {
+    left: 5px;
+    bottom: 8px;
+
+    font-size: $font-size-sm;
+}
+
+@include media-breakpoint-up(md) {
+    .o_CallQueueSwitchView {
+        visibility: hidden;
+    }
+
+    .o_kanban_record:hover .o_CallQueueSwitchView {
+        visibility: visible;
+    }
+}

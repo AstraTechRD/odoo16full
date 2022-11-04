@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="disallowed_expenses_fleet_search_template" inherit_id="account_reports.search_template" primary="True">
+        <xpath expr="//div[@id='extra_options_dropdown']/t" position="replace">
+            <t t-call="account_disallowed_expenses_fleet.disallowed_expenses_fleet_search_template_extra_options"/>
+        </xpath>
+    </template>
+
+    <template id="disallowed_expenses_fleet_search_template_extra_options" inherit_id="account_reports.search_template_extra_options" primary="True">
+        <xpath expr="//div" position="inside">
+            <a role="menuitem"
+               class="dropdown-item js_account_report_bool_filter"
+               title="Vehicle Split"
+               data-filter="vehicle_split"
+            >Vehicle Split
+            </a>
+        </xpath>
+    </template>
+
+    <record id="account_disallowed_expenses.disallowed_expenses_report" model="account.report">
+        <field name="name">Disallowed Expenses Report</field>
+        <field name="search_template">account_disallowed_expenses_fleet.disallowed_expenses_fleet_search_template</field>
+        <field name="custom_handler_model_id" ref="model_account_disallowed_expenses_fleet_report_handler"/>
+    </record>
+
+</odoo>

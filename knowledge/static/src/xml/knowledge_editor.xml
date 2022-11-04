@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.wysiwyg_article_link">
+        <a t-att-href="href" t-att-data-behavior-props="data"
+           class="btn btn-sm o_knowledge_behavior_anchor o_knowledge_behavior_type_article"/>
+    </t>
+    <t t-name="knowledge.wysiwyg_article_link_modal">
+        <form class="container">
+            <div class="m-0">
+                <input class="form-control" type="hidden" placeholder="Choose an Article"/>
+            </div>
+        </form>
+    </t>
+    <t t-name="knowledge.articles_structure_wrapper">
+        <div t-attf-class="o_knowledge_behavior_anchor o_knowledge_behavior_type_articles_structure
+            #{childrenOnly ? 'o_knowledge_articles_structure_children_only' : ''}"/>
+    </t>
+    <t t-name="knowledge.articles_structure">
+        <i t-if="!articles or articles.length === 0">Nest articles under this one to generate a structure</i>
+        <ol class="mb-0">
+            <t t-foreach="articles" t-as="article">
+                <li>
+                    <!-- Use 'data-oe-nodeid' as we need something that is not removed during sanitizing -->
+                    <a t-attf-href="/knowledge/article/#{article.id}" t-att-data-oe-nodeid="article.id"
+                        class="d-block w-100 ps-1 border-0 o_knowledge_article_structure_link"
+                        contenteditable="false" t-out="article.name">
+                    </a>
+                </li>
+                <li t-if="article.child_ids and article.child_ids.length !== 0">
+                    <t t-call="knowledge.articles_structure">
+                        <t t-set="articles" t-value="article.child_ids"/>
+                    </t>
+                </li>
+            </t>
+        </ol>
+    </t>
+</templates>

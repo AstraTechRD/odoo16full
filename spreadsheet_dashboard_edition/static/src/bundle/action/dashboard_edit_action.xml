@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <div t-name="spreadsheet_dashboard_edition.DashboardEditAction" class="o_dashboard_edit_action" owl="1">
+        <SpreadsheetControlPanel
+            spreadsheetName="state.spreadsheetName"
+            isReadonly="isReadonly"
+            isSpreadsheetSynced="collaborativeState.isSynced"
+            numberOfConnectedUsers="collaborativeState.numberOfConnectedUsers"
+            onSpreadsheetNameChanged.bind="_onSpreadSheetNameChanged" />
+        <SpreadsheetComponent
+            name="state.spreadsheetName"
+            data="spreadsheetData"
+            isReadonly="isReadonly"
+            thumbnailSize="150"
+            stateUpdateMessages="stateUpdateMessages"
+            initCallback="initCallback"
+            asyncInitCallback="asyncInitCallback"
+            transportService="transportService"
+            snapshotRequested="snapshotRequested"
+            onDownload.bind="_onDownload"
+            onMakeCopy.bind="() => {}"
+            onNewSpreadsheet.bind="() => {}"
+            spreadsheetSyncStatus.bind="_onSpreadsheetSyncStatus"
+            onUnexpectedRevisionId.bind="_onUnexpectedRevisionId"
+            onSpreadsheetSaved.bind="_onSpreadsheetSaved" />
+    </div>
+
+</templates>

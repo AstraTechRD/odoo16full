@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_bank_statement_form_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.bank.statement.form.bank_rec_widget</field>
+            <field name="model">account.bank.statement</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <form string="Bank Statement">
+                    <sheet>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="journal_id" invisible="1"/> <!--required for computing name -->
+                            <field name="name" required="1" />
+                            <field name="balance_start"/>
+                            <field name="balance_end_real" />
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Save" special="save" data-hotkey="v" class="oe_highlight"/>
+                        <button string="Discard" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bank_statement_form_bank_rec_widget" model="ir.actions.act_window">
+            <field name="name">Create Statement</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bank_statement_form_bank_rec_widget"/>
+            <field name="binding_model_id" ref="account.model_account_bank_statement_line"/>
+            <field name="binding_view_types">list</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Search view on aml to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_bank_statement_line_search_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.bank.statement.line.search.bank_rec_widget</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"
+                           string="Transaction"
+                           filter_domain="['|', '|', '|', '|', '|', '|', ('payment_ref', 'ilike', self), ('narration', 'ilike', self), ('partner_id', 'ilike', self), ('partner_name', 'ilike', self), ('partner_bank_id', 'ilike', self), ('account_number', 'ilike', self), ('amount', 'ilike', self)]"/>
+                    <field name="id" invisible="1"/>
+                    <field name="payment_ref"/>
+                    <field name="date"/>
+                    <field name="statement_id"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"
+                           domain="[('type', 'in', ('bank', 'cash'))]"
+                           invisible="context.get('default_journal_id')"/>
+                    <field name="narration" string="Notes"/>
+                    <field name="transaction_type"/>
+                    <field name="amount"/>
+                    <field name="is_reconciled"/>
+                    <field name="move_id"
+                           string="Journal Entry"
+                           filter_domain="['|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self)]"/>
+                    <field name="statement_line_id" string="Statement Line"/>
+                    <separator/>
+                    <filter name="deposits" string="Deposits" domain="[('amount', '&lt;', 0.0)]"/>
+                    <filter name="payments" string="Payments" domain="[('amount', '>', 0.0)]"/>
+                    <separator/>
+                    <filter name="no_statement" string="No statement" domain="[('statement_id', '=', False)]"/>
+                    <filter name="invalid_statement" string="Invalid statements"
+                            domain="[('statement_complete', '=', False)]"/>
+                    <separator/>
+                    <filter name="matched" string="Matched" domain="[('is_reconciled', '=', True)]"/>
+                    <filter name="not_matched" string="Not Matched"
+                            domain="[('is_reconciled', '=', False), ('to_check', '=', False)]"/>
+                    <filter name="to_check" string="To Check" domain="[('to_check', '=', True)]"/>
+                    <separator/>
+                    <filter name="date" string="Date" date="date"/>
+                    <separator/>
+                    <filter name="statement_group" string="Statement" context="{'group_by': 'statement_id'}"/>
+                    <filter name="journal_group" string="Journal" context="{'group_by': 'journal_id'}"/>
+                    <filter name="date_group" string="Date" context="{'group_by': 'date'}"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Kanban view on statement line injected inside the form (view_bank_rec_widget) -->
+        <record id="view_bank_statement_line_kanban_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.bank.statement.line.kanban.bank_rec_widget</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="arch" type="xml">
+                <kanban js_class="bank_rec_widget_kanban"
+                        on_create="account_accountant.action_bank_statement_line_form_bank_rec_widget">
+                    <field name="id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="statement_complete" invisible="1"/>
+                    <field name="statement_valid" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="is_reconciled" invisible="1"/>
+                    <field name="to_check" invisible="1"/>
+                    <field name="partner_bank_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="foreign_currency_id" invisible="1"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-if="!record.statement_complete.raw_value"
+                                 class="statement_separator text-center">
+                                <a role="button" class="btn btn-secondary btn-sm"
+                                   context="{'split_line_id':active_id}"
+                                   tabindex="-1"
+                                   type="action" name="%(account_accountant.action_bank_statement_form_bank_rec_widget)d">
+                                    Statement
+                                </a>
+                            </div>
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click o_bank_rec_st_line_kanban_card"
+                                 t-att-st-line-id="record.id.raw_value"
+                                 t-att-st-line-todo="!record.is_reconciled.raw_value || record.to_check.raw_value"
+                                 style="width:100%">
+
+                                <t t-set="text_amount_class"
+                                   t-value="record.amount.raw_value &lt; 0.0 and 'text-danger'"/>
+                                <t t-set="text_status_class"
+                                   t-value="record.to_check.raw_value and 'bg-warning' or (record.is_reconciled.raw_value and 'o_status_green' or '')"/>
+
+                                <div class="flex_column">
+                                    <!-- Row 1 -->
+                                    <div class="flex_row">
+                                        <div id="row1_col1">
+                                            <strong>
+                                                <field name="date"/>
+                                            </strong>
+                                        </div>
+                                        <div t-attf-id="row1_col2{{record.statement_id.raw_value and '_statement' or ''}}"
+                                             class="text-truncate ms-1">
+                                            <em class="ps-2">
+                                                <field name="partner_id"/>
+                                            </em>
+                                        </div>
+                                        <div t-if="record.statement_id.raw_value"
+                                             id="row1_statement"
+                                             t-attf-class="text-truncate {{!(record.statement_complete.raw_value and record.statement_valid.raw_value) and 'text-danger' or ''}}">
+                                            <field name="statement_id"/>
+                                        </div>
+                                        <div id="row1_col3" t-att-class="text_amount_class">
+                                            <strong>
+                                                <field name="amount"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <!-- Row 2 -->
+                                    <div class="flex_row">
+                                        <div id="row2_col1" class="text-truncate">
+                                            <field name="payment_ref"/>
+                                        </div>
+                                        <div id="row2_col2">
+                                            <div class="o_field_many2manytags o_field_widget d-flex flex-row flex-nowrap">
+                                                <span t-if="record.to_check.raw_value" class="badge text-bg-warning fw-normal">To check</span>
+                                                <div t-if="record.is_reconciled.raw_value" class="badge text-bg-success fw-normal">
+                                                    <i class="fa fa-check"/> Matched
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_bank_statement_line_tree_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.bank.statement.line.tree.bank_rec_widget</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="arch" type="xml">
+                <tree editable="top"
+                      multi_edit="1"
+                      decoration-muted="state == 'draft'"
+                      default_order="internal_index desc">
+                    <!--Invisible fields-->
+                    <field name="id" invisible="1"/>
+                    <field name="statement_complete" invisible="1"/>
+                    <field name="statement_valid" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="is_reconciled" invisible="1"/>
+                    <field name="to_check" invisible="1"/>
+                    <field name="country_code" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+
+                    <!--Visible fields-->
+                    <field name="sequence" widget="handle" invisible="1"/> <!--Until we add the JS class-->
+                    <field name="date" attrs="{'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}"
+                           options="{'datepicker': {'warn_future': true}}"/>
+                    <field name="move_id" optional="hidden" required="0"/>
+                    <field name="payment_ref" required="1" attrs="{'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}"/>
+                    <field name="partner_id" attrs="{'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}"/>
+                    <field name="ref" attrs="{'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}" optional="hidden"/>
+                    <field name="transaction_type" optional="hidden"/>
+                    <field name="amount_currency"
+                           optional="hidden"
+                           groups="base.group_multi_currency"
+                           attrs="{'invisible': [('foreign_currency_id', '=', False)], 'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}"
+                    />
+                    <field name="foreign_currency_id"
+                           optional="hidden"
+                           groups="base.group_multi_currency"
+                           options="{'no_open': True, 'no_create': True}"
+                           attrs="{'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}"
+                    />
+                    <field name="amount" attrs="{'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}" />
+                    <field name="journal_id"
+                           domain="[('type', 'in', ['bank','cash'])]"
+                           attrs="{'readonly': ['|',('statement_id', '!=', False),('is_reconciled', '=', True),('amount', '!=', 0)]}"
+                           invisible="context.get('default_journal_id')"/>
+                    <field name="running_balance" class="oe_read_only"/>
+                    <field name="account_number" optional="hidden"/>
+                    <field name="statement_id"
+                           optional="show"
+                           options="{'no_quick_create': True}"
+                           domain="['|',('journal_id', '=', journal_id),('journal_id', '=', False)]"
+                           context="{
+                                'default_journal_id':journal_id,
+                                'form_view_ref': 'account_accountant.view_bank_statement_form_bank_rec_widget',
+                                'st_line_id':id,
+                                'st_line_date':date,
+                                'st_line_journal_id':journal_id}"
+                           decoration-danger="statement_complete == False or statement_valid == False"
+                    />
+                    <button class="btn btn-sm btn-secondary"
+                            title="Match"
+                            type="object"
+                            name="action_open_recon_st_line"
+                            string="Match"
+                            attrs="{'invisible':[('id', '=', False)]}">
+
+                    </button>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view for adding statement lines on the fly in a popup-->
+        <record id="view_bank_statement_line_form_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.bank.statement.line.form.bank_rec_widget</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="arch" type="xml">
+                <form string="Add a Transaction">
+                    <field name="state" invisible="1"/>
+                    <field name="statement_complete" invisible="1"/>
+                    <field name="statement_valid" invisible="1"/>
+                    <field name="is_reconciled" invisible="1"/>
+                    <field name="suitable_journal_ids" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="date" attrs="{'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}"/>
+                            <field name="payment_ref" required="1"
+                                   attrs="{'readonly': [('is_reconciled', '=', True), ('amount', '!=', 0)]}"/>
+                            <field name="partner_id"
+                                   attrs="{'readonly': [('is_reconciled', '=', True), ('amount', '!=', 0)]}"/>
+                        </group>
+                        <group>
+                            <field name="amount" attrs="{'readonly': [('is_reconciled', '=', True), ('amount', '!=', 0)]}"/>
+                            <field name="foreign_currency_id"
+                                   groups="base.group_multi_currency"
+                                   attrs="{'readonly': [('is_reconciled', '=', True), ('amount', '!=', 0)]}"/>
+                            <field name="amount_currency"
+                                   groups="base.group_multi_currency"
+                                   attrs="{'invisible': [('foreign_currency_id', '=', False)], 'readonly': [('is_reconciled', '=', True), ('amount', '!=', 0)]}"/>
+                            <field name="statement_id"
+                                   options="{'no_quick_create': True}"
+                                   domain="['|', ('journal_id', '=', journal_id), ('journal_id', '=', False)]"
+                                   attrs="{'readonly': [('is_reconciled', '=', True), ('amount', '!=', 0), ('statement_complete', '=', True)]}"
+                                   context="{
+                                       'default_journal_id': journal_id,
+                                       'form_view_ref': 'account_accountant.view_bank_statement_form_bank_rec_widget',
+                                       'st_line_id': id,
+                                       'st_line_date': date,
+                                       'st_line_journal_id': journal_id}"
+                                   decoration-danger="statement_complete == False or statement_valid == False"
+                                   invisible="context.get('default_statement_id')"
+                            />
+                            <field name="journal_id"
+                                   domain="[('type', 'in', ['bank', 'cash'])]"
+                                   attrs="{'readonly': [('is_reconciled', '=', True),('amount', '!=', 0)]}"
+                                   readonly="context.get('default_journal_id')"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Save &amp; Close" type="object"
+                                name="action_save_close" class="btn btn-primary"
+                                data-hotkey="c"/>
+                        <button string="Save &amp; New" type="object"
+                                name="action_save_new" class="btn btn-primary"
+                                data-hotkey="n"/>
+                        <button string="Cancel" class="btn-secondary"
+                                special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bank_statement_line_form_bank_rec_widget" model="ir.actions.act_window">
+            <field name="name">Add a Transaction</field>
+            <field name="res_model">account.bank.statement.line</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bank_statement_line_form_bank_rec_widget"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_move_form_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.move.form.bank_rec_widget</field>
+            <field name="model">account.move</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!--
+        Form view injected inside the form (view_bank_rec_widget) to perform the reconciliation for a single
+        statement line.
+        -->
+        <record id="view_bank_rec_widget_form" model="ir.ui.view">
+            <field name="name">bank.rec.widget.form</field>
+            <field name="model">bank.rec.widget</field>
+            <field name="arch" type="xml">
+                <form js_class="bank_rec_widget_form">
+                    <!-- Invisible fields -->
+                    <field name="st_line_id" invisible="1"/>
+                    <field name="move_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="st_line_is_reconciled" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="transaction_currency_id" invisible="1"/>
+                    <field name="journal_currency_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="to_check" invisible="1"/>
+                    <field name="todo_command" invisible="1"/>
+                    <field name="next_action_todo" invisible="1"/>
+
+                    <div class="o_bank_rec_stats_buttons">
+                        <div class="o_statusbar_buttons o_bank_rec_stats_buttons_aside_left">
+
+                            <button name="button_validate"
+                                    string="Validate"
+                                    class="btn btn-primary"
+                                    type="object"
+                                    accesskey="v"
+                                    attrs="{'invisible': [('state', '!=', 'valid')]}"/>
+                            <button string="Validate"
+                                    class="btn btn-secondary text-muted"
+                                    disabled="1"
+                                    attrs="{'invisible': [('state', '!=', 'invalid')]}"/>
+
+                            <button name="button_reset"
+                                    string="Reset"
+                                    type="object"
+                                    accesskey="r"
+                                    attrs="{'invisible': [('state', '!=', 'reconciled')]}"/>
+
+                            <button name="button_to_check"
+                                    string="To Check"
+                                    class="btn btn-secondary"
+                                    type="object"
+                                    accesskey="c"
+                                    attrs="{'invisible': [('to_check', '=', True)]}"/>
+                            <button name="button_set_as_checked"
+                                    string="Set as Checked"
+                                    type="object"
+                                    accesskey="c"
+                                    attrs="{'invisible': [('to_check', '=', False)]}"/>
+
+                        </div>
+
+                        <div class="o_statusbar_buttons o_bank_rec_stats_buttons_aside_right"
+                             attrs="{'invisible': [('state', 'not in', ('valid', 'invalid'))]}">
+                            <field name="reco_models_widget"
+                                   nolabel="1"
+                                   widget="bank_rec_widget_form_reco_models_widget"/>
+                        </div>
+                    </div>
+
+                    <field name="lines_widget"
+                           class="w-100"
+                           nolabel="1"
+                           widget="bank_rec_widget_form_lines_widget"/>
+
+                    <notebook name="bank_rec_widget_notebook">
+                        <page name="amls_tab"
+                              string="Match Existing Entries"
+                              attrs="{'invisible': [('state', '=', 'reconciled')]}">
+                            <field name="amls_widget" invisible="1"/>
+                            <field name="selected_aml_ids" invisible="1"/>
+                            <div class="bank_rec_widget_form_amls_list_anchor">
+                                <widget name="bank_rec_form_list" resModel="account.move.line" dataField="amls_widget"/>
+                            </div>
+                        </page>
+                        <page name="manual_operations_tab"
+                              string="Manual Operations"
+                              attrs="{'invisible': [('state', '=', 'reconciled')]}">
+                            <group>
+                                <field name="form_index" invisible="1"/>
+                                <field name="form_flag" invisible="1"/>
+                                <field name="form_force_negative_sign" invisible="1"/>
+                                <field name="form_single_currency_mode" invisible="1"/>
+                                <field name="form_suggest_amount_currency" invisible="1"/>
+                                <field name="form_suggest_balance" invisible="1"/>
+                                <field name="form_partner_currency_id" invisible="1"/>
+                                <field name="form_partner_receivable_account_id" invisible="1"/>
+                                <field name="form_partner_payable_account_id" invisible="1"/>
+
+                                <group>
+                                    <field name="form_partner_id"
+                                           string="Partner"
+                                           options="{'no_open': True, 'no_quick_create': True}"
+                                           attrs="{'readonly': [('form_flag', 'in', ('tax_line', 'new_aml'))], 'invisible': [('form_index', '=', False)]}"/>
+                                    <label for="button_form_partner_receivable"
+                                           string=""
+                                           attrs="{'invisible': ['|', '|', '|', '|', ('form_index', '=', False), ('form_partner_id', '=', False), ('form_partner_receivable_account_id', '=', False), ('form_partner_payable_account_id', '=', False), ('form_flag', 'not in', ('auto_balance', 'manual'))]}"/>
+                                    <div class="d-flex"
+                                         style="align-items: center; font-size: 0.9rem"
+                                         attrs="{'invisible': ['|', '|', '|', '|', ('form_index', '=', False), ('form_partner_id', '=', False), ('form_partner_receivable_account_id', '=', False), ('form_partner_payable_account_id', '=', False), ('form_flag', 'not in', ('auto_balance', 'manual'))]}">
+                                        <button name="button_form_partner_receivable"
+                                                style="padding-left: 0px; padding-right: 0px"
+                                                type="object">Receivable:</button>
+                                        <field name="form_partner_receivable_amount" class="ml4 mb0"/>
+                                        <span class="ml4 mr4">-</span>
+                                        <button name="button_form_partner_payable"
+                                                style="padding-left: 0px; padding-right: 0px"
+                                                type="object">Payable:</button>
+                                        <field name="form_partner_payable_amount" class="ml4 mb0"/>
+                                    </div>
+                                    <field name="form_account_id"
+                                           string="Account"
+                                           options="{'no_open': True, 'no_create': True}"
+                                           attrs="{'readonly': [('form_flag', 'in', ('liquidity', 'new_aml'))], 'invisible': [('form_index', '=', False)], 'required': [('form_index', '!=', False)]}"/>
+                                    <field name="form_tax_ids"
+                                           string="Taxes"
+                                           widget="many2many_tags"
+                                           options="{'no_open': True, 'no_create': True}"
+                                           context="{'append_type_to_tax_name': True}"
+                                           attrs="{'invisible': ['|', ('form_flag', 'in', ('liquidity', 'new_aml', 'tax_line')), ('form_index', '=', False)]}"/>
+                                    <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"
+                                           options="{'account_field': 'form_account_id', 'business_domain': 'general'}"
+                                           attrs="{'invisible': ['|', ('form_flag', '=', 'liquidity'), ('form_index', '=', False)]}"/>
+                                    <field name="form_date"
+                                           attrs="{'invisible': ['|', ('form_flag', '!=', 'liquidity'), ('form_index', '=', False)], 'required': [('form_flag', '=', 'liquidity')]}"/>/>
+                                </group>
+                                <group>
+                                    <field name="form_name"
+                                           string="Label"
+                                           attrs="{'invisible': [('form_index', '=', False)], 'required': [('form_flag', '=', 'liquidity')]}"/>
+
+                                    <label for="form_amount_currency"
+                                           string="Amount in Currency"
+                                           attrs="{'invisible': ['|', ('form_single_currency_mode', '=', True), ('form_index', '=', False)]}"/>
+                                    <div class="d-flex">
+                                        <span class="o_form_label"
+                                              attrs="{'invisible': ['|', '|', ('form_single_currency_mode', '=', True), ('form_force_negative_sign', '=', False), ('form_index', '=', False)]}">-</span>
+                                        <field name="form_amount_currency"
+                                               options="{'no_symbol': True}"
+                                               attrs="{'readonly': [('form_flag', '=', 'liquidity')], 'invisible': ['|', ('form_single_currency_mode', '=', True), ('form_index', '=', False)]}"/>
+                                        <span class="ml4 mr4"
+                                              attrs="{'invisible': ['|', ('form_single_currency_mode', '=', True), ('form_index', '=', False)]}">in</span>
+                                        <field name="form_currency_id"
+                                               style="width: 120px"
+                                               string="Currency"
+                                               options="{'no_open': True, 'no_create': True}"
+                                               attrs="{'readonly': [('form_flag', 'in', ('liquidity', 'tax_line', 'new_aml'))], 'invisible': ['|', ('form_single_currency_mode', '=', True), ('form_index', '=', False)], 'required': [('form_index', '!=', False)]}"/>
+                                    </div>
+
+                                    <label for="form_balance"
+                                           string="Amount"
+                                           attrs="{'invisible': [('form_index', '=', False)]}"/>
+                                    <div class="d-flex">
+                                        <span class="o_form_label"
+                                              attrs="{'invisible': ['|', ('form_force_negative_sign', '=', False), ('form_index', '=', False)]}">-</span>
+                                        <field name="form_balance"
+                                               options="{'no_symbol': True}"
+                                               attrs="{'readonly': [('form_flag', '=', 'liquidity'), ('form_single_currency_mode', '=', False)], 'invisible': [('form_index', '=', False)]}"/>
+                                        <span class="ml4 mr4">in</span>
+                                        <field name="company_currency_id" style="width: 120px"/>
+                                    </div>
+
+                                    <label for="form_extra_text"
+                                           string=""
+                                           attrs="{'invisible': ['|', ('form_extra_text', '=', False), ('form_index', '=', False)]}"/>
+                                    <field name="form_extra_text"
+                                           nolabel="1"
+                                           attrs="{'invisible': ['|', ('form_extra_text', '=', False), ('form_index', '=', False)]}"
+                                           widget="bank_rec_html"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="discuss_tab" string="Discuss">
+                            <div class="bank_rec_widget_form_discuss_anchor">
+                                <widget name="bank_rec_form_chatter" m2oField="move_id"/>
+                            </div>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search view on aml to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_account_move_line_search_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.move.line.search.bank_rec_widget</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"
+                           string="Journal Item"
+                           filter_domain="['|', '|', '|', '|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'ilike', self), ('amount_residual', 'ilike', self), ('amount_residual_currency', 'ilike', self), ('discount_amount_currency', 'ilike', self)]"/>
+                    <field name="date"/>
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="move_id"
+                           string="Journal Entry"
+                           filter_domain="['|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self)]"/>
+                    <separator/>
+                    <filter name="amount_received" string="Received" domain="[('balance', '>', 0.0)]"/>
+                    <filter name="amount_paid" string="Paid" domain="[('balance', '&lt;', 0.0)]"/>
+                    <separator name="inject_after"/>
+                    <filter name="date" string="Date" date="date"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree view on aml to be injected inside the form (view_bank_rec_widget_form) -->
+        <record id="view_account_move_line_list_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.move.line.list.bank_rec_widget</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <tree string="Suggestions"
+                      create="false"
+                      edit="false"
+                      js_class="bank_rec_widget_form_amls_list">
+                    <!-- Invisible fields -->
+                    <field name="company_id" invisible="1"/>
+                    <field name="payment_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+
+                    <field name="account_id"
+                           options="{'no_open': True, 'no_create': True}"
+                           optional="show"/>
+                    <field name="journal_id"
+                           optional="hidden"/>
+                    <field name="partner_id"
+                           optional="show"/>
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="date_maturity" optional="hidden"/>
+                    <field name="ref"
+                           optional="hidden"/>
+                    <field name="analytic_distribution" widget="analytic_distribution"
+                           groups="analytic.group_analytic_accounting"
+                           optional="hidden"
+                           options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
+                    <field name="amount_residual_currency"
+                           decoration-danger="amount_residual_currency &lt; 0"
+                           groups="base.group_multi_currency"
+                           string="Open Amount in Currency"/>
+                    <field name="amount_residual"
+                           decoration-danger="amount_residual &lt; 0"
+                           string="Open Amount"/>
+
+                    <button name="action_open_business_doc"
+                            type="object"
+                            string="View"
+                            class="btn btn-sm btn-secondary"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Add bank recon widget to the statements list view -->
+        <record id="view_bank_statement_tree" model="ir.ui.view">
+            <field name="name">account.bank.statement.tree</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_tree"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="editable">top</attribute>
+                </tree>
+                <field name="name" position="attributes">
+                    <attribute name="widget">bank_rec_widget_open</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

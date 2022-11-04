@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="multicurrency_report_search_template" inherit_id="account_reports.search_template" primary="True">
+        <xpath expr="//div[@id='extra_options_dropdown']" position="before">
+            <div class="btn-group dropdown o_account_reports_filter_currency" t-if="options.get('currency_rates')">
+                <button type="button" class="dropdown-toggle btn btn-secondary" data-bs-toggle="dropdown">
+                    <span class="fa fa-line-chart"/> Exchange Rates
+                </button>
+                <div class="dropdown-menu o_filters_menu" role="menu">
+                    <div class="o_account_report_search" data-filter='custom_currency'>
+                        <div t-foreach="options['currency_rates'].values()" t-as="opt" class="mb-3">
+                            <label t-att-for="opt['currency_id']">1 <t t-out="opt['currency_main']"/> <i class="fa fa-arrow-right"/> <t t-out="opt['currency_name']"/></label>
+                            <input t-att-value="opt['rate']" t-att-name="opt['currency_id']" type="number" min="0" step="0.000001" class="js_account_report_custom_currency_input"/>
+                        </div>
+                        <button type="button" class="btn btn-primary js_account_report_custom_currency" data-filter="custom_currency">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="multicurrency_report_main_template" inherit_id="account_reports.main_template" primary="True">
+      <xpath expr="//div[@id='warnings_div']" position="inside">
+          <div class="alert alert-warning text-center mb-0 no_print" t-if="options.get('custom_rate')">
+              <span>You are using custom exchange rates.
+              <a type="button" class="btn btn-link js_account_report_custom_currency" style="padding: 0; vertical-align=baseline;" data-filter='current_currency'>⇒ Reset to Odoo’s Rate</a></span>
+          </div>
+          <div class="alert alert-warning text-center mb-0 no_print" t-if="options.get('warning_multicompany')">
+              <span>This report only displays the data of the active company.</span>
+          </div>
+      </xpath>
+    </template>
+
+    <template id="multicurrency_report_line_template" inherit_id="account_reports.line_template" primary="True">
+      <xpath expr="//span[hasclass('account_report_line_name')]" position="inside">
+          <t t-set="parsed_line_id" t-value="report._parse_line_id(line['id'])"/>
+          <t t-set="line_model" t-value="parsed_line_id[-1][-2]"/>
+          &amp;nbsp;<a t-if="line_model == 'res.currency'" t-att-data-id="parsed_line_id[-1][-1]" action="action_multi_currency_revaluation_open_currency_rates" class="no_print oe_link_reports">⇒ Rates</a>
+
+          <t t-if="line_model == 'account.account'">
+            &amp;nbsp;<a t-if="line_model == 'account.account'" t-att-data-id="parsed_line_id[-1][-1]" action="action_multi_currency_revaluation_open_general_ledger" class="no_print oe_link_reports">⇒ General Ledger</a>
+            &amp;nbsp;
+              <a t-if="parsed_line_id[0][2] == report.line_ids.filtered(lambda x: x.code == 'multicurrency_included').id"
+                 t-att-data-account_id="parsed_line_id[-1][-1]"
+                 t-att-data-currency_id="parsed_line_id[-2][-1]"
+                 action="action_multi_currency_revaluation_toggle_provision" class="no_print oe_link_reports" title="Exclude from adjustment/provisions entries">Exclude</a>
+              <a t-else=""
+                 t-att-data-account_id="parsed_line_id[-1][-1]"
+                 t-att-data-currency_id="parsed_line_id[-2][-1]"
+                 action="action_multi_currency_revaluation_toggle_provision" class="no_print oe_link_reports" title="Include in adjustment/provisions entries">Include</a>
+          </t>
+      </xpath>
+    </template>
+
+    <record id="multicurrency_revaluation_report" model="account.report">
+        <field name="name">Unrealized Currency Gains/Losses</field>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="default_opening_date_filter">last_month</field>
+        <field name="custom_handler_model_id" ref="model_account_multicurrency_revaluation_report_handler"/>
+        <field name="main_template">account_reports.multicurrency_report_main_template</field>
+        <field name="line_template">account_reports.multicurrency_report_line_template</field>
+        <field name="search_template">account_reports.multicurrency_report_search_template</field>
+        <field name="column_ids">
+            <record id="multicurrency_revaluation_report_balance_currency" model="account.report.column">
+                <field name="name">Balance in Foreign Currency</field>
+                <field name="expression_label">balance_currency</field>
+                <field name="figure_type">none</field>
+            </record>
+            <record id="multicurrency_revaluation_report_balance_operation" model="account.report.column">
+                <field name="name">Balance at Operation Rate</field>
+                <field name="expression_label">balance_operation</field>
+            </record>
+            <record id="multicurrency_revaluation_report_balance_current" model="account.report.column">
+                <field name="name">Balance at Current Rate</field>
+                <field name="expression_label">balance_current</field>
+            </record>
+            <record id="multicurrency_revaluation_report_adjustment" model="account.report.column">
+                <field name="name">Adjustment</field>
+                <field name="expression_label">adjustment</field>
+            </record>
+        </field>
+        <field name="line_ids">
+          <record id="multicurrency_revaluation_to_adjust" model="account.report.line">
+              <field name="name">Accounts To Adjust</field>
+              <field name="code">multicurrency_included</field> <!--Used in multicurrency_report_line_template-->
+              <field name="groupby">currency_id, account_id, id</field>
+              <field name="expression_ids">
+                  <record id="multicurrency_revaluation_to_adjust_balance_currency" model="account.report.expression">
+                      <field name="label">balance_currency</field>
+                      <field name="engine">custom</field>
+                      <field name="formula">_report_custom_engine_multi_currency_revaluation_to_adjust</field>
+                      <field name="subformula">balance_currency</field>
+                  </record>
+                  <record id="multicurrency_revaluation_to_adjust_balance_operation" model="account.report.expression">
+                      <field name="label">balance_operation</field>
+                      <field name="engine">custom</field>
+                      <field name="formula">_report_custom_engine_multi_currency_revaluation_to_adjust</field>
+                      <field name="subformula">balance_operation</field>
+                      <field name="auditable" eval="False"/>
+                  </record>
+                  <record id="multicurrency_revaluation_to_adjust_balance_current" model="account.report.expression">
+                      <field name="label">balance_current</field>
+                      <field name="engine">custom</field>
+                      <field name="formula">_report_custom_engine_multi_currency_revaluation_to_adjust</field>
+                      <field name="subformula">balance_current</field>
+                      <field name="auditable" eval="False"/>
+                  </record>
+                  <record id="multicurrency_revaluation_to_adjust_adjustment" model="account.report.expression">
+                      <field name="label">adjustment</field>
+                      <field name="engine">custom</field>
+                      <field name="formula">_report_custom_engine_multi_currency_revaluation_to_adjust</field>
+                      <field name="subformula">adjustment</field>
+                      <field name="auditable" eval="False"/>
+                  </record>
+              </field>
+          </record>
+
+          <record id="multicurrency_revaluation_excluded" model="account.report.line">
+              <field name="name">Excluded Accounts</field>
+              <field name="groupby">currency_id, account_id, id</field>
+              <field name="expression_ids">
+                  <record id="multicurrency_revaluation_excluded_balance_currency" model="account.report.expression">
+                      <field name="label">balance_currency</field>
+                      <field name="engine">custom</field>
+                      <field name="formula">_report_custom_engine_multi_currency_revaluation_excluded</field>
+                      <field name="subformula">balance_currency</field>
+                  </record>
+                  <record id="multicurrency_revaluation_excluded_balance_operation" model="account.report.expression">
+                      <field name="label">balance_operation</field>
+                      <field name="engine">custom</field>
+                      <field name="formula">_report_custom_engine_multi_currency_revaluation_excluded</field>
+                      <field name="subformula">balance_operation</field>
+                  </record>
+                  <record id="multicurrency_revaluation_excluded_balance_current" model="account.report.expression">
+                      <field name="label">balance_current</field>
+                      <field name="engine">custom</field>
+                      <field name="formula">_report_custom_engine_multi_currency_revaluation_excluded</field>
+                      <field name="subformula">balance_current</field>
+                  </record>
+                  <record id="multicurrency_revaluation_excluded_adjustment" model="account.report.expression">
+                      <field name="label">adjustment</field>
+                      <field name="engine">custom</field>
+                      <field name="formula">_report_custom_engine_multi_currency_revaluation_excluded</field>
+                      <field name="subformula">adjustment</field>
+                  </record>
+              </field>
+          </record>
+        </field>
+    </record>
+
+</odoo>

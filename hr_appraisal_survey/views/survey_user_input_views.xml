@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_user_input_view_tree" model="ir.ui.view">
+        <field name="name">survey.user.input.view.tree.inherit.appraisal</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_tree"/>
+        <field name="priority">32</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="scoring_percentage" position="after">
+                <button class="oe_stat_button" name="action_open_survey_inputs" icon="fa-external-link" type="object" title="View Results"/>
+            </field>
+        </field>
+    </record>
+</odoo>
